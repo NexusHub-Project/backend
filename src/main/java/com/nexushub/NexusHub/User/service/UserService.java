@@ -1,0 +1,100 @@
+package com.nexushub.NexusHub.User.service;
+
+import com.nexushub.NexusHub.Auth.dto.request.UserLoginRequestDto;
+import com.nexushub.NexusHub.Auth.dto.request.UserSignUpRequestDto;
+import com.nexushub.NexusHub.Auth.jwt.JwtUtil;
+import com.nexushub.NexusHub.Exception.RiotAPI.CannotFindSummoner;
+import com.nexushub.NexusHub.Exception.RiotAPI.IsPresentLoginId;
+import com.nexushub.NexusHub.Riot.dto.RiotAccountDto;
+import com.nexushub.NexusHub.Riot.service.RiotApiService;
+import com.nexushub.NexusHub.User.domain.User;
+import com.nexushub.NexusHub.User.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class UserService {
+    private final UserRepository userRepository;
+    private final RiotApiService riotApiService;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+
+    public Boolean enrollV1(UserSignUpRequestDto dto){
+        User user = User.of(dto, passwordEncoder);
+        User save = userRepository.save(user);
+        return save!=null;
+    }
+    public Boolean enrollV2(UserSignUpRequestDto dto) throws IsPresentLoginId {
+        User user = User.of(dto, passwordEncoder);
+        try {
+            return userRepository.save(user) != null;
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Duplicate login ID: {}", user.getLoginId());
+            throw new IsPresentLoginId("중복된 로그인 아이디로 인해 회원가입 실패");
+        }
+    }
+
+    public Map<String, Object> login(UserLoginRequestDto dto) throws ChangeSetPersister.NotFoundException {
+        Optional<User> user0 = userRepository.findByLoginId(dto.getLoginId());
+        Map<String, Object> response = new HashMap<>();
+
+        if (!user0.isPresent()) {
+            response.put("status", HttpStatus.UNAUTHORIZED.value());
+            response.put("message", "Invalid Id");
+            response.put("login", false);
+            return response;
+        }
+
+
+        User user = user0.get();
+
+
+        if (user == null | !passwordEncoder.matches(dto.getLoginPw(), user.getLoginPw())){
+            response.put("status", HttpStatus.UNAUTHORIZED.value());
+            response.put("message", "Incorrect login or password");
+            response.put("login", false);
+            return response;
+        }
+
+        String token = jwtUtil.createToken(user.getLoginId());
+        response.put("user_id", user.getId());
+        response.put("token", token);
+        response.put("message", "Login Success");
+        response.put("login", true);
+        return response;
+    }
+
+    public Boolean loginIdCheckV1(String loginId){
+        log.info("loginIdCheck [V1]: loginId={}", loginId);
+        return userRepository.findByLoginId(loginId).isPresent();
+    }
+
+    public Boolean loginIdCheckV2(String loginId){
+        log.info("loginIdCheck [V2]: loginId={}", loginId);
+        boolean present = userRepository.findByLoginId(loginId).isPresent();
+        try{
+            if (present == false){
+                return false;
+            }
+            else throw new IsPresentLoginId("loginId은 중복된 아이디 입니다. ");
+        } catch (IsPresentLoginId e){
+            return true;
+        }
+    }
+
+    public RiotAccountDto nickNameCheck(String nickName, String tag) throws CannotFindSummoner {
+        return riotApiService.getSummonerInfo(nickName, tag);
+    }
+}

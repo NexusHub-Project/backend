@@ -1,0 +1,43 @@
+package com.nexushub.NexusHub.Summoner.dto;
+
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+public class SummonerDto {
+    private Long id;
+
+    private String gameName;
+
+
+    private String tagLine;
+
+
+    private String puuid;
+
+    // 솔랭 정보
+    private String soloRankTier;
+    private Integer soloRankLP;
+    private Integer soloRankWin;
+    private Integer soloRankDefeat;
+
+    // 자랭 정보
+    private String flexRankTier;
+    private Integer flexRankLP;
+    private Integer flexRankWin;
+    private Integer flexRankDefeat;
+
+    public static SummonerDto setInform(String gameName, String tagLine, String puuid){
+        return SummonerDto.builder()
+                .gameName(gameName)
+                .tagLine(tagLine)
+                .puuid(puuid)
+                .build();
+    }
+    public void test(){
+        this.flexRankLP--;
+    }
+}

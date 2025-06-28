@@ -1,0 +1,169 @@
+package com.nexushub.NexusHub.Summoner.service;
+
+import com.nexushub.NexusHub.Exception.RiotAPI.CannotFindSummoner;
+import com.nexushub.NexusHub.InGame.Champion.Champion;
+import com.nexushub.NexusHub.InGame.Champion.ChampionRepository;
+import com.nexushub.NexusHub.Match.dto.MatchDto;
+import com.nexushub.NexusHub.Match.service.MatchService;
+import com.nexushub.NexusHub.Riot.dto.MasteryDto;
+import com.nexushub.NexusHub.Riot.dto.RiotAccountDto;
+import com.nexushub.NexusHub.Riot.service.RiotApiService;
+import com.nexushub.NexusHub.Summoner.domain.Summoner;
+import com.nexushub.NexusHub.Summoner.dto.SummonerDto;
+import com.nexushub.NexusHub.Summoner.dto.SummonerRequestDto;
+import com.nexushub.NexusHub.Summoner.repository.SummonerRepository;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+@Transactional
+public class SummonerService {
+    private final SummonerRepository summonerRepository;
+    private final RiotApiService riotApiService;
+    private final ChampionRepository championRepository;
+    private final MatchService matchService;
+
+
+    public Summoner getSummonerTierInfoV1(SummonerRequestDto dto) throws CannotFindSummoner {
+        log.info("티어 찾기 2) : {}", dto);
+        String puuid;
+        SummonerDto summonerDto;
+
+        if (dto.getSummonerId() == null){
+            log.info("티어 찾기 3) : {}", dto);
+            RiotAccountDto summonerInfo = riotApiService.getSummonerInfo(dto.getGameName(), dto.getTagLine());
+            log.info("티어 찾기 4) : {}", summonerInfo);
+            puuid = summonerInfo.getPuuid();
+            summonerDto = SummonerDto.setInform(dto.getGameName(), dto.getTagLine(), puuid);
+            riotApiService.getSummonerTierInfo(summonerDto);
+
+            Summoner sum = Summoner.update(summonerDto);
+            return summonerRepository.save(sum);
+        }
+        else {
+            Summoner summoner = summonerRepository.findById(dto.getSummonerId()).get();
+            puuid = summoner.getPuuid();
+            summonerDto = SummonerDto.setInform(dto.getGameName(), dto.getTagLine(), puuid);
+            riotApiService.getSummonerTierInfo(summonerDto);
+            summoner.updateTier(summonerDto);
+            return summoner;
+        }
+    }
+
+    public Summoner getSummonerTierInfoV2(SummonerRequestDto dto) throws CannotFindSummoner {
+        //1. 일단 gameName + tagLine으로 찾아보기
+        Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
+
+        //2. PUUID를 얻기 - 객체가 있을 수도 있고(최초 검색X) 없을 수도 있음(최초 검색O)
+        //         객체가 있으면 그냥 바로 PUUID 뽑아오기
+        //         객체가 없으면 PUUID를 얻어오기
+        String puuid = summoner.isPresent() ? summoner.get().getPuuid() : riotApiService.getSummonerPuuid(dto.getGameName(), dto.getTagLine());
+        //3. PUUID를 통해서 티어 검색하기
+        SummonerDto tierInfo = riotApiService.getSummonerTierInfo(SummonerDto.setInform(dto.getGameName(), dto.getTagLine(), puuid));
+
+        //4. Summoner 객체 적용하여 반환하기
+        return this.SaveOrUpateSummoner(tierInfo, summoner);
+    }
+
+    public List<MasteryDto> getSummonerMasteryInfo(SummonerRequestDto dto) throws CannotFindSummoner {
+         //1. 일단 gameName + tagLine으로 찾아보기
+         Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
+
+         //2. PUUID를 얻기 - 객체가 있을 수도 있고(최초 검색X) 없을 수도 있음(최초 검색O)
+         //         객체가 있으면 그냥 바로 PUUID 뽑아오기
+         //         객체가 없으면 PUUID를 얻어오기
+         String puuid = summoner.isPresent() ? summoner.get().getPuuid() : riotApiService.getSummonerPuuid(dto.getGameName(), dto.getTagLine());
+
+         List<MasteryDto> masteryInfo = riotApiService.getMasteryInfo(SummonerDto.setInform(dto.getGameName(), dto.getTagLine(), puuid));
+
+         setChampionNameV2(masteryInfo);
+
+         return masteryInfo;
+    }
+
+    public String[] getSummonerMatchesId(SummonerRequestDto dto) throws CannotFindSummoner {
+        TempInfo temp = getPuuid(dto);
+        dto.setPuuid(temp.getPuuid());
+        return riotApiService.getSummonerMatches(SummonerDto.setInform(temp.gameName, temp.tagLine, temp.puuid));
+    }
+
+    public List<MatchDto> getSummonerMatchesInfo(SummonerRequestDto dto) throws CannotFindSummoner{
+        String[] summonerMatchesId = getSummonerMatchesId(dto);
+        List<MatchDto> dtos = new ArrayList<>();
+        for (String matchId : summonerMatchesId) {
+            dtos.add(matchService.getMatchInfo(matchId, dto.getPuuid()));
+        }
+        return dtos;
+    }
+
+    private Summoner SaveOrUpateSummoner(SummonerDto dto, Optional<Summoner> summoner){
+        if (summoner.isPresent()){ // 최초 검색이 아닌 경우
+            Summoner target = summoner.get();
+            target.updateTier(dto);
+            return summonerRepository.save(target);
+        }
+        else { // 최초 검색인 경우
+            Summoner target = Summoner.update(dto);
+            return summonerRepository.save(target);
+        }
+    }
+
+    private List<MasteryDto> setChampionNameV1(List<MasteryDto> dtos){
+        for (MasteryDto dto : dtos) {
+            Champion champion = championRepository.findById(dto.getChampionId()).get();
+            log.info("champId : {}, ChampName : {}",dto.getChampionId(), dto.getChampionName());
+        }
+        return dtos;
+    }
+
+    private List<MasteryDto> setChampionNameV2(List<MasteryDto> dtos) {
+        for (MasteryDto dto : dtos) {
+            // 1. championId로 Champion 정보를 조회합니다.
+            Optional<Champion> championOptional = championRepository.findById(dto.getChampionId());
+
+            // 2. ifPresent를 사용하여 Optional 객체가 비어있지 않은 경우에만 내부 로직을 실행합니다.
+            //    이렇게 하면 데이터가 없을 때 .get()으로 인한 오류를 원천적으로 방지할 수 있습니다.
+            championOptional.ifPresent(champion -> {
+                // 3. (핵심) 조회한 champion 객체의 이름을 MasteryDto에 설정합니다.
+                dto.setChampionName(champion.getNameKo());
+                log.info("매핑 성공 - champId: {}, ChampName: {}", dto.getChampionId(), dto.getChampionName());
+            });
+
+            // 4. (선택사항) 만약 데이터가 없는 경우를 확인하고 싶다면 아래와 같이 처리할 수 있습니다.
+            if (championOptional.isEmpty()) {
+                log.warn("DB에서 Champion 정보를 찾을 수 없습니다. champId: {}", dto.getChampionId());
+            }
+        }
+        return dtos;
+    }
+
+    private TempInfo getPuuid(SummonerRequestDto dto) throws CannotFindSummoner {
+        //1. 일단 gameName + tagLine으로 찾아보기
+        Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
+
+        //2. PUUID를 얻기 - 객체가 있을 수도 있고(최초 검색X) 없을 수도 있음(최초 검색O)
+        //         객체가 있으면 그냥 바로 PUUID 뽑아오기
+        //         객체가 없으면 PUUID를 얻어오기
+        String puuid = summoner.isPresent() ? summoner.get().getPuuid() : riotApiService.getSummonerPuuid(dto.getGameName(), dto.getTagLine());
+
+        return new TempInfo(puuid, dto.getGameName(), dto.getTagLine());
+    }
+
+    @Data
+    @AllArgsConstructor
+    private class TempInfo{
+        private String puuid;
+        private String gameName;
+        private String tagLine;
+    }
+}
