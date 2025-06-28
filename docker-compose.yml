@@ -1,0 +1,50 @@
+version: '3.8'
+
+# 실행하려는 서비스(컨테이너)들의 목록
+services:
+  # 1. NexusHub 애플리케이션 서비스 정의
+  nexushub-app:
+    # 현재 폴더의 Dockerfile을 사용하여 이미지를 빌드
+    build: .
+    container_name: nexushub-app
+    # 이 서비스는 'nexushub-db' 서비스가 시작된 후에 시작되도록 설정
+    depends_on:
+      - nexushub-db
+    ports:
+      - "8080:8080"
+    # 환경 변수 설정: .env 파일에 정의된 변수들을 불러와서 사용
+    environment:
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - RIOT_API-KEY=${RIOT_API_KEY}
+      - RIOT_PATCH-VERSION=${RIOT_PATCH_VERSION}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - SEASON2024-1=${SEASON2024-1}
+      - SEASON2024-2=${SEASON2024-2}
+      - SEASON2025-1=${SEASON2025-1}
+      - SEASON2025-2=${SEASON2025-2}
+      - SEASON2025-3=${SEASON2025-3}
+
+  # 2. MySQL 데이터베이스 서비스 정의
+  nexushub-db:
+    image: mysql:8.0
+    container_name: nexushub-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=nexushub_db
+    ports:
+      - "3307:3306"
+    # Docker를 종료해도 데이터가 유지되도록 볼륨 설정
+    volumes:
+      - nexushub-db-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost", "-p${DB_PASSWORD}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+# Docker 볼륨 정의
+volumes:
+  nexushub-db-data:
