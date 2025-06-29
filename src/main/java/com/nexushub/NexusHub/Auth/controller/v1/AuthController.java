@@ -3,7 +3,7 @@ package com.nexushub.NexusHub.Auth.controller.v1;
 import com.nexushub.NexusHub.Auth.dto.request.UserCheckGameNameRequestDto;
 import com.nexushub.NexusHub.Auth.dto.request.UserLoginRequestDto;
 import com.nexushub.NexusHub.Auth.dto.request.UserSignUpRequestDto;
-import com.nexushub.NexusHub.Exception.RiotAPI.CannotFindSummoner;
+import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Exception.RiotAPI.IsPresentLoginId;
 import com.nexushub.NexusHub.Riot.dto.RiotAccountDto;
 import com.nexushub.NexusHub.User.service.UserService;
@@ -56,7 +56,7 @@ public class AuthController {
     }
 
     @PostMapping("/gamename/check")
-    public ResponseEntity<?> gamenameCheck(@RequestBody UserCheckGameNameRequestDto dto) throws CannotFindSummoner {
+    public ResponseEntity<?> gamenameCheck(@RequestBody UserCheckGameNameRequestDto dto) throws CannotFoundSummoner {
         // 소환사 이름 존재 여부 체크 -> 라이엇 API에 요청을 해서 존재 여부를 파악 필요 함
 
         log.info("GameNameCheck request received");

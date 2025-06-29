@@ -1,6 +1,8 @@
 package com.nexushub.NexusHub.Auth;
 
 import com.nexushub.NexusHub.Auth.jwt.JwtAuthenticationFilter;
+import com.nexushub.NexusHub.Exception.Handler.PatchNoteAccessDenieHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -15,16 +17,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
+    private final PatchNoteAccessDenieHandler patchNoteAccessDenieHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
-        http.csrf().disable()
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/user/**", "/api/v1/summoner/**", "/import/**").permitAll()
-                        .anyRequest().authenticated()
-                )
+        http
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/v1/user/**",
+                                "/api/v1/summoner/**",
+                                "/import/**",
+                                "/api/v1/patchnote/test", "/api/v1/patchnote/find/*", "/api/v1/patchnote/edit/*", "/api/v1/patchnote/delete/*", "/api/v1/patchnote/show/**"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+//
+                )
+                .exceptionHandling(exception -> exception.accessDeniedHandler(patchNoteAccessDenieHandler)) // patchnote 접근 권한 오류 핸들러
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

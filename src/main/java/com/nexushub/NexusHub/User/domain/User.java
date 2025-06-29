@@ -38,11 +38,11 @@ public class User {
     @Column(name = "puuid", length = 100)
     private String puuid;
 
-    @Column(name = "create_at", updatable = false)
-    private LocalDateTime createAt;
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -50,13 +50,13 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
-        this.createAt = LocalDateTime.now();
-        this.updateAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updateAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public static User of (UserSignUpRequestDto dto, PasswordEncoder encoder) {

@@ -25,6 +25,15 @@ public class PatchNote {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Column(nullable = false)
+    private Integer views;
+
+    @Column(nullable = false)
+    private Integer likes;
+
+    @Column(nullable = false)
+    private Integer dislikes;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User author; // 작성자 (User 엔티티와 연결함)
@@ -33,9 +42,12 @@ public class PatchNote {
     private LocalDateTime updatedAt;
 
     @PrePersist
-    protected void onCreate() {
+    protected void on() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.views = 0;
+        this.likes = 0;
+        this.dislikes = 0;
     }
 
     @PreUpdate
@@ -53,6 +65,20 @@ public class PatchNote {
     public void update(String title, String content){
         this.title = title;
         this.content = content;
+    }
+
+    public void like(){
+        this.likes++;
+    }
+    public void dislike(){
+        this.dislikes++;
+    }
+    public void view(){
+        this.views++;
+    }
+
+    public static PatchNote of(String title, String content, User author){
+        return PatchNote.builder().title(title).content(content).author(author).build();
     }
 }
 

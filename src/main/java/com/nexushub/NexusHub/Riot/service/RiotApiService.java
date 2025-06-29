@@ -1,6 +1,6 @@
 package com.nexushub.NexusHub.Riot.service;
 
-import com.nexushub.NexusHub.Exception.RiotAPI.CannotFindSummoner;
+import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Match.dto.*;
 import com.nexushub.NexusHub.Match.dto.minimal.MinimalMatchDto;
 import com.nexushub.NexusHub.Riot.dto.*;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class RiotApiService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public RiotAccountDto getSummonerInfo(String gameName, String tagLine) throws CannotFindSummoner {
+    public RiotAccountDto getSummonerInfo(String gameName, String tagLine) throws CannotFoundSummoner {
         // uuid 정보 얻기
         String url = baseUrlAsia + "/riot/account/v1/accounts/by-riot-id/" + gameName +"/" + tagLine;
 
@@ -55,13 +54,13 @@ public class RiotApiService {
 
         } catch (HttpClientErrorException.NotFound e) {
             // 404 에러일 경우 직접 메시지 던짐
-            throw new CannotFindSummoner(gameName + "#" + tagLine + " 소환사를 찾을 수 없습니다.");
+            throw new CannotFoundSummoner(gameName + "#" + tagLine + " 소환사를 찾을 수 없습니다.");
         } catch (RestClientException e) {
             log.error(" Riot API ERROR : {}", e.getMessage());
-            throw new CannotFindSummoner("소환사 정보를 가져오는 중 오류가 발생했습니다.");
+            throw new CannotFoundSummoner("소환사 정보를 가져오는 중 오류가 발생했습니다.");
         }
     }
-    public String getSummonerPuuid(String gameName, String tagLine) throws CannotFindSummoner {
+    public String getSummonerPuuid(String gameName, String tagLine) throws CannotFoundSummoner {
         return getSummonerInfo(gameName, tagLine).getPuuid();
     }
     public SummonerDto getSummonerTierInfo(SummonerDto dto){
@@ -91,7 +90,7 @@ public class RiotApiService {
             return null;
         }
     }
-    public List<MasteryDto> getMasteryInfo(SummonerDto dto) throws CannotFindSummoner {
+    public List<MasteryDto> getMasteryInfo(SummonerDto dto) throws CannotFoundSummoner {
         String url = baseUrlKR + "/lol/champion-mastery/v4/champion-masteries/by-puuid/" + dto.getPuuid();
 
         HttpHeaders headers = new HttpHeaders();
@@ -114,7 +113,7 @@ public class RiotApiService {
         }
 
     }
-    public String[] getSummonerMatches(SummonerDto dto) throws CannotFindSummoner {
+    public String[] getSummonerMatches(SummonerDto dto) throws CannotFoundSummoner {
         String url = baseUrlAsia + "/lol/match/v5/matches/by-puuid/"+dto.getPuuid()+"/ids";
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Riot-Token", apiKey);

@@ -1,7 +1,6 @@
 package com.nexushub.NexusHub.Summoner.controller.v1;
 
-import com.nexushub.NexusHub.Exception.RiotAPI.CannotFindSummoner;
-import com.nexushub.NexusHub.Match.dto.ChampionStatsDto;
+import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.dto.MasteryDto;
@@ -15,10 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/summoner")
@@ -29,12 +25,13 @@ public class SummonerController {
     private final MatchService matchService;
 
     // 티어 정보 검색
-    @GetMapping("/tier")
+    @PostMapping("/tier")
     public ResponseEntity<?> summonerTierInfo(@RequestBody SummonerRequestDto dto) {
         try {
+            log.info("Summoner request12321321312312312: {}", dto);
             Summoner summonerTierInfo = summonerService.getSummonerTierInfoV2(dto);
             return ResponseEntity.ok(summonerTierInfo);
-        } catch (CannotFindSummoner e) {
+        } catch (CannotFoundSummoner e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -46,7 +43,7 @@ public class SummonerController {
         try{
             List<MasteryDto> masteryInfo = summonerService.getSummonerMasteryInfo(dto);
             return ResponseEntity.ok(masteryInfo);
-        } catch (CannotFindSummoner e){
+        } catch (CannotFoundSummoner e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -58,7 +55,7 @@ public class SummonerController {
         try{
             String[] matches = summonerService.getSummonerMatchesId(dto);
             return ResponseEntity.ok(matches);
-        } catch (CannotFindSummoner e) {
+        } catch (CannotFoundSummoner e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -68,7 +65,7 @@ public class SummonerController {
             List<MatchDto> dtos = summonerService.getSummonerMatchesInfo(dto);
             return ResponseEntity.ok(dtos);
 
-        } catch (CannotFindSummoner e) {
+        } catch (CannotFoundSummoner e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -96,9 +93,8 @@ public class SummonerController {
             List<ChampionSeasonStatisticsDto> sortedStats = matchService.getSeasonChampionStatsV2(dto);
 
             return ResponseEntity.ok(sortedStats);
-        } catch (CannotFindSummoner e) {
+        } catch (CannotFoundSummoner e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
 }

@@ -1,6 +1,6 @@
 package com.nexushub.NexusHub.Match.service;
 
-import com.nexushub.NexusHub.Exception.RiotAPI.CannotFindSummoner;
+import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.InGame.Champion.ChampionRepository;
 import com.nexushub.NexusHub.Match.dto.ChampionStatsDto;
 import com.nexushub.NexusHub.Match.dto.DataDto;
@@ -52,7 +52,7 @@ public class MatchService {
         }
         return matchInfo;
     }
-    public Map<Long, ChampionStatsDto> getSeasonChampionStatsV1(SummonerRequestDto dto) throws CannotFindSummoner {
+    public Map<Long, ChampionStatsDto> getSeasonChampionStatsV1(SummonerRequestDto dto) throws CannotFoundSummoner {
         String puuid = riotApiService.getSummonerPuuid(dto.getGameName(), dto.getTagLine());
 
 
@@ -102,7 +102,7 @@ public class MatchService {
         return statsMap;
     }
 
-    public List<ChampionSeasonStatisticsDto> getSeasonChampionStatsV2(SummonerRequestDto dto) throws CannotFindSummoner {
+    public List<ChampionSeasonStatisticsDto> getSeasonChampionStatsV2(SummonerRequestDto dto) throws CannotFoundSummoner {
         String puuid = riotApiService.getSummonerPuuid(dto.getGameName(), dto.getTagLine());
 
 
