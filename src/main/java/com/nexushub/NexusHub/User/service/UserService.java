@@ -3,7 +3,7 @@ package com.nexushub.NexusHub.User.service;
 import com.nexushub.NexusHub.Auth.dto.request.UserLoginRequestDto;
 import com.nexushub.NexusHub.Auth.dto.request.UserSignUpRequestDto;
 import com.nexushub.NexusHub.Auth.jwt.JwtUtil;
-import com.nexushub.NexusHub.Exception.RiotAPI.CannotFindSummoner;
+import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Exception.RiotAPI.IsPresentLoginId;
 import com.nexushub.NexusHub.Riot.dto.RiotAccountDto;
 import com.nexushub.NexusHub.Riot.service.RiotApiService;
@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -46,7 +45,7 @@ public class UserService {
         }
     }
 
-    public Map<String, Object> login(UserLoginRequestDto dto) throws ChangeSetPersister.NotFoundException {
+    public Map<String, Object> login(UserLoginRequestDto dto) {
         Optional<User> user0 = userRepository.findByLoginId(dto.getLoginId());
         Map<String, Object> response = new HashMap<>();
 
@@ -68,7 +67,8 @@ public class UserService {
             return response;
         }
 
-        String token = jwtUtil.createToken(user.getLoginId());
+        // Role로 전달하도록 수정
+        String token = jwtUtil.createToken(user.getLoginId(), user.getRole());
         response.put("user_id", user.getId());
         response.put("token", token);
         response.put("message", "Login Success");
@@ -94,7 +94,11 @@ public class UserService {
         }
     }
 
-    public RiotAccountDto nickNameCheck(String nickName, String tag) throws CannotFindSummoner {
+    public RiotAccountDto nickNameCheck(String nickName, String tag) throws CannotFoundSummoner {
         return riotApiService.getSummonerInfo(nickName, tag);
+    }
+
+    public Optional<User> findByLoginId(String loginId) {
+        return userRepository.findByLoginId(loginId);
     }
 }

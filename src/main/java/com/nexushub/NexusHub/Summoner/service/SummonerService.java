@@ -1,6 +1,6 @@
 package com.nexushub.NexusHub.Summoner.service;
 
-import com.nexushub.NexusHub.Exception.RiotAPI.CannotFindSummoner;
+import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.InGame.Champion.Champion;
 import com.nexushub.NexusHub.InGame.Champion.ChampionRepository;
 import com.nexushub.NexusHub.Match.dto.MatchDto;
@@ -34,7 +34,7 @@ public class SummonerService {
     private final MatchService matchService;
 
 
-    public Summoner getSummonerTierInfoV1(SummonerRequestDto dto) throws CannotFindSummoner {
+    public Summoner getSummonerTierInfoV1(SummonerRequestDto dto) throws CannotFoundSummoner {
         log.info("티어 찾기 2) : {}", dto);
         String puuid;
         SummonerDto summonerDto;
@@ -60,7 +60,7 @@ public class SummonerService {
         }
     }
 
-    public Summoner getSummonerTierInfoV2(SummonerRequestDto dto) throws CannotFindSummoner {
+    public Summoner getSummonerTierInfoV2(SummonerRequestDto dto) throws CannotFoundSummoner {
         //1. 일단 gameName + tagLine으로 찾아보기
         Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
 
@@ -75,7 +75,7 @@ public class SummonerService {
         return this.SaveOrUpateSummoner(tierInfo, summoner);
     }
 
-    public List<MasteryDto> getSummonerMasteryInfo(SummonerRequestDto dto) throws CannotFindSummoner {
+    public List<MasteryDto> getSummonerMasteryInfo(SummonerRequestDto dto) throws CannotFoundSummoner {
          //1. 일단 gameName + tagLine으로 찾아보기
          Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
 
@@ -91,13 +91,13 @@ public class SummonerService {
          return masteryInfo;
     }
 
-    public String[] getSummonerMatchesId(SummonerRequestDto dto) throws CannotFindSummoner {
+    public String[] getSummonerMatchesId(SummonerRequestDto dto) throws CannotFoundSummoner {
         TempInfo temp = getPuuid(dto);
         dto.setPuuid(temp.getPuuid());
         return riotApiService.getSummonerMatches(SummonerDto.setInform(temp.gameName, temp.tagLine, temp.puuid));
     }
 
-    public List<MatchDto> getSummonerMatchesInfo(SummonerRequestDto dto) throws CannotFindSummoner{
+    public List<MatchDto> getSummonerMatchesInfo(SummonerRequestDto dto) throws CannotFoundSummoner {
         String[] summonerMatchesId = getSummonerMatchesId(dto);
         List<MatchDto> dtos = new ArrayList<>();
         for (String matchId : summonerMatchesId) {
@@ -147,7 +147,7 @@ public class SummonerService {
         return dtos;
     }
 
-    private TempInfo getPuuid(SummonerRequestDto dto) throws CannotFindSummoner {
+    private TempInfo getPuuid(SummonerRequestDto dto) throws CannotFoundSummoner {
         //1. 일단 gameName + tagLine으로 찾아보기
         Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
 
