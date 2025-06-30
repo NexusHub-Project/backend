@@ -1,5 +1,7 @@
 package com.nexushub.NexusHub.Guide.domain;
 
+// 이거는 다 지피티한테 부탁함
+
 import com.nexushub.NexusHub.User.domain.User;
 import lombok.Builder;
 import lombok.Getter;

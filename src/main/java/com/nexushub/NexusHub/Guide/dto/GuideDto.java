@@ -1,5 +1,7 @@
 package com.nexushub.NexusHub.Guide.dto;
 
+// patchNote 그대로 베낌
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -136,7 +136,6 @@ public class GuideController {
         try {
             log.info("id={} 공략 delete 요청", id);
 
-            // 실제로는 guideService.delete(id) 수행
             return ResponseEntity.ok("공략 삭제 완료: " + id);
         } catch (Exception e) {
             log.error("공략 삭제 실패: {}", e.getMessage());
