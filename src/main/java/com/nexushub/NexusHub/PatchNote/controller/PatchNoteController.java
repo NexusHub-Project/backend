@@ -28,7 +28,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/v1/patchnote")
-@Transactional
 public class PatchNoteController {
     private final PatchNoteService patchNoteService;
     private final UserService userService;
@@ -110,7 +109,7 @@ public class PatchNoteController {
         User adminUser = userService.findByLoginId(loginId)
                 .orElseThrow(() -> new CannotFoundUser("해당 관리자 정보를 찾을 수 없습니다."));
 
-        try {
+        try{
             patchNoteService.deleteById(id);
             return ResponseEntity.ok(new String("해당 글이 삭제 되었습니다."));
 
