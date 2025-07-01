@@ -13,7 +13,7 @@ public class GuideDto {
     @NoArgsConstructor
     public static class Request {
         private String title;
-        private String description;
+        private String content;
     }
 
     @Getter
