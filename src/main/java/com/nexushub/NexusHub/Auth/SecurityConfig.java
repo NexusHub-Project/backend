@@ -31,7 +31,8 @@ public class SecurityConfig {
                                 "/api/v1/user/**",
                                 "/api/v1/summoner/**",
                                 "/import/**",
-                                "/api/v1/patchnote/test", "/api/v1/patchnote/find/*", "/api/v1/patchnote/edit/*", "/api/v1/patchnote/delete/*", "/api/v1/patchnote/show/**"
+                                "/api/v1/patchnote/test", "/api/v1/patchnote/find/*", "/api/v1/patchnote/edit/*", "/api/v1/patchnote/delete/*", "/api/v1/patchnote/show/**",
+                                "/api/v1/comment/**"
                         ).permitAll()
                         .anyRequest().authenticated()
 //
