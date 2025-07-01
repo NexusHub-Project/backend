@@ -41,6 +41,9 @@ public class PatchNote {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+
+    /// -----------
+
     @PrePersist
     protected void on() {
         this.createdAt = LocalDateTime.now();

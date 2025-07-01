@@ -24,6 +24,10 @@ public class PatchNoteService {
         return patchNoteRepository.save(PatchNote.of(dto.getTitle(), dto.getContent(), author));
     }
 
+    public void test(Long id, String title){
+        patchNoteRepository.findById(id);
+    }
+
     public Optional<PatchNote> findById(Long id){
         return patchNoteRepository.findById(id);
     }
