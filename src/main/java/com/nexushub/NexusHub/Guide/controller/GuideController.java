@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import com.nexushub.NexusHub.Guide.dto.GuideDto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.nexushub.NexusHub.Guide.domain.Guide;
 import com.nexushub.NexusHub.User.domain.User;
 
@@ -93,5 +96,24 @@ public class GuideController {
                     .body("공략 삭제 실패: " + e.getMessage());
         }
     }
+
+    // 좋아요
+    @PostMapping("/detail/{id}/likes")
+    public ResponseEntity<?> addLikeToGuide(@PathVariable Long id) throws CannotFoundGuide {
+        guideService.addLikeById(id);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("message", id + "번 글에 좋아요를 눌렀습니다.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+    }
+
+    // 싫어요
+    @PostMapping("/detail/{id}/dislikes")
+    public ResponseEntity<?> addDislikeToGuide(@PathVariable Long id) throws CannotFoundGuide {
+        guideService.addDislikeById(id);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("message", id +"번 글에 싫어요를 눌렀습니다.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+    }
+
 
 }

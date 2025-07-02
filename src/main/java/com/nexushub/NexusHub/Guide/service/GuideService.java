@@ -55,9 +55,12 @@ public class GuideService {
     }
 
     // 좋아요
-    public void addLike(Long id) {
+    public void addLikeById(Long id) {
         guideRepository.findById(id).ifPresent(Guide::like);
     }
+
+    //싫어요
+    public void addDislikeById(Long id) { guideRepository.findById(id).ifPresent(Guide::dislike); }
 
     // 조회수 증가
     public void addView(Long id) {
