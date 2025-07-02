@@ -3,6 +3,8 @@ package com.nexushub.NexusHub.User.service;
 import com.nexushub.NexusHub.Auth.dto.request.UserLoginRequestDto;
 import com.nexushub.NexusHub.Auth.dto.request.UserSignUpRequestDto;
 import com.nexushub.NexusHub.Auth.jwt.JwtUtil;
+import com.nexushub.NexusHub.Exception.Fail.CannotSignUp;
+import com.nexushub.NexusHub.Exception.Fail.SignUpFail;
 import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Exception.RiotAPI.IsPresentLoginId;
 import com.nexushub.NexusHub.Riot.dto.RiotAccountDto;
@@ -17,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -36,13 +39,25 @@ public class UserService {
         return save!=null;
     }
     public Boolean enrollV2(UserSignUpRequestDto dto) throws IsPresentLoginId {
-        User user = User.of(dto, passwordEncoder);
-        try {
-            return userRepository.save(user) != null;
-        } catch (DataIntegrityViolationException e) {
-            log.warn("Duplicate login ID: {}", user.getLoginId());
-            throw new IsPresentLoginId("중복된 로그인 아이디로 인해 회원가입 실패");
+        // 사전 체크
+        if (!checkPossibleByGameNameAndLoginId(dto)) {
+            throw new CannotSignUp("아이디 중복 확인 또는 소환사명 인증을 먼저 진행해주세요.");
         }
+
+        // 아이디 중복 예외를 직접 던짐
+        if (loginIdCheckV1(dto.getLoginId())) {
+            throw new IsPresentLoginId("이미 사용 중인 아이디입니다.");
+        }
+
+        // loginId가 null인 경우를 방지하기 위해 추가
+        if (dto.getLoginId() == null || dto.getLoginId().isBlank()) {
+            throw new CannotSignUp("필수 입력 값이 누락 되었습니다.");
+        }
+
+        User user = User.of(dto, passwordEncoder);
+        userRepository.save(user);
+
+        return true;
     }
 
     public Map<String, Object> login(UserLoginRequestDto dto) {
@@ -100,5 +115,9 @@ public class UserService {
 
     public Optional<User> findByLoginId(String loginId) {
         return userRepository.findByLoginId(loginId);
+    }
+
+    private boolean checkPossibleByGameNameAndLoginId(UserSignUpRequestDto dto){
+        return dto.getIsPresentGameName() == true && dto.getIsPresentId() == false ;
     }
 }
