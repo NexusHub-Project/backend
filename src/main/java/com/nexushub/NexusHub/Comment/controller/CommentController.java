@@ -4,11 +4,11 @@ import com.nexushub.NexusHub.Comment.domain.Comment;
 import com.nexushub.NexusHub.Comment.dto.CommentDto;
 import com.nexushub.NexusHub.Comment.repository.CommentRepository;
 import com.nexushub.NexusHub.Comment.service.CommentService;
-import com.nexushub.NexusHub.Exception.Fail.DeleteFail;
-import com.nexushub.NexusHub.Exception.Fail.EditFail;
-import com.nexushub.NexusHub.Exception.Normal.CannotFoundComment;
+import com.nexushub.NexusHub.Exception.Normal.CannotFoundGuide;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundPatchNote;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundUser;
+import com.nexushub.NexusHub.Guide.domain.Guide;
+import com.nexushub.NexusHub.Guide.service.GuideService;
 import com.nexushub.NexusHub.PatchNote.domain.PatchNote;
 import com.nexushub.NexusHub.PatchNote.service.PatchNoteService;
 import com.nexushub.NexusHub.User.domain.User;
@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -30,9 +29,10 @@ public class CommentController {
     private final CommentService commentService;
     private final UserService userService;
     private final PatchNoteService patchNoteService;
+    private final GuideService guideService;
     private final CommentRepository commentRepository;
 
-    // 댓글 쓰기
+    // 댓글 쓰기 (패치노트)
     @PostMapping("/patchnote/{patch_note_id}/write")
     public ResponseEntity<?> writeNote(
             @PathVariable("patch_note_id") Long id,
@@ -50,10 +50,27 @@ public class CommentController {
 
 
         // 3) Service로 내용과 author를 넘겨줌
-        Comment comment = commentService.save(requestDto, author, patchNote);
+        Comment comment = commentService.savePatchNoteComment(requestDto, author, patchNote);
 
         return ResponseEntity.ok(CommentDto.Response.of(comment, author));
     }
+
+    @PostMapping("/guide/{guide_id}/write")
+    public ResponseEntity<?> writeGuideComment(
+            @PathVariable("guide_id") Long id,
+            @AuthenticationPrincipal String loginId,
+            @RequestBody CommentDto.Request requestDto) throws CannotFoundUser, CannotFoundGuide {
+        User author = userService.findByLoginId(loginId)
+                .orElseThrow(() -> new CannotFoundUser("해당 유저의 정보를 찾을 수 없습니다."));
+
+        Guide guide = guideService.findById(id)
+                .orElseThrow(() -> new CannotFoundGuide("해당 공략 정보를 찾을 수 없습니다."));
+
+        Comment comment = commentService.saveGuideComment(requestDto, author, guide);
+
+        return ResponseEntity.ok(CommentDto.Response.of(comment, author));
+    }
+
 
     // 댓글 수정
     @PatchMapping("/{comment_id}/edit")
@@ -103,7 +120,7 @@ public class CommentController {
     }
 
     @GetMapping("/{id}/{type}")
-    public ResponseEntity<?> getComment(@PathVariable Long id, @PathVariable String type) throws CannotFoundPatchNote {
+    public ResponseEntity<?> getComment(@PathVariable Long id, @PathVariable String type) throws CannotFoundPatchNote, CannotFoundGuide {
         List<Comment> comments;
         List<CommentDto.PostResponseDto> commentDtoResponses = new ArrayList<>();
 
@@ -112,6 +129,15 @@ public class CommentController {
                     .orElseThrow(() -> new CannotFoundPatchNote("해당 패치노트 글을 찾을 수 없습니다"));
             comments = commentService.findPatchNoteCommentAll(patchNote);
 
+            for (Comment comment : comments) {
+                commentDtoResponses.add(CommentDto.PostResponseDto.of(comment, comment.getAuthor()));
+            }
+        }
+        else if (type.equals("guide")) {
+            Guide guide = guideService.findById(id)
+                    .orElseThrow(() -> new CannotFoundGuide("해당 공략 글을 찾을 수 없습니다."));
+
+            comments = commentService.findGuideCommentAll(guide);
             for (Comment comment : comments) {
                 commentDtoResponses.add(CommentDto.PostResponseDto.of(comment, comment.getAuthor()));
             }

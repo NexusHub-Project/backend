@@ -1,5 +1,6 @@
 package com.nexushub.NexusHub.Comment.domain;
 
+import com.nexushub.NexusHub.Guide.domain.Guide;
 import com.nexushub.NexusHub.PatchNote.domain.PatchNote;
 import com.nexushub.NexusHub.User.domain.User;
 import jakarta.persistence.*;
@@ -34,12 +35,12 @@ public class Comment {
     private PatchNote patchNote;
 
 
-/*
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guide_id", nullable = true) // 공략 게시판을 위한 FK (null 허용)
     private Guide guide;
 
-  */
+
 
 
     private LocalDateTime createdAt;
@@ -74,12 +75,12 @@ public class Comment {
         this.author = author;
         this.patchNote = patchNote;
     }
-//    @Builder
-//    public Comment(String content, User author, Guide guide){
-//        this.content = content;
-//        this.author = author;
-//        this.guide = guide;
-//    }
+    @Builder
+    public Comment(String content, User author, Guide guide){
+        this.content = content;
+        this.author = author;
+        this.guide = guide;
+    }
 
     public static Comment of(PatchNote patchNote, String content, User author){
         return Comment.builder()
