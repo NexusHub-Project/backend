@@ -64,7 +64,7 @@ public class GuideController {
     }
 
     // 단일 공략 조회
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<?> getGuideById(@PathVariable Long id) throws CannotFoundGuide {
         Guide guideEntity = guideService.findById(id); // 이미 예외처리 포함된 서비스 메서드
         GuideDto.GuideResponseDto guideDto = new GuideDto.GuideResponseDto(guideEntity);
@@ -72,8 +72,8 @@ public class GuideController {
     }
 
     // 공략 수정
-    @PatchMapping("/{id}")
-    public ResponseEntity<?> updateStrategy(@PathVariable Long id,
+    @PatchMapping("/edit/{id}")
+    public ResponseEntity<?> updateGuide(@PathVariable Long id,
                                                     @RequestBody GuideDto.Request dto) throws CannotFoundGuide {
         Guide guideEntity = guideService.edit(id, dto);
         GuideDto.GuideUploadResponseDto guideDto = new GuideDto.GuideUploadResponseDto(guideEntity);
@@ -82,8 +82,8 @@ public class GuideController {
     }
 
     // 공략 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteStrategy(@PathVariable Long id) throws CannotFoundGuide {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteGuide(@PathVariable Long id) throws CannotFoundGuide {
         try {
             guideService.deleteById(id);
             return ResponseEntity.ok("공략 삭제 완료: " + id);
