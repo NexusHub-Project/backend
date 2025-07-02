@@ -5,7 +5,6 @@ import com.nexushub.NexusHub.Exception.Normal.CannotFoundGuide;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundUser;
 import com.nexushub.NexusHub.Guide.service.GuideService;
 import com.nexushub.NexusHub.User.service.UserService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -84,11 +83,10 @@ public class GuideController {
 
     // 공략 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteStrategy(@PathVariable int id) {
+    public ResponseEntity<?> deleteStrategy(@PathVariable Long id) throws CannotFoundGuide {
         try {
-            log.info("id={} 공략 delete 요청", id);
-
-            return null;
+            guideService.deleteById(id);
+            return ResponseEntity.ok("공략 삭제 완료: " + id);
         } catch (Exception e) {
             log.error("공략 삭제 실패: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
