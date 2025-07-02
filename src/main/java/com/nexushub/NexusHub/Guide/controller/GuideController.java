@@ -1,6 +1,7 @@
 package com.nexushub.NexusHub.Guide.controller;
 
 
+import com.nexushub.NexusHub.Exception.Normal.CannotFoundGuide;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundUser;
 import com.nexushub.NexusHub.Guide.service.GuideService;
 import com.nexushub.NexusHub.User.service.UserService;
@@ -12,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.nexushub.NexusHub.Guide.dto.GuideDto;
+
+import java.util.ArrayList;
 import java.util.List;
 import com.nexushub.NexusHub.Guide.domain.Guide;
 import com.nexushub.NexusHub.User.domain.User;
@@ -27,7 +30,9 @@ public class GuideController {
     // 게시글 생성
     @PostMapping("/upload")
     public ResponseEntity<?> createGuide(
-            @RequestBody GuideDto.Request request, @AuthenticationPrincipal String loginId) {
+            @RequestBody GuideDto.Request request,
+            @AuthenticationPrincipal String loginId)
+    {
         try {
             log.info("공략 create: title = {}", request.getTitle());
 
@@ -44,13 +49,19 @@ public class GuideController {
 
     // 전체 공략 조회
     @GetMapping("/list")
-    public List<GuideDto.GuideListResponseDto> getGuideList() {
-        try {
-            return null;
-        } catch (Exception e) {
-            log.error("공략 리스트 조회 실패: {}", e.getMessage());
-            throw new RuntimeException("공략 list 실패: " + e.getMessage());
+    public ResponseEntity<?> getGuideList() throws CannotFoundGuide {
+        List<Guide> guideEntityList = guideService.findAll();
+
+        if (guideEntityList.isEmpty()) {
+            throw new CannotFoundGuide("공략이 존재하지 않습니다");
         }
+
+        List<GuideDto.GuideListResponseDto> guideDtoList = new ArrayList<>();
+        for (Guide guide : guideEntityList) {
+            guideDtoList.add(new GuideDto.GuideListResponseDto(guide));
+        }
+
+        return ResponseEntity.ok(guideDtoList);
     }
 
     // 단일 공략 조회
