@@ -1,8 +1,9 @@
-package com.nexushub.NexusHub.Auth.controller.v1;
+package com.nexushub.NexusHub.User.controller.v1;
 
 import com.nexushub.NexusHub.Auth.dto.request.UserCheckGameNameRequestDto;
 import com.nexushub.NexusHub.Auth.dto.request.UserLoginRequestDto;
 import com.nexushub.NexusHub.Auth.dto.request.UserSignUpRequestDto;
+import com.nexushub.NexusHub.Exception.Fail.SignUpFail;
 import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Exception.RiotAPI.IsPresentLoginId;
 import com.nexushub.NexusHub.Riot.dto.RiotAccountDto;
@@ -21,7 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
-public class AuthController {
+public class UserController {
     private final UserService userService;
 
 
@@ -79,6 +80,12 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup (@RequestBody UserSignUpRequestDto dto) throws IsPresentLoginId {
+
+        if (dto.getIsPresentGameName() == null || dto.getIsPresentId() == null){
+            throw new SignUpFail("아이디 중복 확인 또는 소환사명 인증을 먼저 진행해주세요.");
+        }
+
+
         log.info("Signup request: {}", dto);
         Boolean enrollResult = userService.enrollV2(dto);
 

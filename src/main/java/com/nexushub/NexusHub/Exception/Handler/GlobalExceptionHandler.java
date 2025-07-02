@@ -1,7 +1,9 @@
 package com.nexushub.NexusHub.Exception.Handler;
 
+import com.nexushub.NexusHub.Exception.Fail.CannotSignUp;
 import com.nexushub.NexusHub.Exception.Fail.DeleteFail;
 import com.nexushub.NexusHub.Exception.Fail.EditFail;
+import com.nexushub.NexusHub.Exception.Fail.SignUpFail;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundComment;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundPatchNote;
 import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,5 +68,26 @@ public class GlobalExceptionHandler {
         Map<String, Object> error = new HashMap<>();
         error.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
+    @ExceptionHandler(SignUpFail.class)
+    public ResponseEntity<?> signUpFail(SignUpFail e) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(error);
+    }
+
+    @ExceptionHandler(CannotSignUp.class)
+    public ResponseEntity<?> cannotSignUp(CannotSignUp e) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(error);
+    }
+
+    @ExceptionHandler(SQLException.class)
+    public ResponseEntity<?> sqlException(SQLException e) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }
