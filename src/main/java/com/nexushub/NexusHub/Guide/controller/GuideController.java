@@ -74,17 +74,12 @@ public class GuideController {
 
     // 공략 수정
     @PatchMapping("/{id}")
-    public GuideDto.GuideResponseDto updateStrategy(@PathVariable int id,
-                                                    @RequestBody GuideDto.Request dto) {
-        try {
-            log.info("id={} 공략 update 요청: title = {}", id, dto.getTitle());
+    public ResponseEntity<?> updateStrategy(@PathVariable Long id,
+                                                    @RequestBody GuideDto.Request dto) throws CannotFoundGuide {
+        Guide guideEntity = guideService.edit(id, dto);
+        GuideDto.GuideUploadResponseDto guideDto = new GuideDto.GuideUploadResponseDto(guideEntity);
+        return ResponseEntity.ok(guideDto);
 
-
-            return null;
-        } catch (Exception e) {
-            log.error("공략 update 실패: {}", e.getMessage());
-            throw new RuntimeException("공략 update 실패: " + e.getMessage());
-        }
     }
 
     // 공략 삭제
