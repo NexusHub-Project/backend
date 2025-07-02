@@ -1,5 +1,7 @@
 package com.nexushub.NexusHub.Guide.service;
 
+import com.nexushub.NexusHub.Exception.Fail.DeleteFail;
+import com.nexushub.NexusHub.Exception.Fail.EditFail;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundGuide;
 import com.nexushub.NexusHub.Guide.domain.Guide;
 import com.nexushub.NexusHub.Guide.dto.GuideDto;
@@ -38,20 +40,38 @@ public class GuideService {
 
     // 단일 조회
     public Guide findById(Long id) throws CannotFoundGuide {
-        return guideRepository.findById(id)
+        Guide guide = guideRepository.findById(id)
                 .orElseThrow(() -> new CannotFoundGuide("해당 공략이 존재하지 않습니다."));
+        guide.view();
+        return guide;
     }
 
     // 수정
-    public Guide edit(Long id, GuideDto.Request dto) throws CannotFoundGuide {
+    // 수정 사항 4) edit 메소드 안에서 해당 유저가 작성한 게 맞는지 판별 후에 수정 하기
+    public Guide edit(Long id, GuideDto.Request dto, User author) throws CannotFoundGuide {
         Guide guide = findById(id);
-        guide.update(dto.getTitle(), dto.getContent());
+
+        if (isAuthor(guide, author)) {
+            guide.update(dto.getTitle(), dto.getContent());
+        }
+        else {
+            throw new EditFail("작성자만 수정 가능합니다.");
+        }
+
         return guide;
     }
 
     // 삭제
-    public void deleteById(Long id) {
-        guideRepository.deleteById(id);
+    // 수정 사항 6) delete 메소드 안에서 해당 유저가 작성한 게 맞는지 판별 후에 삭제 하기
+    public void deleteById(Long id, User author) throws CannotFoundGuide {
+        Guide guide = findById(id);
+        if (isAuthor(guide, author)) {
+            guideRepository.deleteById(id);
+        }
+        else {
+            throw new DeleteFail("작성자만 삭제 가능합니다.");
+        }
+
     }
 
     // 좋아요
@@ -63,7 +83,10 @@ public class GuideService {
     public void addDislikeById(Long id) { guideRepository.findById(id).ifPresent(Guide::dislike); }
 
     // 조회수 증가
-    public void addView(Long id) {
-        guideRepository.findById(id).ifPresent(Guide::view);
+    // 수정 사항 7) 찾을 때 이 메소드 호출해서 조회수 올리기 -> 수정 전에는 해당 메소드가 사용되지 않았음 -> 그냥 객체의 view() 메소드 이용하면 됨 JPA로 해당 객체의 값을 변경하면 알아서 반영됨
+
+
+    private boolean isAuthor(Guide guide, User author) {
+        return guide.getAuthor().equals(author);
     }
 }

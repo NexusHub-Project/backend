@@ -55,7 +55,7 @@ public class CommentController {
         return ResponseEntity.ok(CommentDto.Response.of(comment, author));
     }
 
-    // 댓글 수정 (에러 터짐)
+    // 댓글 수정
     @PatchMapping("/{comment_id}/edit")
     public ResponseEntity<?> editComment(
             @PathVariable Long comment_id,

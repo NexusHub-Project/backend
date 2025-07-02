@@ -67,6 +67,7 @@ public class Guide {
         this.content = content;
     }
 
+
     public void like(){
         this.likes++;
     }
