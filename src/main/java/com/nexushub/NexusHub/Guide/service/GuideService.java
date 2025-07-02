@@ -90,7 +90,9 @@ public class GuideService {
 
     // 조회수 증가
     // 수정 사항 7) 찾을 때 이 메소드 호출해서 조회수 올리기 -> 수정 전에는 해당 메소드가 사용되지 않았음 -> 그냥 객체의 view() 메소드 이용하면 됨 JPA로 해당 객체의 값을 변경하면 알아서 반영됨
-
+    public void addViews(Guide guide){
+        guide.view();
+    }
 
     private boolean isAuthor(Guide guide, User author) {
         return guide.getAuthor().equals(author);

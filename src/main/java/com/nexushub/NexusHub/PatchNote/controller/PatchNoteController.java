@@ -58,7 +58,7 @@ public class PatchNoteController {
 
         PatchNote patchNote = patchNoteService.findById(id)
                 .orElseThrow(() -> new CannotFoundPatchNote("해당 패치노트를 찾을 수 없습니다."));
-        patchNote.view();
+        patchNoteService.addViews(patchNote);
 
         return ResponseEntity.ok(new PatchNoteDto.PatchNoteResponseDto(patchNote));
     }
