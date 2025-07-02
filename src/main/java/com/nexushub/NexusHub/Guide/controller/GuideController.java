@@ -1,10 +1,10 @@
 package com.nexushub.NexusHub.Guide.controller;
 
 
+import com.nexushub.NexusHub.Exception.Normal.CannotFoundGuide;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundUser;
 import com.nexushub.NexusHub.Guide.service.GuideService;
 import com.nexushub.NexusHub.User.service.UserService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.nexushub.NexusHub.Guide.dto.GuideDto;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.nexushub.NexusHub.Guide.domain.Guide;
 import com.nexushub.NexusHub.User.domain.User;
 
@@ -27,7 +32,9 @@ public class GuideController {
     // 게시글 생성
     @PostMapping("/upload")
     public ResponseEntity<?> createGuide(
-            @RequestBody GuideDto.Request request, @AuthenticationPrincipal String loginId) {
+            @RequestBody GuideDto.Request request,
+            @AuthenticationPrincipal String loginId)
+    {
         try {
             log.info("공략 create: title = {}", request.getTitle());
 
@@ -44,55 +51,69 @@ public class GuideController {
 
     // 전체 공략 조회
     @GetMapping("/list")
-    public List<GuideDto.GuideListResponseDto> getGuideList() {
-        try {
-            return null;
-        } catch (Exception e) {
-            log.error("공략 리스트 조회 실패: {}", e.getMessage());
-            throw new RuntimeException("공략 list 실패: " + e.getMessage());
+    public ResponseEntity<?> getGuideList() throws CannotFoundGuide {
+        List<Guide> guideEntityList = guideService.findAll();
+
+        if (guideEntityList.isEmpty()) {
+            throw new CannotFoundGuide("공략이 존재하지 않습니다");
         }
+
+        List<GuideDto.GuideListResponseDto> guideDtoList = new ArrayList<>();
+        for (Guide guide : guideEntityList) {
+            guideDtoList.add(new GuideDto.GuideListResponseDto(guide));
+        }
+
+        return ResponseEntity.ok(guideDtoList);
     }
 
     // 단일 공략 조회
-    @GetMapping("/{id}")
-    public GuideDto.GuideResponseDto getGuideDetails(@PathVariable int id) {
-        try {
-
-            return null;
-
-        } catch (Exception e) {
-            log.error("공략 get 실패: {}", e.getMessage());
-            throw new RuntimeException("공략 get 실패: " + e.getMessage());
-        }
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> getGuideById(@PathVariable Long id) throws CannotFoundGuide {
+        Guide guideEntity = guideService.findById(id); // 이미 예외처리 포함된 서비스 메서드
+        GuideDto.GuideResponseDto guideDto = new GuideDto.GuideResponseDto(guideEntity);
+        return ResponseEntity.ok(guideDto);
     }
 
     // 공략 수정
-    @PatchMapping("/{id}")
-    public GuideDto.GuideResponseDto updateStrategy(@PathVariable int id,
-                                                    @RequestBody GuideDto.Request dto) {
-        try {
-            log.info("id={} 공략 update 요청: title = {}", id, dto.getTitle());
+    @PatchMapping("/edit/{id}")
+    public ResponseEntity<?> updateGuide(@PathVariable Long id,
+                                                    @RequestBody GuideDto.Request dto) throws CannotFoundGuide {
+        Guide guideEntity = guideService.edit(id, dto);
+        GuideDto.GuideUploadResponseDto guideDto = new GuideDto.GuideUploadResponseDto(guideEntity);
+        return ResponseEntity.ok(guideDto);
 
-
-            return null;
-        } catch (Exception e) {
-            log.error("공략 update 실패: {}", e.getMessage());
-            throw new RuntimeException("공략 update 실패: " + e.getMessage());
-        }
     }
 
     // 공략 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteStrategy(@PathVariable int id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteGuide(@PathVariable Long id) throws CannotFoundGuide {
         try {
-            log.info("id={} 공략 delete 요청", id);
-
-            return null;
+            guideService.deleteById(id);
+            return ResponseEntity.ok("공략 삭제 완료: " + id);
         } catch (Exception e) {
             log.error("공략 삭제 실패: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("공략 삭제 실패: " + e.getMessage());
         }
     }
+
+    // 좋아요
+    @PostMapping("/detail/{id}/likes")
+    public ResponseEntity<?> addLikeToGuide(@PathVariable Long id) throws CannotFoundGuide {
+        guideService.addLikeById(id);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("message", id + "번 글에 좋아요를 눌렀습니다.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+    }
+
+    // 싫어요
+    @PostMapping("/detail/{id}/dislikes")
+    public ResponseEntity<?> addDislikeToGuide(@PathVariable Long id) throws CannotFoundGuide {
+        guideService.addDislikeById(id);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("message", id +"번 글에 싫어요를 눌렀습니다.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+    }
+
 
 }
