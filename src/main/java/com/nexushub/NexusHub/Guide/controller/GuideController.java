@@ -80,7 +80,7 @@ public class GuideController {
     public ResponseEntity<?> getGuideById(@PathVariable Long id) throws CannotFoundGuide {
         Guide guideEntity = guideService.findById(id)
                 .orElseThrow(()-> new CannotFoundGuide("해당 공략 정보를 찾을 수 없습니다.")); // 이미 예외처리 포함된 서비스 메서드 👍
-        guideEntity.view();
+        guideService.addViews(guideEntity);
 
         return ResponseEntity.ok( new GuideDto.GuideResponseDto(guideEntity));
     }

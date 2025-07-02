@@ -53,4 +53,8 @@ public class PatchNoteService {
     public void addDislikeById(Long id){
         findById(id).ifPresent(patchNote -> {patchNote.dislike();});
     }
+
+    public void addViews(PatchNote patchNote){
+        patchNote.view();
+    }
 }
