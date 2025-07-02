@@ -37,6 +37,7 @@ public class GuideDto {
             this.updatedAt = guide.getUpdatedAt();
             this.views = guide.getViews();
             this.likes = guide.getLikes();
+            this.dislikes = guide.getDislikes();
         }
     }
 

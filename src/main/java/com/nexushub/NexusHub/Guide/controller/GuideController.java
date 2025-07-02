@@ -1,6 +1,7 @@
 package com.nexushub.NexusHub.Guide.controller;
 
 
+import com.nexushub.NexusHub.Exception.Normal.CannotFoundComment;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundGuide;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundUser;
 import com.nexushub.NexusHub.Guide.service.GuideService;
@@ -30,6 +31,7 @@ public class GuideController {
     private final UserService userService;
 
     // 게시글 생성
+    // 수정해야할 것 -> 로그인하지 않은 사람 (토큰이 없는 사람)이 포스팅을 하려할 때 로그인을 요청하는 오류 발생 시키기
     @PostMapping("/upload")
     public ResponseEntity<?> createGuide(
             @RequestBody GuideDto.Request request,
@@ -50,13 +52,17 @@ public class GuideController {
     }
 
     // 전체 공략 조회
-    @GetMapping("/list")
+    // 수정 사항 1) /list -> /find/all : 명확성 부여
+    @GetMapping("/find/all")
     public ResponseEntity<?> getGuideList() throws CannotFoundGuide {
         List<Guide> guideEntityList = guideService.findAll();
 
+        // 수정 사항 2) 비어 있는 경우는 에러가 아님 그냥 빈 리스트를 반환해주면 됨
+        /*
         if (guideEntityList.isEmpty()) {
             throw new CannotFoundGuide("공략이 존재하지 않습니다");
         }
+        */
 
         List<GuideDto.GuideListResponseDto> guideDtoList = new ArrayList<>();
         for (Guide guide : guideEntityList) {
@@ -67,28 +73,43 @@ public class GuideController {
     }
 
     // 단일 공략 조회
-    @GetMapping("/detail/{id}")
+    // 수정 사항 2) /detail -> /find : 전체 게시물 찾는거랑 일관성 부여
+    // 수정 사항 8) 싫어요는 DTO에 넣지 않아서 추가 함
+    @GetMapping("/find/{id}")
     public ResponseEntity<?> getGuideById(@PathVariable Long id) throws CannotFoundGuide {
-        Guide guideEntity = guideService.findById(id); // 이미 예외처리 포함된 서비스 메서드
+        Guide guideEntity = guideService.findById(id); // 이미 예외처리 포함된 서비스 메서드 👍
+
         GuideDto.GuideResponseDto guideDto = new GuideDto.GuideResponseDto(guideEntity);
         return ResponseEntity.ok(guideDto);
     }
 
     // 공략 수정
+    // 수정 사항 3) 작성자만 수정할 수 있게 해야함
+    // 수정 사항 9) DTO를 업로드 용으로 DTO로 해놔서 제목만 보임
     @PatchMapping("/edit/{id}")
-    public ResponseEntity<?> updateGuide(@PathVariable Long id,
-                                                    @RequestBody GuideDto.Request dto) throws CannotFoundGuide {
-        Guide guideEntity = guideService.edit(id, dto);
-        GuideDto.GuideUploadResponseDto guideDto = new GuideDto.GuideUploadResponseDto(guideEntity);
+    public ResponseEntity<?> updateGuide(
+            @PathVariable Long id,
+            @AuthenticationPrincipal String loginId,
+            @RequestBody GuideDto.Request dto) throws CannotFoundGuide, CannotFoundUser {
+        // 1) author 찾기
+        User author = userService.findByLoginId(loginId)
+                .orElseThrow(() -> new CannotFoundUser("해당 유저 정보를 찾을 수 없습니다"));
+
+        Guide guideEntity = guideService.edit(id, dto, author);
+        GuideDto.GuideResponseDto guideDto = new GuideDto.GuideResponseDto(guideEntity);
         return ResponseEntity.ok(guideDto);
 
     }
 
     // 공략 삭제
+    // 수정 사항 5) 작성자만 삭제할 수 있게 해야 함
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteGuide(@PathVariable Long id) throws CannotFoundGuide {
+    public ResponseEntity<?> deleteGuide(@PathVariable Long id, @AuthenticationPrincipal String loginId) throws CannotFoundGuide {
         try {
-            guideService.deleteById(id);
+            User author = userService.findByLoginId(loginId)
+                    .orElseThrow(() -> new CannotFoundUser("해당 유저 정보를 찾을 수 없습니다."));
+
+            guideService.deleteById(id, author);
             return ResponseEntity.ok("공략 삭제 완료: " + id);
         } catch (Exception e) {
             log.error("공략 삭제 실패: {}", e.getMessage());
