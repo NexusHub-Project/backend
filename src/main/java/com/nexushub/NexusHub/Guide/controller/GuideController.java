@@ -75,12 +75,14 @@ public class GuideController {
     // 단일 공략 조회
     // 수정 사항 2) /detail -> /find : 전체 게시물 찾는거랑 일관성 부여
     // 수정 사항 8) 싫어요는 DTO에 넣지 않아서 추가 함
+
     @GetMapping("/find/{id}")
     public ResponseEntity<?> getGuideById(@PathVariable Long id) throws CannotFoundGuide {
-        Guide guideEntity = guideService.findById(id); // 이미 예외처리 포함된 서비스 메서드 👍
+        Guide guideEntity = guideService.findById(id)
+                .orElseThrow(()-> new CannotFoundGuide("해당 공략 정보를 찾을 수 없습니다.")); // 이미 예외처리 포함된 서비스 메서드 👍
+        guideEntity.view();
 
-        GuideDto.GuideResponseDto guideDto = new GuideDto.GuideResponseDto(guideEntity);
-        return ResponseEntity.ok(guideDto);
+        return ResponseEntity.ok( new GuideDto.GuideResponseDto(guideEntity));
     }
 
     // 공략 수정

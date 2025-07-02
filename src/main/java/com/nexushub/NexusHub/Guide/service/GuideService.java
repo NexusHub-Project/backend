@@ -39,17 +39,21 @@ public class GuideService {
     }
 
     // 단일 조회
-    public Guide findById(Long id) throws CannotFoundGuide {
-        Guide guide = guideRepository.findById(id)
-                .orElseThrow(() -> new CannotFoundGuide("해당 공략이 존재하지 않습니다."));
-        guide.view();
-        return guide;
+    // 수정 사항 *) view를 여기서 호출하지 않기로 함
+    public Optional<Guide> findById(Long id) throws CannotFoundGuide {
+//        Guide guide = guideRepository.findById(id)
+//                .orElseThrow(() -> new CannotFoundGuide("해당 공략이 존재하지 않습니다."));
+//        guide.view();
+//        return guide;
+
+        return guideRepository.findById(id);
     }
 
     // 수정
     // 수정 사항 4) edit 메소드 안에서 해당 유저가 작성한 게 맞는지 판별 후에 수정 하기
     public Guide edit(Long id, GuideDto.Request dto, User author) throws CannotFoundGuide {
-        Guide guide = findById(id);
+        Guide guide = guideRepository.findById(id)
+                .orElseThrow(() -> new CannotFoundGuide("해당 공략이 존재하지 않습니다."));
 
         if (isAuthor(guide, author)) {
             guide.update(dto.getTitle(), dto.getContent());
@@ -64,7 +68,9 @@ public class GuideService {
     // 삭제
     // 수정 사항 6) delete 메소드 안에서 해당 유저가 작성한 게 맞는지 판별 후에 삭제 하기
     public void deleteById(Long id, User author) throws CannotFoundGuide {
-        Guide guide = findById(id);
+        Guide guide = findById(id)
+                .orElseThrow(()-> new CannotFoundGuide("해당 공략 정보를 찾을 수 없습니다."));
+
         if (isAuthor(guide, author)) {
             guideRepository.deleteById(id);
         }
