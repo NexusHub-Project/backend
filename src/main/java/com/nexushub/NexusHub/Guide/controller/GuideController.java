@@ -66,15 +66,10 @@ public class GuideController {
 
     // 단일 공략 조회
     @GetMapping("/{id}")
-    public GuideDto.GuideResponseDto getGuideDetails(@PathVariable int id) {
-        try {
-
-            return null;
-
-        } catch (Exception e) {
-            log.error("공략 get 실패: {}", e.getMessage());
-            throw new RuntimeException("공략 get 실패: " + e.getMessage());
-        }
+    public ResponseEntity<?> getGuideById(@PathVariable Long id) throws CannotFoundGuide {
+        Guide guideEntity = guideService.findById(id); // 이미 예외처리 포함된 서비스 메서드
+        GuideDto.GuideResponseDto guideDto = new GuideDto.GuideResponseDto(guideEntity);
+        return ResponseEntity.ok(guideDto);
     }
 
     // 공략 수정
