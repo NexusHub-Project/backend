@@ -33,7 +33,9 @@ public class SecurityConfig {
                                 "/import/**",
                                 "/api/v1/patchnote/test", "/api/v1/patchnote/find/*", "/api/v1/patchnote/edit/*", "/api/v1/patchnote/delete/*", "/api/v1/patchnote/show/**",
                                 "/api/v1/comment/**",
-                                "/api/v1/strategy/**"
+                                "/api/v1/strategy/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
                         ).permitAll()
                         .anyRequest().authenticated()
 //
