@@ -4,6 +4,7 @@ import com.nexushub.NexusHub.Exception.Fail.CannotSignUp;
 import com.nexushub.NexusHub.Exception.Fail.DeleteFail;
 import com.nexushub.NexusHub.Exception.Fail.EditFail;
 import com.nexushub.NexusHub.Exception.Fail.SignUpFail;
+import com.nexushub.NexusHub.Exception.Normal.CannotFoundChampion;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundComment;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundPatchNote;
 import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
@@ -89,5 +90,12 @@ public class GlobalExceptionHandler {
         Map<String, Object> error = new HashMap<>();
         error.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    @ExceptionHandler(CannotFoundChampion.class)
+    public ResponseEntity<?> cannotFoundChampion(CannotFoundChampion e) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 }

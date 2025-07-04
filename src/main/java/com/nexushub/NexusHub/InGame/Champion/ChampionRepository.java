@@ -2,6 +2,8 @@ package com.nexushub.NexusHub.InGame.Champion;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ChampionRepository extends JpaRepository<Champion, Long> {
+import java.util.Optional;
 
+public interface ChampionRepository extends JpaRepository<Champion, Long> {
+    Optional<Champion> findByNameKo(String championName);
 }
