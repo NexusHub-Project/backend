@@ -33,7 +33,7 @@ public class GuideDto {
             this.id = guide.getId();
             this.title = guide.getTitle();
             this.content = guide.getContent();
-            this.authorName = guide.getAuthor().getGameName(); // 작성자 이름
+            this.authorName = guide.getAuthor().getNickName(); // 작성자 이름
             this.createdAt = guide.getCreatedAt();
             this.updatedAt = guide.getUpdatedAt();
             this.views = guide.getViews();
@@ -52,7 +52,7 @@ public class GuideDto {
         public GuideUploadResponseDto(Guide guide) {
             this.id = guide.getId();
             this.title = guide.getTitle();
-            this.authorName = guide.getAuthor().getGameName();
+            this.authorName = guide.getAuthor().getNickName();
             this.authorId = guide.getAuthor().getId();
         }
     }
@@ -69,7 +69,7 @@ public class GuideDto {
         public GuideListResponseDto(Guide guide) {
             this.id = guide.getId();
             this.title = guide.getTitle();
-            this.authorName = guide.getAuthor().getGameName();
+            this.authorName = guide.getAuthor().getNickName();
             this.authorId = guide.getAuthor().getId();
             this.views = guide.getViews();
             this.createdAt = guide.getCreatedAt();

@@ -1,4 +1,4 @@
-package com.nexushub.NexusHub.Auth.dto.request;
+package com.nexushub.NexusHub.User.dto.request;
 
 import lombok.Data;
 

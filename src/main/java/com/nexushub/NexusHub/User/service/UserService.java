@@ -1,10 +1,9 @@
 package com.nexushub.NexusHub.User.service;
 
-import com.nexushub.NexusHub.Auth.dto.request.UserLoginRequestDto;
-import com.nexushub.NexusHub.Auth.dto.request.UserSignUpRequestDto;
+import com.nexushub.NexusHub.User.dto.request.UserLoginRequestDto;
+import com.nexushub.NexusHub.User.dto.request.UserSignUpRequestDto;
 import com.nexushub.NexusHub.Auth.jwt.JwtUtil;
 import com.nexushub.NexusHub.Exception.Fail.CannotSignUp;
-import com.nexushub.NexusHub.Exception.Fail.SignUpFail;
 import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Exception.RiotAPI.IsPresentLoginId;
 import com.nexushub.NexusHub.Riot.dto.RiotAccountDto;
@@ -13,13 +12,10 @@ import com.nexushub.NexusHub.User.domain.User;
 import com.nexushub.NexusHub.User.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -88,6 +84,7 @@ public class UserService {
         response.put("token", token);
         response.put("message", "Login Success");
         response.put("login", true);
+        response.put("nickName", user.getNickName());
         return response;
     }
 
@@ -109,8 +106,8 @@ public class UserService {
         }
     }
 
-    public RiotAccountDto nickNameCheck(String nickName, String tag) throws CannotFoundSummoner {
-        return riotApiService.getSummonerInfo(nickName, tag);
+    public RiotAccountDto gameNameCheck(String gameName, String tagLine) throws CannotFoundSummoner {
+        return riotApiService.getSummonerInfo(gameName, tagLine);
     }
 
     public Optional<User> findByLoginId(String loginId) {
@@ -118,6 +115,10 @@ public class UserService {
     }
 
     private boolean checkPossibleByGameNameAndLoginId(UserSignUpRequestDto dto){
-        return dto.getIsPresentGameName() == true && dto.getIsPresentId() == false ;
+        return dto.getIsPresentGameName() == true && dto.getIsPresentId() == false && dto.getIsPresentNickName() == false;
+    }
+
+    public boolean checkPossibleUsingNickName(String nickName) {
+        return userRepository.findByNickName(nickName).isPresent();
     }
 }
