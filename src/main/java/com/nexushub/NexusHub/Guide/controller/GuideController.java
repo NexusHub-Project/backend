@@ -1,10 +1,13 @@
 package com.nexushub.NexusHub.Guide.controller;
 
 
+import com.nexushub.NexusHub.Exception.Normal.CannotFoundChampion;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundComment;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundGuide;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundUser;
 import com.nexushub.NexusHub.Guide.service.GuideService;
+import com.nexushub.NexusHub.InGame.Champion.Champion;
+import com.nexushub.NexusHub.InGame.Champion.ChampionService;
 import com.nexushub.NexusHub.User.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,7 @@ import com.nexushub.NexusHub.User.domain.User;
 public class GuideController {
     private final GuideService guideService;
     private final UserService userService;
+    private final ChampionService championService;
 
     // 게시글 생성
     // 수정해야할 것 -> 로그인하지 않은 사람 (토큰이 없는 사람)이 포스팅을 하려할 때 로그인을 요청하는 오류 발생 시키기
@@ -42,7 +46,11 @@ public class GuideController {
 
             // 유저 정보 받아오기
             User author = userService.findByLoginId(loginId).orElseThrow(() -> new CannotFoundUser ("해당 유저 정보를 찾을 수 없습니다."));
-            Guide saved = guideService.save(request, author);
+
+            Champion champion = championService.getChampionById(request.getChampionId())
+                    .orElseThrow(()-> new CannotFoundChampion("id = "+ request.getChampionId()+" 인 챔피언을 찾을 수 없습니다. "));
+
+            Guide saved = guideService.save(request, author, champion);
             return ResponseEntity.ok(new GuideDto.GuideUploadResponseDto(saved));
 
         } catch (Exception e) {
@@ -52,7 +60,7 @@ public class GuideController {
     }
 
     // 전체 공략 조회
-    // 수정 사항 1) /list -> /find/all : 명확성 부여
+    // 수정 사항 1) /list -> /find/all : 명확성 부여find/champion
     @GetMapping("/find/all")
     public ResponseEntity<List<GuideDto.GuideListResponseDto>> getGuideList() throws CannotFoundGuide {
         List<Guide> guideEntityList = guideService.findAll();
@@ -71,6 +79,22 @@ public class GuideController {
 
         return ResponseEntity.ok(guideDtoList);
     }
+    // 챔피언 별로 공략글 찾기
+    @GetMapping("/find/champion/{id}")
+    public ResponseEntity<List<GuideDto.GuideListResponseDto>> findChampGuide(@PathVariable Long id) throws CannotFoundGuide {
+        Champion champion = championService.getChampionById(id)
+                .orElseThrow(() -> new CannotFoundChampion("id = " + id + " 인 챔피언을 찾을 수 없습니다. "));
+
+        List<Guide> byChampion = guideService.findByChampion(champion);
+
+        List<GuideDto.GuideListResponseDto> guideDtoList = new ArrayList<>();
+
+        for (Guide guide : byChampion) {
+            guideDtoList.add(new GuideDto.GuideListResponseDto(guide));
+        }
+        return ResponseEntity.ok(guideDtoList);
+    }
+
 
     // 단일 공략 조회
     // 수정 사항 2) /detail -> /find : 전체 게시물 찾는거랑 일관성 부여
@@ -84,6 +108,12 @@ public class GuideController {
 
         return ResponseEntity.ok( new GuideDto.GuideResponseDto(guideEntity));
     }
+    // 작성자 별로 공략글 찾기
+//    @GetMapping("/find/author/{id}")
+//    public ResponseEntity<GuideDto.GuideListResponseDto> getGuideByAuthor(@PathVariable Long id) throws CannotFoundGuide {
+//
+//    }
+
 
     // 공략 수정
     // 수정 사항 3) 작성자만 수정할 수 있게 해야함
@@ -137,6 +167,7 @@ public class GuideController {
         responseBody.put("message", id +"번 글에 싫어요를 눌렀습니다.");
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
+
 
 
 }

@@ -2,6 +2,7 @@ package com.nexushub.NexusHub.InGame.Champion;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexushub.NexusHub.Exception.Normal.CannotFoundChampion;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 @Service
 @RequiredArgsConstructor
@@ -52,5 +55,8 @@ public class ChampionService {
 
             championRepository.save(champion);
         }
+    }
+    public Optional<Champion> getChampionById(Long id) {
+        return championRepository.findById(id);
     }
 }

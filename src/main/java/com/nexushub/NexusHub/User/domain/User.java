@@ -32,6 +32,9 @@ public class User {
     @Column(name="game_name", length = 100)
     private String gameName;
 
+    @Column(name="nick_name",length = 20)
+    private String nickName;
+
     @Column(name="tag_line", length = 20)
     private String tagLine;
 
