@@ -34,7 +34,7 @@ public class CommentController {
 
     // 댓글 쓰기 (패치노트)
     @PostMapping("/patchnote/{patch_note_id}/write")
-    public ResponseEntity<?> writeNote(
+    public ResponseEntity<CommentDto.Response> writeNote(
             @PathVariable("patch_note_id") Long id,
             @AuthenticationPrincipal String loginId,
             @RequestBody CommentDto.Request requestDto) throws CannotFoundUser, CannotFoundPatchNote {
@@ -56,7 +56,7 @@ public class CommentController {
     }
 
     @PostMapping("/guide/{guide_id}/write")
-    public ResponseEntity<?> writeGuideComment(
+    public ResponseEntity<CommentDto.Response> writeGuideComment(
             @PathVariable("guide_id") Long id,
             @AuthenticationPrincipal String loginId,
             @RequestBody CommentDto.Request requestDto) throws CannotFoundUser, CannotFoundGuide {
@@ -74,7 +74,7 @@ public class CommentController {
 
     // 댓글 수정
     @PatchMapping("/{comment_id}/edit")
-    public ResponseEntity<?> editComment(
+    public ResponseEntity<CommentDto.Response> editComment(
             @PathVariable Long comment_id,
             @AuthenticationPrincipal String loginId,
             @RequestBody CommentDto.Request requestDto) throws CannotFoundUser {
@@ -90,7 +90,7 @@ public class CommentController {
 
     // 댓글 삭제
     @DeleteMapping("/{comment_id}/delete")
-    public ResponseEntity<?> deleteComment(
+    public ResponseEntity<String> deleteComment(
             @PathVariable Long comment_id,
             @AuthenticationPrincipal String loginId) throws CannotFoundUser {
 
@@ -104,11 +104,11 @@ public class CommentController {
     }
 
     @PostMapping("/show/{id}/likes")
-    public ResponseEntity<?> like(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> like(@PathVariable Long id) {
         commentService.addLikeById(id);
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", "댓글에 좋아요를 눌렀습니다.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
     @PostMapping("/show/{id}/dislikes")
@@ -116,11 +116,11 @@ public class CommentController {
         commentService.addDislikeById(id);
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", "댓글에 싫어요를 눌렀습니다.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
     @GetMapping("/{id}/{type}")
-    public ResponseEntity<?> getComment(@PathVariable Long id, @PathVariable String type) throws CannotFoundPatchNote, CannotFoundGuide {
+    public ResponseEntity<List<CommentDto.PostResponseDto>> getComment(@PathVariable Long id, @PathVariable String type) throws CannotFoundPatchNote, CannotFoundGuide {
         List<Comment> comments;
         List<CommentDto.PostResponseDto> commentDtoResponses = new ArrayList<>();
 

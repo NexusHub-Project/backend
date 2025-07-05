@@ -27,7 +27,7 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginRequestDto userLoginRequestDto) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody UserLoginRequestDto userLoginRequestDto) throws ChangeSetPersister.NotFoundException {
         // 로그인 하기
         log.info("Login request: {}", userLoginRequestDto);
 
@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping("/loginId/check")
-    public ResponseEntity<?> loginIdCheck(@RequestBody UserLoginRequestDto dto){
+    public ResponseEntity<Map<String, Object>> loginIdCheck(@RequestBody UserLoginRequestDto dto){
         // 로그인 아이디 중복 체크
         log.info("LoginIdCheck request received");
         log.info("loginId:{}", dto.getLoginId());
@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @PostMapping("/gamename/check")
-    public ResponseEntity<?> gamenameCheck(@RequestBody UserCheckGameNameRequestDto dto) throws CannotFoundSummoner {
+    public ResponseEntity<Map<String, Object>> gamenameCheck(@RequestBody UserCheckGameNameRequestDto dto) throws CannotFoundSummoner {
         // 소환사 이름 존재 여부 체크 -> 라이엇 API에 요청을 해서 존재 여부를 파악 필요 함
 
         log.info("GameNameCheck request received");
@@ -79,7 +79,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup (@RequestBody UserSignUpRequestDto dto) throws IsPresentLoginId {
+    public ResponseEntity<Map<String, Object>> signup (@RequestBody UserSignUpRequestDto dto) throws IsPresentLoginId {
 
         if (dto.getIsPresentGameName() == null || dto.getIsPresentId() == null){
             throw new SignUpFail("아이디 중복 확인 또는 소환사명 인증을 먼저 진행해주세요.");

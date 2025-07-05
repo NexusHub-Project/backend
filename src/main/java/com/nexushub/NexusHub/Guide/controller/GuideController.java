@@ -33,7 +33,7 @@ public class GuideController {
     // 게시글 생성
     // 수정해야할 것 -> 로그인하지 않은 사람 (토큰이 없는 사람)이 포스팅을 하려할 때 로그인을 요청하는 오류 발생 시키기
     @PostMapping("/upload")
-    public ResponseEntity<?> createGuide(
+    public ResponseEntity<GuideDto.GuideUploadResponseDto> createGuide(
             @RequestBody GuideDto.Request request,
             @AuthenticationPrincipal String loginId)
     {
@@ -54,7 +54,7 @@ public class GuideController {
     // 전체 공략 조회
     // 수정 사항 1) /list -> /find/all : 명확성 부여
     @GetMapping("/find/all")
-    public ResponseEntity<?> getGuideList() throws CannotFoundGuide {
+    public ResponseEntity<List<GuideDto.GuideListResponseDto>> getGuideList() throws CannotFoundGuide {
         List<Guide> guideEntityList = guideService.findAll();
 
         // 수정 사항 2) 비어 있는 경우는 에러가 아님 그냥 빈 리스트를 반환해주면 됨
@@ -77,7 +77,7 @@ public class GuideController {
     // 수정 사항 8) 싫어요는 DTO에 넣지 않아서 추가 함
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<?> getGuideById(@PathVariable Long id) throws CannotFoundGuide {
+    public ResponseEntity<GuideDto.GuideResponseDto> getGuideById(@PathVariable Long id) throws CannotFoundGuide {
         Guide guideEntity = guideService.findById(id)
                 .orElseThrow(()-> new CannotFoundGuide("해당 공략 정보를 찾을 수 없습니다.")); // 이미 예외처리 포함된 서비스 메서드 👍
         guideService.addViews(guideEntity);
@@ -89,7 +89,7 @@ public class GuideController {
     // 수정 사항 3) 작성자만 수정할 수 있게 해야함
     // 수정 사항 9) DTO를 업로드 용으로 DTO로 해놔서 제목만 보임
     @PatchMapping("/edit/{id}")
-    public ResponseEntity<?> updateGuide(
+    public ResponseEntity<GuideDto.GuideResponseDto> updateGuide(
             @PathVariable Long id,
             @AuthenticationPrincipal String loginId,
             @RequestBody GuideDto.Request dto) throws CannotFoundGuide, CannotFoundUser {
@@ -106,7 +106,7 @@ public class GuideController {
     // 공략 삭제
     // 수정 사항 5) 작성자만 삭제할 수 있게 해야 함
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteGuide(@PathVariable Long id, @AuthenticationPrincipal String loginId) throws CannotFoundGuide {
+    public ResponseEntity<String> deleteGuide(@PathVariable Long id, @AuthenticationPrincipal String loginId)  {
         try {
             User author = userService.findByLoginId(loginId)
                     .orElseThrow(() -> new CannotFoundUser("해당 유저 정보를 찾을 수 없습니다."));
@@ -122,20 +122,20 @@ public class GuideController {
 
     // 좋아요
     @PostMapping("/detail/{id}/likes")
-    public ResponseEntity<?> addLikeToGuide(@PathVariable Long id) throws CannotFoundGuide {
+    public ResponseEntity<Map<String, Object>> addLikeToGuide(@PathVariable Long id)  {
         guideService.addLikeById(id);
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("message", id + "번 글에 좋아요를 눌렀습니다.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
     // 싫어요
     @PostMapping("/detail/{id}/dislikes")
-    public ResponseEntity<?> addDislikeToGuide(@PathVariable Long id) throws CannotFoundGuide {
+    public ResponseEntity<Map<String, Object>> addDislikeToGuide(@PathVariable Long id)  {
         guideService.addDislikeById(id);
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("message", id +"번 글에 싫어요를 눌렀습니다.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
 
