@@ -14,6 +14,7 @@ public class GuideDto {
     public static class Request {
         private String title;
         private String content;
+        private Long championId;
     }
 
     @Getter

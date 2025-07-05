@@ -1,16 +1,15 @@
 package com.nexushub.NexusHub.Guide.domain;
 
+import com.nexushub.NexusHub.InGame.Champion.Champion;
 import com.nexushub.NexusHub.User.domain.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // Builder로 객체 생성 유도
 public class Guide {
     @Id
@@ -37,6 +36,10 @@ public class Guide {
     @JoinColumn(name = "user_id", nullable = false)
     private User author; // 작성자 (User 엔티티와 연결함)
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "champion_id", nullable = false)
+    private Champion champion;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -56,10 +59,11 @@ public class Guide {
     }
 
     @Builder
-    public Guide(String title, String content, User author) {
+    public Guide(String title, String content,Champion champion, User author) {
         this.title = title;
         this.content = content;
         this.author = author;
+        this.champion = champion;
     }
 
     public void update(String title, String content){
@@ -78,7 +82,4 @@ public class Guide {
         this.views++;
     }
 
-    public static Guide of(String title, String content, User author){
-        return Guide.builder().title(title).content(content).author(author).build();
-    }
 }

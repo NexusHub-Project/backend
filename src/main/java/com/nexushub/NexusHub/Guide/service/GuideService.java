@@ -6,6 +6,7 @@ import com.nexushub.NexusHub.Exception.Normal.CannotFoundGuide;
 import com.nexushub.NexusHub.Guide.domain.Guide;
 import com.nexushub.NexusHub.Guide.dto.GuideDto;
 import com.nexushub.NexusHub.Guide.repository.GuideRepository;
+import com.nexushub.NexusHub.InGame.Champion.Champion;
 import com.nexushub.NexusHub.User.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +25,17 @@ public class GuideService {
     private final GuideRepository guideRepository;
 
     // 공략 저장
-    public Guide save(GuideDto.Request dto, User author) {
-        Guide guide = Guide.builder()
-                .title(dto.getTitle())
-                .content(dto.getContent())
-                .author(author)
-                .build();
+    public Guide save(GuideDto.Request dto, User author, Champion champion) {
+        log.info("title : {}, content : {}, author : {}, champion : {}", dto.getTitle(), dto.getContent(), author.getGameName(), champion.getNameKo());
+        Guide guide = new Guide(
+                dto.getTitle(),
+                dto.getContent(),
+                champion,
+                author
+        );
+
         return guideRepository.save(guide);
+//        return guide;
     }
 
     // 전체 조회
@@ -47,6 +52,9 @@ public class GuideService {
 //        return guide;
 
         return guideRepository.findById(id);
+    }
+    public List<Guide> findByChampion(Champion champion) {
+        return guideRepository.findByChampion(champion);
     }
 
     // 수정
