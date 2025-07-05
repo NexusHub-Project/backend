@@ -36,7 +36,7 @@ public class PatchNoteController {
     // 패치노트 업로드 하기 (관리자만 가능)
     @PostMapping("/upload")
     @PreAuthorize("hasRole('ADMIN')") // * ADMIN 역할만 이 메소드를 호출할 수 있도록 제한하기
-    public ResponseEntity<?> createPatchNote(
+    public ResponseEntity<PatchNoteDto.PatchNoteUploadResponseDto> createPatchNote(
             @RequestBody PatchNoteDto.Request patchNoteRequestDto,
             // 현재 로그인한 사용자의 loginId를 자동으로 가져 옴
             @AuthenticationPrincipal String loginId) throws CannotFoundUser {
@@ -54,7 +54,7 @@ public class PatchNoteController {
 
     // 패치노트 찾기
     @GetMapping("/find/{id}")
-    public ResponseEntity<?> findPatchNoteById(@PathVariable("id") Long id) throws CannotFoundPatchNote {
+    public ResponseEntity<PatchNoteDto.PatchNoteResponseDto> findPatchNoteById(@PathVariable("id") Long id) throws CannotFoundPatchNote {
 
         PatchNote patchNote = patchNoteService.findById(id)
                 .orElseThrow(() -> new CannotFoundPatchNote("해당 패치노트를 찾을 수 없습니다."));
@@ -65,7 +65,7 @@ public class PatchNoteController {
 
     // 패치노트 목록 찾아오기
     @GetMapping("/find/all")
-    public ResponseEntity<?> findAllPatchNotes() throws CannotFoundPatchNote {
+    public ResponseEntity<List<PatchNoteDto.PatchNoteListResponseDto>> findAllPatchNotes() throws CannotFoundPatchNote {
         List<PatchNote> patchNoteList = patchNoteService.findAll();
 
         if (patchNoteList.isEmpty()) {
@@ -83,7 +83,7 @@ public class PatchNoteController {
     // 패치노트 수정하기 (관리자만 가능)
     @PatchMapping("/edit/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> editPatchNote(@RequestBody PatchNoteDto.Request patchNoteRequestDto, @PathVariable("id") Long id, @AuthenticationPrincipal String loginId) throws CannotFoundUser, CannotFoundPatchNote {
+    public ResponseEntity<PatchNoteDto.PatchNoteResponseDto> editPatchNote(@RequestBody PatchNoteDto.Request patchNoteRequestDto, @PathVariable("id") Long id, @AuthenticationPrincipal String loginId) throws CannotFoundUser, CannotFoundPatchNote {
 
         // 1) 받아온 loginID를 통해서 User 객체를 가져 온다
         User adminUser = userService.findByLoginId(loginId)
@@ -105,7 +105,7 @@ public class PatchNoteController {
     // 패치노트 삭제하기 (관리자만 가능)
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deletePatchNote(@PathVariable("id") Long id, @AuthenticationPrincipal String loginId) throws Exception {
+    public ResponseEntity<String> deletePatchNote(@PathVariable("id") Long id, @AuthenticationPrincipal String loginId) throws Exception {
         User adminUser = userService.findByLoginId(loginId)
                 .orElseThrow(() -> new CannotFoundUser("해당 관리자 정보를 찾을 수 없습니다."));
 
@@ -120,28 +120,20 @@ public class PatchNoteController {
 
     // 패치내용 글 좋아요
     @PostMapping("/show/{id}/likes")
-    public ResponseEntity<?> addLikeToPatchNote(@PathVariable("id") Long id) {
+    public ResponseEntity<Map<String, String>> addLikeToPatchNote(@PathVariable("id") Long id) {
 
         patchNoteService.addLikeById(id);
-        Map<String, Object> responseBody = new HashMap<>();
+        Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", id + "번 글에 좋아요를 눌렀습니다.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
     // 패치내용 글 싫어요
     @PostMapping("/show/{id}/dislikes")
-    public ResponseEntity<?> likePatchNote(@PathVariable("id") Long id)  {
+    public ResponseEntity<Map<String, String>> likePatchNote(@PathVariable("id") Long id)  {
         patchNoteService.addDislikeById(id);
-        Map<String, Object> responseBody = new HashMap<>();
+        Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", id +"번 글에 싫어요를 눌렀습니다.");
         return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
-    }
-
-
-
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        log.info("### PatchNoteController /test 메소드 성공적으로 호출됨! ###");
-        return ResponseEntity.ok("테스트 성공!");
     }
 }

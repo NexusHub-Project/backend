@@ -26,62 +26,43 @@ public class SummonerController {
 
     // 티어 정보 검색
     @PostMapping("/tier")
-    public ResponseEntity<?> summonerTierInfo(@RequestBody SummonerRequestDto dto) {
-        try {
-            log.info("Summoner request12321321312312312: {}", dto);
-            Summoner summonerTierInfo = summonerService.getSummonerTierInfoV2(dto);
-            return ResponseEntity.ok(summonerTierInfo);
-        } catch (CannotFoundSummoner e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
+    public ResponseEntity<Summoner> summonerTierInfo(@RequestBody SummonerRequestDto dto) throws CannotFoundSummoner {
+        Summoner summonerTierInfo = summonerService.getSummonerTierInfoV2(dto);
+        return ResponseEntity.ok(summonerTierInfo);
 
+    }
 
     // 숙련도 정보 검색 (모든 챔피언의 숙련도 리턴)
     @GetMapping("/mastery")
-    public ResponseEntity<?> summonerMasteryInfo(@RequestBody SummonerRequestDto dto) {
-        try{
-            List<MasteryDto> masteryInfo = summonerService.getSummonerMasteryInfo(dto);
-            return ResponseEntity.ok(masteryInfo);
-        } catch (CannotFoundSummoner e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<List<MasteryDto>> summonerMasteryInfo(@RequestBody SummonerRequestDto dto) throws CannotFoundSummoner {
+        List<MasteryDto> masteryInfo = summonerService.getSummonerMasteryInfo(dto);
+        return ResponseEntity.ok(masteryInfo);
     }
 
 
     // 전적 검색
     @GetMapping("/matches/v1")
-    public ResponseEntity<?> summonerMatchesV1(@RequestBody SummonerRequestDto dto) {
-        try{
-            String[] matches = summonerService.getSummonerMatchesId(dto);
-            return ResponseEntity.ok(matches);
-        } catch (CannotFoundSummoner e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<String[]> summonerMatchesV1(@RequestBody SummonerRequestDto dto) throws CannotFoundSummoner{
+        String[] matches = summonerService.getSummonerMatchesId(dto);
+        return ResponseEntity.ok(matches);
     }
     @GetMapping("/matches/v2")
-    public ResponseEntity<?> summonerMatchesV2(@RequestBody SummonerRequestDto dto) {
-        try{
-            List<MatchDto> dtos = summonerService.getSummonerMatchesInfo(dto);
-            return ResponseEntity.ok(dtos);
-
-        } catch (CannotFoundSummoner e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<List<MatchDto>> summonerMatchesV2(@RequestBody SummonerRequestDto dto) throws CannotFoundSummoner{
+        List<MatchDto> dtos = summonerService.getSummonerMatchesInfo(dto);
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/matchInfo")
-    public ResponseEntity<?> summonerMatchInfo(@RequestParam String matchId) {
+    public ResponseEntity<MatchDto> summonerMatchInfo(@RequestParam String matchId) {
         log.info("matchId: " + matchId);
         MatchDto matchInfo = matchService.getMatchInfoById(matchId);
         return ResponseEntity.ok(matchInfo);
-
     }
 
     // most 챔피언 검색
     @GetMapping("/most")
-    public ResponseEntity<?> summonerMostInfo(@RequestBody SummonerRequestDto dto) {
-        try {
+    public ResponseEntity<List<ChampionSeasonStatisticsDto>> summonerMostInfo(@RequestBody SummonerRequestDto dto) throws CannotFoundSummoner{
+
             /*    모스트 챔피언 V1 -> 차이는 새롭게 DTO를 정의해서 필요한 것만 뽑아 왔다
             Map<Long, ChampionStatsDto> stats = matchService.getSeasonChampionStatsV1(dto);
 
@@ -90,11 +71,7 @@ public class SummonerController {
                     .sorted(Comparator.comparingInt(ChampionStatsDto::getGamesPlayed).reversed())
                     .collect(Collectors.toList());
             */
-            List<ChampionSeasonStatisticsDto> sortedStats = matchService.getSeasonChampionStatsV2(dto);
-
-            return ResponseEntity.ok(sortedStats);
-        } catch (CannotFoundSummoner e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        List<ChampionSeasonStatisticsDto> sortedStats = matchService.getSeasonChampionStatsV2(dto);
+        return ResponseEntity.ok(sortedStats);
     }
 }

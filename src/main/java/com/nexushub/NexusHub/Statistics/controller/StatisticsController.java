@@ -31,7 +31,7 @@ public class StatisticsController {
     }
 
     @GetMapping("/tier/top")
-    public ResponseEntity<?> topTiers() {
+    public ResponseEntity<List<TierResponseDto>> topTiers() {
         List<TierTop> topTiers = tierService.getTopTiers();
         List<TierResponseDto> dtos = new ArrayList<>();
 
@@ -42,7 +42,7 @@ public class StatisticsController {
     }
 
     @GetMapping("/tier/jug")
-    public ResponseEntity<?> jugTiers() {
+    public ResponseEntity<List<TierResponseDto>> jugTiers() {
         List<TierJug> jugTiers = tierService.getJugTiers();
         List<TierResponseDto> dtos = new ArrayList<>();
         for (TierJug jug : jugTiers) {
@@ -52,7 +52,7 @@ public class StatisticsController {
     }
 
     @GetMapping("/tier/mid")
-    public ResponseEntity<?> midTiers() {
+    public ResponseEntity<List<TierResponseDto>> midTiers() {
         List<TierMid> midTiers = tierService.getMidTiers();
         List<TierResponseDto> dtos = new ArrayList<>();
         for (TierMid mid : midTiers) {
@@ -62,7 +62,7 @@ public class StatisticsController {
     }
 
     @GetMapping("/tier/adc")
-    public ResponseEntity<?> adcTiers() {
+    public ResponseEntity<List<TierResponseDto>> adcTiers() {
         List<TierAdc> adcTiers = tierService.getAdcTiers();
         List<TierResponseDto> dtos = new ArrayList<>();
         for (TierAdc adc : adcTiers) {
@@ -71,7 +71,7 @@ public class StatisticsController {
         return ResponseEntity.ok(sort(dtos));
     }
     @GetMapping("/tier/sup")
-    public ResponseEntity<?> supTiers() {
+    public ResponseEntity<List<TierResponseDto>> supTiers() {
         List<TierSup> supTiers = tierService.getSupTiers();
         List<TierResponseDto> dtos = new ArrayList<>();
         for (TierSup sup : supTiers) {
@@ -84,8 +84,5 @@ public class StatisticsController {
         return dtos.stream().sorted(
                 Comparator.comparing(TierResponseDto::getTier).thenComparing(Comparator.comparing(TierResponseDto::getScore).reversed()))
                 .collect(Collectors.toList());
-    }
-    private List<TierResponseDto> sortByScore(List<TierResponseDto> dtos) {
-        return dtos.stream().sorted(Comparator.comparing(TierResponseDto::getScore)).collect(Collectors.toList());
     }
 }
