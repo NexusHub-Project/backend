@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/comment")
 public class CommentController {
@@ -33,7 +33,7 @@ public class CommentController {
     private final CommentRepository commentRepository;
 
     // 댓글 쓰기 (패치노트)
-    @PostMapping("/patchnote/{patch_note_id}/write")
+    @PostMapping("/write/patchNote/{patch_note_id}")
     public ResponseEntity<CommentDto.Response> writeNote(
             @PathVariable("patch_note_id") Long id,
             @AuthenticationPrincipal String loginId,
@@ -55,7 +55,7 @@ public class CommentController {
         return ResponseEntity.ok(CommentDto.Response.of(comment, author));
     }
 
-    @PostMapping("/guide/{guide_id}/write")
+    @PostMapping("/write/guide/{guide_id}")
     public ResponseEntity<CommentDto.Response> writeGuideComment(
             @PathVariable("guide_id") Long id,
             @AuthenticationPrincipal String loginId,

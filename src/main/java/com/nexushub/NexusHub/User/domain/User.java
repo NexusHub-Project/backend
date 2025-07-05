@@ -1,7 +1,7 @@
 package com.nexushub.NexusHub.User.domain;
 
 
-import com.nexushub.NexusHub.Auth.dto.request.UserSignUpRequestDto;
+import com.nexushub.NexusHub.User.dto.request.UserSignUpRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -68,6 +68,7 @@ public class User {
                 .gameName(dto.getGameName())
                 .puuid(dto.getPuuid())
                 .tagLine(dto.getTagLine())
+                .nickName(dto.getNickName())
                 .role(Role.USER) // 기본 역할을 USER로 만들기
                 .build();
     }
