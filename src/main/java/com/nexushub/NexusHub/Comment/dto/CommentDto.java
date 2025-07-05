@@ -10,9 +10,14 @@ import java.time.LocalDateTime;
 public class CommentDto {
     @Getter
     @Setter
-    public static class Request{
+    public static class EditRequest {
         private String content;
         private Long commentId;
+    }
+
+    @Getter
+    public static class WriteRequest{
+        private String content;
     }
 
 

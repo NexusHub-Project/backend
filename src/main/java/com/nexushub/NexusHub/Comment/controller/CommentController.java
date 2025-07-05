@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -37,7 +36,7 @@ public class CommentController {
     public ResponseEntity<CommentDto.Response> writeNote(
             @PathVariable("patch_note_id") Long id,
             @AuthenticationPrincipal String loginId,
-            @RequestBody CommentDto.Request requestDto) throws CannotFoundUser, CannotFoundPatchNote {
+            @RequestBody CommentDto.WriteRequest requestDto) throws CannotFoundUser, CannotFoundPatchNote {
         // 1) 토큰을 통해서 가져온 아이디를 통해서 작성자 객체를 가져온다
 
         User author = userService.findByLoginId(loginId)
@@ -59,7 +58,7 @@ public class CommentController {
     public ResponseEntity<CommentDto.Response> writeGuideComment(
             @PathVariable("guide_id") Long id,
             @AuthenticationPrincipal String loginId,
-            @RequestBody CommentDto.Request requestDto) throws CannotFoundUser, CannotFoundGuide {
+            @RequestBody CommentDto.WriteRequest requestDto) throws CannotFoundUser, CannotFoundGuide {
         User author = userService.findByLoginId(loginId)
                 .orElseThrow(() -> new CannotFoundUser("해당 유저의 정보를 찾을 수 없습니다."));
 
@@ -77,7 +76,7 @@ public class CommentController {
     public ResponseEntity<CommentDto.Response> editComment(
             @PathVariable Long comment_id,
             @AuthenticationPrincipal String loginId,
-            @RequestBody CommentDto.Request requestDto) throws CannotFoundUser {
+            @RequestBody CommentDto.EditRequest requestDto) throws CannotFoundUser {
 
         // 토큰을 통해서 author 객체를 받아서 service로 넘겨줌
         User author = userService.findByLoginId(loginId)
