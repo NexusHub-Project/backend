@@ -1,4 +1,4 @@
-package com.nexushub.NexusHub.Config;
+package com.nexushub.NexusHub.Swagger;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
