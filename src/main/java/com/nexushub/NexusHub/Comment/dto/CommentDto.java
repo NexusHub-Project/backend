@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class CommentDto {
     @Getter
     @Setter
-    public static class Request{
+    public static class CommentRequest {
         private String content;
         private Long commentId;
     }
@@ -19,15 +19,15 @@ public class CommentDto {
     @Getter
     @AllArgsConstructor
     @Builder
-    public static class Response{
+    public static class CommentResponse {
         private String authorName;
         private Long id;
         private String content;
         private LocalDateTime createdAt;
         private Role role;
 
-        public static Response of(Comment comment, User author){
-            return Response.builder()
+        public static CommentResponse of(Comment comment, User author){
+            return CommentResponse.builder()
                     .authorName(author.getGameName())
                     .id(comment.getId())
                     .content(comment.getContent())
@@ -40,7 +40,7 @@ public class CommentDto {
     @Getter
     @AllArgsConstructor
     @Builder
-    public static class PostResponseDto {
+    public static class CommentDetailDto {
         private String authorName;
         private Long id;
         private String content;
@@ -49,8 +49,8 @@ public class CommentDto {
         private Integer likes;
         private Integer dislikes;
 
-        public static PostResponseDto of(Comment comment, User author) {
-            return PostResponseDto.builder()
+        public static CommentDetailDto of(Comment comment, User author) {
+            return CommentDetailDto.builder()
                     .authorName(comment.getAuthor().getGameName())
                     .id(comment.getId())
                     .content(comment.getContent())

@@ -21,12 +21,12 @@ import java.util.List;
 public class CommentService {
     private final CommentRepository commentRepository;
 
-    public Comment savePatchNoteComment(CommentDto.Request requestDto, User author, PatchNote patchNote) {
+    public Comment savePatchNoteComment(CommentDto.CommentRequest requestDto, User author, PatchNote patchNote) {
         Comment comment = new Comment(requestDto.getContent(), author, patchNote);
 
         return commentRepository.save(comment);
     }
-    public Comment saveGuideComment(CommentDto.Request requestDto, User author, Guide guide){
+    public Comment saveGuideComment(CommentDto.CommentRequest requestDto, User author, Guide guide){
         Comment comment = new Comment(requestDto.getContent(), author, guide);
 
         return commentRepository.save(comment);
@@ -37,7 +37,7 @@ public class CommentService {
                 .orElseThrow(() -> new CannotFoundComment("해당 댓글을 찾을 수 없습니다."));
     }
 
-    public Comment updateComment(CommentDto.Request requestDto, User author) {
+    public Comment updateComment(CommentDto.CommentRequest requestDto, User author) {
         // 1) 작성자인지 체크하기
         Comment comment = findById(requestDto.getCommentId());
         if (isAuthor(comment, author)) {
