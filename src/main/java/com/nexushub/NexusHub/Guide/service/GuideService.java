@@ -25,7 +25,7 @@ public class GuideService {
     private final GuideRepository guideRepository;
 
     // 공략 저장
-    public Guide save(GuideDto.Request dto, User author, Champion champion) {
+    public Guide save(GuideDto.GuideRequest dto, User author, Champion champion) {
         log.info("title : {}, content : {}, author : {}, champion : {}", dto.getTitle(), dto.getContent(), author.getGameName(), champion.getNameKo());
         Guide guide = new Guide(
                 dto.getTitle(),
@@ -59,7 +59,7 @@ public class GuideService {
 
     // 수정
     // 수정 사항 4) edit 메소드 안에서 해당 유저가 작성한 게 맞는지 판별 후에 수정 하기
-    public Guide edit(Long id, GuideDto.Request dto, User author) throws CannotFoundGuide {
+    public Guide edit(Long id, GuideDto.GuideRequest dto, User author) throws CannotFoundGuide {
         Guide guide = guideRepository.findById(id)
                 .orElseThrow(() -> new CannotFoundGuide("해당 공략이 존재하지 않습니다."));
 
