@@ -20,7 +20,7 @@ import java.util.Optional;
 public class PatchNoteService {
     private final PatchNoteRepository patchNoteRepository;
 
-    public PatchNote save(PatchNoteDto.Request dto, User author){
+    public PatchNote save(PatchNoteDto.PatchNoteRequest dto, User author){
         return patchNoteRepository.save(PatchNote.of(dto.getTitle(), dto.getContent(), author));
     }
 
@@ -36,7 +36,7 @@ public class PatchNoteService {
         return patchNoteRepository.findAll();
     }
 
-    public PatchNote edit(PatchNoteDto.Request dto, User author, Long id) throws CannotFoundPatchNote {
+    public PatchNote edit(PatchNoteDto.PatchNoteRequest dto, User author, Long id) throws CannotFoundPatchNote {
         PatchNote patchNote = patchNoteRepository.findById(id).orElseThrow(()-> new CannotFoundPatchNote("해당 패치노트가 없어요"));
         patchNote.update(dto.getTitle(), dto.getContent());
         return patchNoteRepository.save(patchNote);
