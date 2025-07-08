@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -34,10 +33,10 @@ public class CommentController {
 
     // 댓글 쓰기 (패치노트)
     @PostMapping("/write/patchNote/{patch_note_id}")
-    public ResponseEntity<CommentDto.Response> writeNote(
+    public ResponseEntity<CommentDto.CommentResponse> writeNote(
             @PathVariable("patch_note_id") Long id,
             @AuthenticationPrincipal String loginId,
-            @RequestBody CommentDto.Request requestDto) throws CannotFoundUser, CannotFoundPatchNote {
+            @RequestBody CommentDto.CommentRequest requestDto) throws CannotFoundUser, CannotFoundPatchNote {
         // 1) 토큰을 통해서 가져온 아이디를 통해서 작성자 객체를 가져온다
 
         User author = userService.findByLoginId(loginId)
@@ -52,14 +51,14 @@ public class CommentController {
         // 3) Service로 내용과 author를 넘겨줌
         Comment comment = commentService.savePatchNoteComment(requestDto, author, patchNote);
 
-        return ResponseEntity.ok(CommentDto.Response.of(comment, author));
+        return ResponseEntity.ok(CommentDto.CommentResponse.of(comment, author));
     }
 
     @PostMapping("/write/guide/{guide_id}")
-    public ResponseEntity<CommentDto.Response> writeGuideComment(
+    public ResponseEntity<CommentDto.CommentResponse> writeGuideComment(
             @PathVariable("guide_id") Long id,
             @AuthenticationPrincipal String loginId,
-            @RequestBody CommentDto.Request requestDto) throws CannotFoundUser, CannotFoundGuide {
+            @RequestBody CommentDto.CommentRequest requestDto) throws CannotFoundUser, CannotFoundGuide {
         User author = userService.findByLoginId(loginId)
                 .orElseThrow(() -> new CannotFoundUser("해당 유저의 정보를 찾을 수 없습니다."));
 
@@ -68,16 +67,16 @@ public class CommentController {
 
         Comment comment = commentService.saveGuideComment(requestDto, author, guide);
 
-        return ResponseEntity.ok(CommentDto.Response.of(comment, author));
+        return ResponseEntity.ok(CommentDto.CommentResponse.of(comment, author));
     }
 
 
     // 댓글 수정
     @PatchMapping("/{comment_id}/edit")
-    public ResponseEntity<CommentDto.Response> editComment(
+    public ResponseEntity<CommentDto.CommentResponse> editComment(
             @PathVariable Long comment_id,
             @AuthenticationPrincipal String loginId,
-            @RequestBody CommentDto.Request requestDto) throws CannotFoundUser {
+            @RequestBody CommentDto.CommentRequest requestDto) throws CannotFoundUser {
 
         // 토큰을 통해서 author 객체를 받아서 service로 넘겨줌
         User author = userService.findByLoginId(loginId)
@@ -85,7 +84,7 @@ public class CommentController {
         requestDto.setCommentId(comment_id);
         Comment comment = commentService.updateComment(requestDto, author);
 
-        return ResponseEntity.ok(CommentDto.Response.of(comment, author));
+        return ResponseEntity.ok(CommentDto.CommentResponse.of(comment, author));
     }
 
     // 댓글 삭제
@@ -120,9 +119,9 @@ public class CommentController {
     }
 
     @GetMapping("/{id}/{type}")
-    public ResponseEntity<List<CommentDto.PostResponseDto>> getComment(@PathVariable Long id, @PathVariable String type) throws CannotFoundPatchNote, CannotFoundGuide {
+    public ResponseEntity<List<CommentDto.CommentDetailDto>> getComment(@PathVariable Long id, @PathVariable String type) throws CannotFoundPatchNote, CannotFoundGuide {
         List<Comment> comments;
-        List<CommentDto.PostResponseDto> commentDtoResponses = new ArrayList<>();
+        List<CommentDto.CommentDetailDto> commentDtoResponses = new ArrayList<>();
 
         if (type.equals("patchNote")) {
             PatchNote patchNote = patchNoteService.findById(id)
@@ -130,7 +129,7 @@ public class CommentController {
             comments = commentService.findPatchNoteCommentAll(patchNote);
 
             for (Comment comment : comments) {
-                commentDtoResponses.add(CommentDto.PostResponseDto.of(comment, comment.getAuthor()));
+                commentDtoResponses.add(CommentDto.CommentDetailDto.of(comment, comment.getAuthor()));
             }
         }
         else if (type.equals("guide")) {
@@ -139,7 +138,7 @@ public class CommentController {
 
             comments = commentService.findGuideCommentAll(guide);
             for (Comment comment : comments) {
-                commentDtoResponses.add(CommentDto.PostResponseDto.of(comment, comment.getAuthor()));
+                commentDtoResponses.add(CommentDto.CommentDetailDto.of(comment, comment.getAuthor()));
             }
         }
 

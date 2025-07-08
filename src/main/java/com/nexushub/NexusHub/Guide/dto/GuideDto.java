@@ -11,7 +11,7 @@ import com.nexushub.NexusHub.Guide.domain.Guide;
 public class GuideDto {
     @Getter
     @NoArgsConstructor
-    public static class Request {
+    public static class GuideRequest {
         private String title;
         private String content;
         private Long championId;

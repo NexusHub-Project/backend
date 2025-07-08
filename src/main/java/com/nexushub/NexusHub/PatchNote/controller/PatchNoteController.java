@@ -11,12 +11,10 @@ import com.nexushub.NexusHub.User.domain.User;
 import com.nexushub.NexusHub.User.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,7 +35,7 @@ public class PatchNoteController {
     @PostMapping("/upload")
     @PreAuthorize("hasRole('ADMIN')") // * ADMIN 역할만 이 메소드를 호출할 수 있도록 제한하기
     public ResponseEntity<PatchNoteDto.PatchNoteUploadResponseDto> createPatchNote(
-            @RequestBody PatchNoteDto.Request patchNoteRequestDto,
+            @RequestBody PatchNoteDto.PatchNoteRequest patchNotePatchNoteRequestDto,
             // 현재 로그인한 사용자의 loginId를 자동으로 가져 옴
             @AuthenticationPrincipal String loginId) throws CannotFoundUser {
 
@@ -46,7 +44,7 @@ public class PatchNoteController {
                 .orElseThrow(() -> new CannotFoundUser("해당 관리자 정보를 찾을 수 없습니다."));
 
         // 2) PatchNote 게시물 내용과 adminUser의 정보를 넘겨서 DB에 저장할 수 있도록 Service로 넘겨줌
-        PatchNote createdPatchNote = patchNoteService.save(patchNoteRequestDto, adminUser);
+        PatchNote createdPatchNote = patchNoteService.save(patchNotePatchNoteRequestDto, adminUser);
 
         // 3) 반환받은 PatchNote 객체를 Response로 감싸서 리턴해준다
         return ResponseEntity.ok(new PatchNoteDto.PatchNoteUploadResponseDto(createdPatchNote));
@@ -83,7 +81,7 @@ public class PatchNoteController {
     // 패치노트 수정하기 (관리자만 가능)
     @PatchMapping("/edit/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<PatchNoteDto.PatchNoteResponseDto> editPatchNote(@RequestBody PatchNoteDto.Request patchNoteRequestDto, @PathVariable("id") Long id, @AuthenticationPrincipal String loginId) throws CannotFoundUser, CannotFoundPatchNote {
+    public ResponseEntity<PatchNoteDto.PatchNoteResponseDto> editPatchNote(@RequestBody PatchNoteDto.PatchNoteRequest patchNotePatchNoteRequestDto, @PathVariable("id") Long id, @AuthenticationPrincipal String loginId) throws CannotFoundUser, CannotFoundPatchNote {
 
         // 1) 받아온 loginID를 통해서 User 객체를 가져 온다
         User adminUser = userService.findByLoginId(loginId)
@@ -91,7 +89,7 @@ public class PatchNoteController {
 
         try {
             // 2) 편집하기
-            PatchNote editPatchNote = patchNoteService.edit(patchNoteRequestDto, adminUser, id);
+            PatchNote editPatchNote = patchNoteService.edit(patchNotePatchNoteRequestDto, adminUser, id);
 
             // 3) 리턴
             return ResponseEntity.ok(new PatchNoteDto.PatchNoteResponseDto(editPatchNote));

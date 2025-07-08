@@ -9,7 +9,7 @@ public class PatchNoteDto {
 
     @Getter
     @NoArgsConstructor
-    public static class Request {
+    public static class PatchNoteRequest {
         private String title;
         private String content;
     }

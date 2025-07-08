@@ -2,7 +2,6 @@ package com.nexushub.NexusHub.Guide.controller;
 
 
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundChampion;
-import com.nexushub.NexusHub.Exception.Normal.CannotFoundComment;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundGuide;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundUser;
 import com.nexushub.NexusHub.Guide.service.GuideService;
@@ -38,19 +37,19 @@ public class GuideController {
     // 수정해야할 것 -> 로그인하지 않은 사람 (토큰이 없는 사람)이 포스팅을 하려할 때 로그인을 요청하는 오류 발생 시키기
     @PostMapping("/upload")
     public ResponseEntity<GuideDto.GuideUploadResponseDto> createGuide(
-            @RequestBody GuideDto.Request request,
+            @RequestBody GuideDto.GuideRequest guideRequest,
             @AuthenticationPrincipal String loginId)
     {
         try {
-            log.info("공략 create: title = {}", request.getTitle());
+            log.info("공략 create: title = {}", guideRequest.getTitle());
 
             // 유저 정보 받아오기
             User author = userService.findByLoginId(loginId).orElseThrow(() -> new CannotFoundUser ("해당 유저 정보를 찾을 수 없습니다."));
 
-            Champion champion = championService.getChampionById(request.getChampionId())
-                    .orElseThrow(()-> new CannotFoundChampion("id = "+ request.getChampionId()+" 인 챔피언을 찾을 수 없습니다. "));
+            Champion champion = championService.getChampionById(guideRequest.getChampionId())
+                    .orElseThrow(()-> new CannotFoundChampion("id = "+ guideRequest.getChampionId()+" 인 챔피언을 찾을 수 없습니다. "));
 
-            Guide saved = guideService.save(request, author, champion);
+            Guide saved = guideService.save(guideRequest, author, champion);
             return ResponseEntity.ok(new GuideDto.GuideUploadResponseDto(saved));
 
         } catch (Exception e) {
@@ -122,7 +121,7 @@ public class GuideController {
     public ResponseEntity<GuideDto.GuideResponseDto> updateGuide(
             @PathVariable Long id,
             @AuthenticationPrincipal String loginId,
-            @RequestBody GuideDto.Request dto) throws CannotFoundGuide, CannotFoundUser {
+            @RequestBody GuideDto.GuideRequest dto) throws CannotFoundGuide, CannotFoundUser {
         // 1) author 찾기
         User author = userService.findByLoginId(loginId)
                 .orElseThrow(() -> new CannotFoundUser("해당 유저 정보를 찾을 수 없습니다"));
