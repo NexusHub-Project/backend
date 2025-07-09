@@ -3,7 +3,13 @@ package com.nexushub.NexusHub.Summoner.service;
 import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.InGame.Champion.Champion;
 import com.nexushub.NexusHub.InGame.Champion.ChampionRepository;
+import com.nexushub.NexusHub.Match.domain.Match;
+import com.nexushub.NexusHub.Match.domain.MatchParticipant;
+import com.nexushub.NexusHub.Match.dto.InfoDto;
 import com.nexushub.NexusHub.Match.dto.MatchDto;
+import com.nexushub.NexusHub.Match.dto.ParticipantDto;
+import com.nexushub.NexusHub.Match.dto.v2.MatchDataDto;
+import com.nexushub.NexusHub.Match.repository.MatchRepository;
 import com.nexushub.NexusHub.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.dto.MasteryDto;
 import com.nexushub.NexusHub.Riot.dto.RiotAccountDto;
@@ -18,10 +24,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +68,7 @@ public class SummonerService {
         }
     }
 
-    public Summoner getSummonerTierInfoV2(SummonerRequestDto dto) throws CannotFoundSummoner {
+    public Summoner getSummonerTierInfoV2(SummonerDto.Request dto) throws CannotFoundSummoner {
         //1. 일단 gameName + tagLine으로 찾아보기
         Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
 
@@ -106,6 +114,99 @@ public class SummonerService {
         return dtos;
     }
 
+    public List<MatchDataDto> getSummonerMatchesInfoV1(SummonerRequestDto dto) throws CannotFoundSummoner {
+        // step 2) : dto에 담겨 있는 gameName, tagLine를 통해서 해당 유저의 MatchId들을 받아오기
+        String[] summonerMatchesId = getSummonerMatchesId(dto);
+        List<MatchDataDto> matchDataDtos = new ArrayList<>();
+
+        // step 3) : matchId를 통해서 Match_info 객체를 받아오기  => 있을 수도 있고 없을 수도 있음
+        for (String matchId : summonerMatchesId) {
+            Optional<Match> match = matchService.getMatchByMatchId(matchId);
+
+            // step 4) : match가 있다면 바로 matchDataDto 구성하기
+            if (match.isPresent()) {
+                // step 4-1) : MatchDataDto에는 player01~10까지 넣기
+                List<MatchParticipant> participants = match.get().getParticipants();
+                MatchDataDto matchDataDto = MatchDataDto.of(participants);
+                matchDataDto.setMatchInform(match.get());
+                // step 4-2) : MatchDataDto 객체를 List에 넣어준다
+                matchDataDtos.add(matchDataDto);
+            }
+
+            // step 5) : match가 없다면 새로 만들어서 matchDataDto를 구성하기
+            else {
+                // step 5-1) : riot API 요청을 통해서 해당 matchId의 값을 받기
+                MatchDto matchDto = riotApiService.getMatchInfo(matchId);
+
+                // step 5-2) : matchDto 속의 infoDto를 통해서 participantDto를 통해, Summoner에 저장이 되어 있는 Summoner인지 체크하기
+                InfoDto infoDto = matchDto.getInfo();
+                List<ParticipantDto> participantsDtoFromApi = infoDto.getParticipants();
+
+
+                // 아직 저장 안 함
+                Match newMatch = Match.builder()
+                        .matchId(matchId) // Riot API에서 받은 matchId
+                        .gameMode(infoDto.getGameMode())
+                        .gameDuration(infoDto.getGameDuration())
+                        .gameCreation(infoDto.getGameCreation())
+                        .gameEndTimestamp(infoDto.getGameEndTimestamp())
+                        .build();
+
+                List<MatchParticipant> matchParticipants = new ArrayList<>();
+
+                for (ParticipantDto participantDto : participantsDtoFromApi) {
+                    // step 5-3) : puuid로 Summoner를 찾거나, 없으면 새로 저장합니다.
+                    Summoner summoner = summonerRepository.findSummonerByPuuid(participantDto.getPuuid())
+                            .orElseGet(() -> summonerRepository.save(
+                                    new Summoner(participantDto.getRiotIdGameName(), participantDto.getRiotIdTagline(), participantDto.getPuuid())
+                            ));
+
+                    MatchParticipant participant = MatchParticipant.builder()
+                            .match(newMatch)
+                            .summoner(summoner)
+                            .win(participantDto.getWin())
+                            .championId(participantDto.getChampionId())
+                            .champLevel(participantDto.getChampLevel())
+                            .teamPosition(participantDto.getTeamPosition())
+                            .item0(participantDto.getItem0())
+                            .item1(participantDto.getItem1())
+                            .item2(participantDto.getItem2())
+                            .item3(participantDto.getItem3())
+                            .item4(participantDto.getItem4())
+                            .item5(participantDto.getItem5())
+                            .item6(participantDto.getItem6())
+                            .perks(participantDto.getPerks())
+                            .kda(participantDto.getKda())
+                            .kills(participantDto.getKills())
+                            .assists(participantDto.getAssists())
+                            .deaths(participantDto.getDeaths())
+                            .totalMinionKills(participantDto.getTotalMinionsKilled() + participantDto.getNeutralMinionsKilled())
+                            .totalDamageTaken(participantDto.getTotalDamageTaken())
+                            .totalDamageDealtToChampions(participantDto.getTotalDamageDealtToChampions())
+                            .doubleKills(participantDto.getDoubleKills())
+                            .tripleKills(participantDto.getTripleKills())
+                            .quadraKills(participantDto.getQuadraKills())
+                            .pentaKills(participantDto.getPentaKills())
+                            .build();
+
+                    participant.setTeamLuckScore(ThreadLocalRandom.current().nextInt(35, 100));
+                    participant.setOurScore(ThreadLocalRandom.current().nextInt(35, 100));
+                    matchParticipants.add(participant);
+                }
+
+                newMatch.setParticipants(matchParticipants);
+
+                MatchDataDto matchDataDto = MatchDataDto.of(matchParticipants);
+                matchDataDto.setMatchInform(newMatch);
+                matchDataDtos.add(matchDataDto);
+
+                matchService.save(newMatch);
+            }
+        }
+
+        return matchDataDtos;
+    }
+
     private Summoner SaveOrUpateSummoner(SummonerDto dto, Optional<Summoner> summoner){
         if (summoner.isPresent()){ // 최초 검색이 아닌 경우
             Summoner target = summoner.get();
@@ -117,6 +218,7 @@ public class SummonerService {
             return summonerRepository.save(target);
         }
     }
+
 
     private List<MasteryDto> setChampionNameV1(List<MasteryDto> dtos){
         for (MasteryDto dto : dtos) {

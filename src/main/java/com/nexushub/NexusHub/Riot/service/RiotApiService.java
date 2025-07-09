@@ -133,6 +133,7 @@ public class RiotApiService {
             return null;
         }
     }
+
     public MatchDto getMatchInfo(String matchId) {
         String url = baseUrlAsia + "/lol/match/v5/matches/"+matchId;
 
@@ -177,6 +178,7 @@ public class RiotApiService {
             return new ArrayList<>(); // 오류 발생 시 빈 리스트 반환
         }
     }
+
     public MinimalMatchDto getMinimalMatchInfo(String matchId) {
         String url = baseUrlAsia + "/lol/match/v5/matches/" + matchId;
 

@@ -1,6 +1,7 @@
 package com.nexushub.NexusHub.Summoner.dto;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,5 +40,13 @@ public class SummonerDto {
     }
     public void test(){
         this.flexRankLP--;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Request{
+        private String gameName;
+        private String tagLine;
     }
 }

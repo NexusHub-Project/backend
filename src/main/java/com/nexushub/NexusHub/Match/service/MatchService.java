@@ -2,24 +2,29 @@ package com.nexushub.NexusHub.Match.service;
 
 import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.InGame.Champion.ChampionRepository;
+import com.nexushub.NexusHub.Match.domain.Match;
+import com.nexushub.NexusHub.Match.domain.MatchParticipant;
 import com.nexushub.NexusHub.Match.dto.ChampionStatsDto;
 import com.nexushub.NexusHub.Match.dto.DataDto;
 import com.nexushub.NexusHub.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Match.dto.ParticipantDto;
 import com.nexushub.NexusHub.Match.dto.minimal.MinimalMatchDto;
+import com.nexushub.NexusHub.Match.dto.v2.MatchDataDto;
+import com.nexushub.NexusHub.Match.repository.MatchParticipantRepository;
+import com.nexushub.NexusHub.Match.repository.MatchRepository;
 import com.nexushub.NexusHub.Riot.service.RiotApiService;
 import com.nexushub.NexusHub.Statistics.dto.ChampionSeasonStatisticsDto;
+import com.nexushub.NexusHub.Summoner.domain.Summoner;
 import com.nexushub.NexusHub.Summoner.dto.SummonerRequestDto;
+import com.nexushub.NexusHub.Summoner.service.SummonerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -27,6 +32,9 @@ import java.util.stream.Collectors;
 public class MatchService {
     private final RiotApiService riotApiService;
     private final ChampionRepository championRepository;
+    private final MatchRepository matchRepository;
+    private final MatchParticipantRepository matchParticipantRepository;
+
 
     @Value("${riot.season2025-1}")
     private long seasonStartTime;
@@ -101,7 +109,6 @@ public class MatchService {
         }
         return statsMap;
     }
-
     public List<ChampionSeasonStatisticsDto> getSeasonChampionStatsV2(SummonerRequestDto dto) throws CannotFoundSummoner {
         String puuid = riotApiService.getSummonerPuuid(dto.getGameName(), dto.getTagLine());
 
@@ -162,11 +169,18 @@ public class MatchService {
                 .sorted(Comparator.comparingInt(ChampionSeasonStatisticsDto::getGamesPlayed).reversed())
                 .collect(Collectors.toList());
     }
-
-
     public MatchDto getMatchInfoById(String matchId) {
         return riotApiService.getMatchInfo(matchId);
     }
+
+    public Optional<Match> getMatchByMatchId(String matchId) {
+        return matchRepository.findMatchByMatchId(matchId);
+    }
+
+    public void save(Match newMatch){
+        matchRepository.save(newMatch);
+    }
+
     private void calculateOurScore(List<ParticipantDto> participants) {
         participants.forEach(participant -> participant.setOurScore(
                         (int) (Math.random()*80)+20
