@@ -1,6 +1,7 @@
 package com.nexushub.NexusHub.Summoner.domain;
 
 
+import com.nexushub.NexusHub.Match.domain.MatchParticipant;
 import com.nexushub.NexusHub.Summoner.dto.SummonerDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -61,6 +63,9 @@ public class Summoner {
     @Column(name = "update_at")
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "summoner")
+    private List<MatchParticipant> matchHistory;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -99,5 +104,9 @@ public class Summoner {
         this.flexRankDefeat = dto.getFlexRankDefeat();
         return this;
     }
-
+    public Summoner (String gameName, String tagLine, String puuid) {
+        this.gameName = gameName;
+        this.tagLine = tagLine;
+        this.puuid = puuid;
+    }
 }

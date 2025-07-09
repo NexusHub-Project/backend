@@ -2,6 +2,7 @@ package com.nexushub.NexusHub.Summoner.controller.v1;
 
 import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Match.dto.MatchDto;
+import com.nexushub.NexusHub.Match.dto.v2.MatchDataDto;
 import com.nexushub.NexusHub.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.dto.MasteryDto;
 import com.nexushub.NexusHub.Statistics.dto.ChampionSeasonStatisticsDto;
@@ -9,6 +10,7 @@ import com.nexushub.NexusHub.Summoner.domain.Summoner;
 import com.nexushub.NexusHub.Summoner.dto.SummonerDto;
 import com.nexushub.NexusHub.Summoner.dto.SummonerRequestDto;
 import com.nexushub.NexusHub.Summoner.service.SummonerService;
+import com.nexushub.NexusHub.User.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import java.util.List;
 public class SummonerController {
     private final SummonerService summonerService;
     private final MatchService matchService;
+    private final UserService userService;
 
     // 티어 정보 검색
     @PostMapping("/tier")
@@ -52,6 +55,15 @@ public class SummonerController {
         List<MatchDto> dtos = summonerService.getSummonerMatchesInfo(dto);
         return ResponseEntity.ok(dtos);
     }
+    @GetMapping("/matches/v3")
+    public ResponseEntity<List<MatchDataDto>> summonerMatchesV3(@RequestBody SummonerRequestDto dto) throws CannotFoundSummoner {
+
+        log.info("step 1) Summoner Controller : summonerMatchesV3 / dto : {}", dto.toString());
+        List<MatchDataDto> matchDtos = summonerService.getSummonerMatchesInfoV1(dto);
+
+        return ResponseEntity.ok(matchDtos);
+    }
+
 
     @GetMapping("/matchInfo")
     public ResponseEntity<MatchDto> summonerMatchInfo(@RequestParam String matchId) {
