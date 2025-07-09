@@ -144,5 +144,4 @@ public class CommentController {
 
         return ResponseEntity.ok(commentDtoResponses);
     }
-
 }
