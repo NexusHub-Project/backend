@@ -60,7 +60,7 @@ public class SummonerService {
         }
     }
 
-    public Summoner getSummonerTierInfoV2(SummonerRequestDto dto) throws CannotFoundSummoner {
+    public Summoner getSummonerTierInfoV2(SummonerDto.Request dto) throws CannotFoundSummoner {
         //1. 일단 gameName + tagLine으로 찾아보기
         Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
 

@@ -6,6 +6,7 @@ import com.nexushub.NexusHub.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.dto.MasteryDto;
 import com.nexushub.NexusHub.Statistics.dto.ChampionSeasonStatisticsDto;
 import com.nexushub.NexusHub.Summoner.domain.Summoner;
+import com.nexushub.NexusHub.Summoner.dto.SummonerDto;
 import com.nexushub.NexusHub.Summoner.dto.SummonerRequestDto;
 import com.nexushub.NexusHub.Summoner.service.SummonerService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class SummonerController {
 
     // 티어 정보 검색
     @PostMapping("/tier")
-    public ResponseEntity<Summoner> summonerTierInfo(@RequestBody SummonerRequestDto dto) throws CannotFoundSummoner {
+    public ResponseEntity<Summoner> summonerTierInfo(@RequestBody SummonerDto.Request dto) throws CannotFoundSummoner {
         Summoner summonerTierInfo = summonerService.getSummonerTierInfoV2(dto);
         return ResponseEntity.ok(summonerTierInfo);
 
