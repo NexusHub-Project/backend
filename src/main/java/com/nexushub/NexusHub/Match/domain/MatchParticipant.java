@@ -58,9 +58,6 @@ public class MatchParticipant {
     private Integer teamLuckScore;
     private Integer ourScore;
 
-//    private PerksDto perks;
-
-
 
     public void setTeamLuckScore(Integer score) {
         this.teamLuckScore = score;
