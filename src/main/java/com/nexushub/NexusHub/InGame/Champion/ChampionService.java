@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-@Service
+@Service("inGameChampionService")
 @RequiredArgsConstructor
 @Slf4j
 public class ChampionService {

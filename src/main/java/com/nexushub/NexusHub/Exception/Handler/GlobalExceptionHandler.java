@@ -1,9 +1,6 @@
 package com.nexushub.NexusHub.Exception.Handler;
 
-import com.nexushub.NexusHub.Exception.Fail.CannotSignUp;
-import com.nexushub.NexusHub.Exception.Fail.DeleteFail;
-import com.nexushub.NexusHub.Exception.Fail.EditFail;
-import com.nexushub.NexusHub.Exception.Fail.SignUpFail;
+import com.nexushub.NexusHub.Exception.Fail.*;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundChampion;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundComment;
 import com.nexushub.NexusHub.Exception.Normal.CannotFoundPatchNote;
@@ -94,6 +91,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CannotFoundChampion.class)
     public ResponseEntity<?> cannotFoundChampion(CannotFoundChampion e) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(PositionError.class)
+    public ResponseEntity<?> positionError(PositionError e) {
         Map<String, Object> error = new HashMap<>();
         error.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);

@@ -1,7 +1,6 @@
 package com.nexushub.NexusHub.Statistics.dto;
 
-import com.nexushub.NexusHub.Statistics.domain.Tier;
-import jakarta.persistence.Column;
+import com.nexushub.NexusHub.Statistics.domain.Champion.ChampionStatsByPosition;
 import lombok.Data;
 
 @Data
@@ -13,12 +12,12 @@ public class TierResponseDto {
     private Float winRate;
     private Integer scoreDiff;
 
-    public TierResponseDto(Tier tier) {
-        this.tier = tier.getTier();
-        this.score = tier.getScore();
-        this.pickRate = tier.getPickRate();
-        this.winRate = tier.getWinRate();
-        this.scoreDiff = tier.getScoreDiff();
-        this.championName = tier.getChampion().getNameKo();
+    public TierResponseDto(ChampionStatsByPosition stats) {
+        this.championName = stats.getChampion().getNameKo();
+        this.tier = stats.getTier();
+        this.score = stats.getScore();
+        this.pickRate = stats.getPickRate();
+        this.winRate = stats.getWinRate();
+        this.scoreDiff = stats.getScore();
     }
 }

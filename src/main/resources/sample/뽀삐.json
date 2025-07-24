@@ -1,0 +1,2010 @@
+[
+  {
+    "detailChampInfo": {
+      "tier": 1,
+      "winRate": 56.3252,
+      "pickRate": 40.1054,
+      "banRate": 18.9048,
+      "gameCount": 38942,
+      "percent": 0
+    },
+    "detailChampBuild": {
+      "lane": "SUP",
+      "item01": 3078,
+      "item02": 3053,
+      "item03": 3153,
+      "item04": 6333,
+      "item05": 3026,
+      "item06": 2055,
+      "perks": {
+        "statPerks": {
+          "defense": 5002,
+          "flex": 5008,
+          "offense": 5008
+        },
+        "styles": [
+          {
+            "description": "primaryStyle",
+            "style": 8000,
+            "selections": [
+              {
+                "perk": 8010,
+                "var1": 0,
+                "var2": 0,
+                "var3": 0
+              },
+              {
+                "perk": 9101,
+                "var1": 0,
+                "var2": 0,
+                "var3": 0
+              },
+              {
+                "perk": 9104,
+                "var1": 0,
+                "var2": 0,
+                "var3": 0
+              },
+              {
+                "perk": 8014,
+                "var1": 0,
+                "var2": 0,
+                "var3": 0
+              }
+            ]
+          },
+          {
+            "description": "subStyle",
+            "style": 8100,
+            "selections": [
+              {
+                "perk": 8139,
+                "var1": 0,
+                "var2": 0,
+                "var3": 0
+              },
+              {
+                "perk": 8138,
+                "var1": 0,
+                "var2": 0,
+                "var3": 0
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "relativeWinRate": {
+      "champions": [
+        {
+          "championName": "노틸러스",
+          "gameCount": 175,
+          "winRate": 44.437
+        },
+        {
+          "championName": "나미",
+          "gameCount": 680,
+          "winRate": 55.396
+        },
+        {
+          "championName": "레오나",
+          "gameCount": 209,
+          "winRate": 48.5359
+        },
+        {
+          "championName": "레나타 글라스크",
+          "gameCount": 576,
+          "winRate": 50.0663
+        },
+        {
+          "championName": "렐",
+          "gameCount": 469,
+          "winRate": 50.6826
+        },
+        {
+          "championName": "룰루",
+          "gameCount": 758,
+          "winRate": 54.3926
+        },
+        {
+          "championName": "럭스",
+          "gameCount": 962,
+          "winRate": 44.6274
+        },
+        {
+          "championName": "라칸",
+          "gameCount": 229,
+          "winRate": 49.9529
+        },
+        {
+          "championName": "마오카이",
+          "gameCount": 401,
+          "winRate": 56.0829
+        },
+        {
+          "championName": "모르가나",
+          "gameCount": 294,
+          "winRate": 51.2298
+        },
+        {
+          "championName": "밀리오",
+          "gameCount": 756,
+          "winRate": 45.49
+        },
+        {
+          "championName": "바드",
+          "gameCount": 381,
+          "winRate": 50.2378
+        },
+        {
+          "championName": "브라움",
+          "gameCount": 286,
+          "winRate": 43.0074
+        },
+        {
+          "championName": "브랜드",
+          "gameCount": 338,
+          "winRate": 47.714
+        },
+        {
+          "championName": "블리츠크랭크",
+          "gameCount": 454,
+          "winRate": 55.9178
+        },
+        {
+          "championName": "세나",
+          "gameCount": 393,
+          "winRate": 51.6209
+        },
+        {
+          "championName": "세라핀",
+          "gameCount": 666,
+          "winRate": 59.3387
+        },
+        {
+          "championName": "소나",
+          "gameCount": 47,
+          "winRate": 59.3789
+        },
+        {
+          "championName": "소라카",
+          "gameCount": 254,
+          "winRate": 46.9154
+        },
+        {
+          "championName": "스웨인",
+          "gameCount": 135,
+          "winRate": 51.4656
+        },
+        {
+          "championName": "샤코",
+          "gameCount": 318,
+          "winRate": 52.9151
+        },
+        {
+          "championName": "쓰레쉬",
+          "gameCount": 544,
+          "winRate": 57.1983
+        },
+        {
+          "championName": "알리스타",
+          "gameCount": 713,
+          "winRate": 51.2095
+        },
+        {
+          "championName": "애쉬",
+          "gameCount": 181,
+          "winRate": 49.4024
+        },
+        {
+          "championName": "자이라",
+          "gameCount": 560,
+          "winRate": 55.4438
+        },
+        {
+          "championName": "잔나",
+          "gameCount": 613,
+          "winRate": 46.1018
+        },
+        {
+          "championName": "질리언",
+          "gameCount": 516,
+          "winRate": 48.5822
+        },
+        {
+          "championName": "카르마",
+          "gameCount": 566,
+          "winRate": 54.4908
+        },
+        {
+          "championName": "타릭",
+          "gameCount": 257,
+          "winRate": 53.3148
+        },
+        {
+          "championName": "탐 켄치",
+          "gameCount": 30,
+          "winRate": 40.6926
+        },
+        {
+          "championName": "파이크",
+          "gameCount": 156,
+          "winRate": 42.5852
+        },
+        {
+          "championName": "피들스틱",
+          "gameCount": 617,
+          "winRate": 53.9431
+        },
+        {
+          "championName": "하이머딩거",
+          "gameCount": 419,
+          "winRate": 47.8885
+        },
+        {
+          "championName": "벨코즈",
+          "gameCount": 767,
+          "winRate": 47.5368
+        },
+        {
+          "championName": "제라스",
+          "gameCount": 404,
+          "winRate": 54.4064
+        },
+        {
+          "championName": "오로라",
+          "gameCount": 245,
+          "winRate": 48.501
+        },
+        {
+          "championName": "유미",
+          "gameCount": 603,
+          "winRate": 54.1163
+        },
+        {
+          "championName": "니코",
+          "gameCount": 810,
+          "winRate": 47.5732
+        },
+        {
+          "championName": "노틸러스",
+          "gameCount": 395,
+          "winRate": 50.9999
+        },
+        {
+          "championName": "나미",
+          "gameCount": 159,
+          "winRate": 45.8748
+        },
+        {
+          "championName": "레오나",
+          "gameCount": 704,
+          "winRate": 56.5106
+        },
+        {
+          "championName": "레나타 글라스크",
+          "gameCount": 25,
+          "winRate": 48.5273
+        },
+        {
+          "championName": "렐",
+          "gameCount": 574,
+          "winRate": 50.0956
+        },
+        {
+          "championName": "룰루",
+          "gameCount": 832,
+          "winRate": 52.7782
+        },
+        {
+          "championName": "럭스",
+          "gameCount": 908,
+          "winRate": 41.1248
+        },
+        {
+          "championName": "라칸",
+          "gameCount": 523,
+          "winRate": 47.2892
+        },
+        {
+          "championName": "마오카이",
+          "gameCount": 587,
+          "winRate": 45.5172
+        },
+        {
+          "championName": "모르가나",
+          "gameCount": 899,
+          "winRate": 47.2714
+        },
+        {
+          "championName": "밀리오",
+          "gameCount": 400,
+          "winRate": 45.1709
+        },
+        {
+          "championName": "바드",
+          "gameCount": 906,
+          "winRate": 58.9339
+        },
+        {
+          "championName": "브라움",
+          "gameCount": 270,
+          "winRate": 46.7388
+        },
+        {
+          "championName": "브랜드",
+          "gameCount": 629,
+          "winRate": 58.193
+        },
+        {
+          "championName": "블리츠크랭크",
+          "gameCount": 944,
+          "winRate": 54.1185
+        },
+        {
+          "championName": "세나",
+          "gameCount": 811,
+          "winRate": 49.4421
+        },
+        {
+          "championName": "세라핀",
+          "gameCount": 958,
+          "winRate": 52.5763
+        },
+        {
+          "championName": "소나",
+          "gameCount": 63,
+          "winRate": 48.053
+        },
+        {
+          "championName": "소라카",
+          "gameCount": 790,
+          "winRate": 44.409
+        },
+        {
+          "championName": "스웨인",
+          "gameCount": 331,
+          "winRate": 47.5047
+        },
+        {
+          "championName": "샤코",
+          "gameCount": 541,
+          "winRate": 58.4722
+        },
+        {
+          "championName": "쓰레쉬",
+          "gameCount": 984,
+          "winRate": 51.4398
+        },
+        {
+          "championName": "알리스타",
+          "gameCount": 504,
+          "winRate": 48.5389
+        },
+        {
+          "championName": "애쉬",
+          "gameCount": 698,
+          "winRate": 57.9112
+        },
+        {
+          "championName": "자이라",
+          "gameCount": 946,
+          "winRate": 43.2378
+        },
+        {
+          "championName": "잔나",
+          "gameCount": 887,
+          "winRate": 48.7781
+        },
+        {
+          "championName": "질리언",
+          "gameCount": 435,
+          "winRate": 54.4338
+        },
+        {
+          "championName": "카르마",
+          "gameCount": 452,
+          "winRate": 53.4403
+        },
+        {
+          "championName": "타릭",
+          "gameCount": 924,
+          "winRate": 43.3196
+        },
+        {
+          "championName": "탐 켄치",
+          "gameCount": 205,
+          "winRate": 56.0158
+        },
+        {
+          "championName": "파이크",
+          "gameCount": 51,
+          "winRate": 56.7653
+        },
+        {
+          "championName": "피들스틱",
+          "gameCount": 61,
+          "winRate": 42.2011
+        },
+        {
+          "championName": "하이머딩거",
+          "gameCount": 668,
+          "winRate": 45.3051
+        },
+        {
+          "championName": "벨코즈",
+          "gameCount": 853,
+          "winRate": 58.1736
+        },
+        {
+          "championName": "제라스",
+          "gameCount": 638,
+          "winRate": 46.4692
+        },
+        {
+          "championName": "오로라",
+          "gameCount": 395,
+          "winRate": 53.1734
+        },
+        {
+          "championName": "유미",
+          "gameCount": 956,
+          "winRate": 44.4597
+        },
+        {
+          "championName": "니코",
+          "gameCount": 254,
+          "winRate": 45.7048
+        }
+      ]
+    },
+    "synergyChampion": {
+      "champions": [
+        {
+          "championName": "노틸러스",
+          "gameCount": 175,
+          "winRate": 44.437
+        },
+        {
+          "championName": "나미",
+          "gameCount": 680,
+          "winRate": 55.396
+        },
+        {
+          "championName": "레오나",
+          "gameCount": 209,
+          "winRate": 48.5359
+        },
+        {
+          "championName": "레나타 글라스크",
+          "gameCount": 576,
+          "winRate": 50.0663
+        },
+        {
+          "championName": "렐",
+          "gameCount": 469,
+          "winRate": 50.6826
+        },
+        {
+          "championName": "룰루",
+          "gameCount": 758,
+          "winRate": 54.3926
+        },
+        {
+          "championName": "럭스",
+          "gameCount": 962,
+          "winRate": 44.6274
+        },
+        {
+          "championName": "라칸",
+          "gameCount": 229,
+          "winRate": 49.9529
+        },
+        {
+          "championName": "마오카이",
+          "gameCount": 401,
+          "winRate": 56.0829
+        },
+        {
+          "championName": "모르가나",
+          "gameCount": 294,
+          "winRate": 51.2298
+        },
+        {
+          "championName": "밀리오",
+          "gameCount": 756,
+          "winRate": 45.49
+        },
+        {
+          "championName": "바드",
+          "gameCount": 381,
+          "winRate": 50.2378
+        },
+        {
+          "championName": "브라움",
+          "gameCount": 286,
+          "winRate": 43.0074
+        },
+        {
+          "championName": "브랜드",
+          "gameCount": 338,
+          "winRate": 47.714
+        },
+        {
+          "championName": "블리츠크랭크",
+          "gameCount": 454,
+          "winRate": 55.9178
+        },
+        {
+          "championName": "세나",
+          "gameCount": 393,
+          "winRate": 51.6209
+        },
+        {
+          "championName": "세라핀",
+          "gameCount": 666,
+          "winRate": 59.3387
+        },
+        {
+          "championName": "소나",
+          "gameCount": 47,
+          "winRate": 59.3789
+        },
+        {
+          "championName": "소라카",
+          "gameCount": 254,
+          "winRate": 46.9154
+        },
+        {
+          "championName": "스웨인",
+          "gameCount": 135,
+          "winRate": 51.4656
+        },
+        {
+          "championName": "샤코",
+          "gameCount": 318,
+          "winRate": 52.9151
+        },
+        {
+          "championName": "쓰레쉬",
+          "gameCount": 544,
+          "winRate": 57.1983
+        },
+        {
+          "championName": "알리스타",
+          "gameCount": 713,
+          "winRate": 51.2095
+        },
+        {
+          "championName": "애쉬",
+          "gameCount": 181,
+          "winRate": 49.4024
+        },
+        {
+          "championName": "자이라",
+          "gameCount": 560,
+          "winRate": 55.4438
+        },
+        {
+          "championName": "잔나",
+          "gameCount": 613,
+          "winRate": 46.1018
+        },
+        {
+          "championName": "질리언",
+          "gameCount": 516,
+          "winRate": 48.5822
+        },
+        {
+          "championName": "카르마",
+          "gameCount": 566,
+          "winRate": 54.4908
+        },
+        {
+          "championName": "타릭",
+          "gameCount": 257,
+          "winRate": 53.3148
+        },
+        {
+          "championName": "탐 켄치",
+          "gameCount": 30,
+          "winRate": 40.6926
+        },
+        {
+          "championName": "파이크",
+          "gameCount": 156,
+          "winRate": 42.5852
+        },
+        {
+          "championName": "피들스틱",
+          "gameCount": 617,
+          "winRate": 53.9431
+        },
+        {
+          "championName": "하이머딩거",
+          "gameCount": 419,
+          "winRate": 47.8885
+        },
+        {
+          "championName": "벨코즈",
+          "gameCount": 767,
+          "winRate": 47.5368
+        },
+        {
+          "championName": "제라스",
+          "gameCount": 404,
+          "winRate": 54.4064
+        },
+        {
+          "championName": "오로라",
+          "gameCount": 245,
+          "winRate": 48.501
+        },
+        {
+          "championName": "유미",
+          "gameCount": 603,
+          "winRate": 54.1163
+        },
+        {
+          "championName": "니코",
+          "gameCount": 810,
+          "winRate": 47.5732
+        },
+        {
+          "championName": "노틸러스",
+          "gameCount": 395,
+          "winRate": 50.9999
+        },
+        {
+          "championName": "나미",
+          "gameCount": 159,
+          "winRate": 45.8748
+        },
+        {
+          "championName": "레오나",
+          "gameCount": 704,
+          "winRate": 56.5106
+        },
+        {
+          "championName": "레나타 글라스크",
+          "gameCount": 25,
+          "winRate": 48.5273
+        },
+        {
+          "championName": "렐",
+          "gameCount": 574,
+          "winRate": 50.0956
+        },
+        {
+          "championName": "룰루",
+          "gameCount": 832,
+          "winRate": 52.7782
+        },
+        {
+          "championName": "럭스",
+          "gameCount": 908,
+          "winRate": 41.1248
+        },
+        {
+          "championName": "라칸",
+          "gameCount": 523,
+          "winRate": 47.2892
+        },
+        {
+          "championName": "마오카이",
+          "gameCount": 587,
+          "winRate": 45.5172
+        },
+        {
+          "championName": "모르가나",
+          "gameCount": 899,
+          "winRate": 47.2714
+        },
+        {
+          "championName": "밀리오",
+          "gameCount": 400,
+          "winRate": 45.1709
+        },
+        {
+          "championName": "바드",
+          "gameCount": 906,
+          "winRate": 58.9339
+        },
+        {
+          "championName": "브라움",
+          "gameCount": 270,
+          "winRate": 46.7388
+        },
+        {
+          "championName": "브랜드",
+          "gameCount": 629,
+          "winRate": 58.193
+        },
+        {
+          "championName": "블리츠크랭크",
+          "gameCount": 944,
+          "winRate": 54.1185
+        },
+        {
+          "championName": "세나",
+          "gameCount": 811,
+          "winRate": 49.4421
+        },
+        {
+          "championName": "세라핀",
+          "gameCount": 958,
+          "winRate": 52.5763
+        },
+        {
+          "championName": "소나",
+          "gameCount": 63,
+          "winRate": 48.053
+        },
+        {
+          "championName": "소라카",
+          "gameCount": 790,
+          "winRate": 44.409
+        },
+        {
+          "championName": "스웨인",
+          "gameCount": 331,
+          "winRate": 47.5047
+        },
+        {
+          "championName": "샤코",
+          "gameCount": 541,
+          "winRate": 58.4722
+        },
+        {
+          "championName": "쓰레쉬",
+          "gameCount": 984,
+          "winRate": 51.4398
+        },
+        {
+          "championName": "알리스타",
+          "gameCount": 504,
+          "winRate": 48.5389
+        },
+        {
+          "championName": "애쉬",
+          "gameCount": 698,
+          "winRate": 57.9112
+        },
+        {
+          "championName": "자이라",
+          "gameCount": 946,
+          "winRate": 43.2378
+        },
+        {
+          "championName": "잔나",
+          "gameCount": 887,
+          "winRate": 48.7781
+        },
+        {
+          "championName": "질리언",
+          "gameCount": 435,
+          "winRate": 54.4338
+        },
+        {
+          "championName": "카르마",
+          "gameCount": 452,
+          "winRate": 53.4403
+        },
+        {
+          "championName": "타릭",
+          "gameCount": 924,
+          "winRate": 43.3196
+        },
+        {
+          "championName": "탐 켄치",
+          "gameCount": 205,
+          "winRate": 56.0158
+        },
+        {
+          "championName": "파이크",
+          "gameCount": 51,
+          "winRate": 56.7653
+        },
+        {
+          "championName": "피들스틱",
+          "gameCount": 61,
+          "winRate": 42.2011
+        },
+        {
+          "championName": "하이머딩거",
+          "gameCount": 668,
+          "winRate": 45.3051
+        },
+        {
+          "championName": "벨코즈",
+          "gameCount": 853,
+          "winRate": 58.1736
+        },
+        {
+          "championName": "제라스",
+          "gameCount": 638,
+          "winRate": 46.4692
+        },
+        {
+          "championName": "오로라",
+          "gameCount": 395,
+          "winRate": 53.1734
+        },
+        {
+          "championName": "유미",
+          "gameCount": 956,
+          "winRate": 44.4597
+        },
+        {
+          "championName": "니코",
+          "gameCount": 254,
+          "winRate": 45.7048
+        }
+      ]
+    }
+  },
+  {
+    "detailChampInfo": {
+      "tier": 5,
+      "winRate": 57.0553,
+      "pickRate": 28.9064,
+      "banRate": 20.0924,
+      "gameCount": 52391,
+      "percent": 0
+    },
+    "detailChampBuild": {
+      "lane": "TOP",
+      "item01": 3078,
+      "item02": 3053,
+      "item03": 3153,
+      "item04": 6333,
+      "item05": 3026,
+      "item06": 2055,
+      "perks": {
+        "statPerks": {
+          "defense": 5002,
+          "flex": 5008,
+          "offense": 5008
+        },
+        "styles": [
+          {
+            "description": "primaryStyle",
+            "style": 8000,
+            "selections": [
+              {
+                "perk": 8010,
+                "var1": 0,
+                "var2": 0,
+                "var3": 0
+              },
+              {
+                "perk": 9101,
+                "var1": 0,
+                "var2": 0,
+                "var3": 0
+              },
+              {
+                "perk": 9104,
+                "var1": 0,
+                "var2": 0,
+                "var3": 0
+              },
+              {
+                "perk": 8014,
+                "var1": 0,
+                "var2": 0,
+                "var3": 0
+              }
+            ]
+          },
+          {
+            "description": "subStyle",
+            "style": 8100,
+            "selections": [
+              {
+                "perk": 8139,
+                "var1": 0,
+                "var2": 0,
+                "var3": 0
+              },
+              {
+                "perk": 8138,
+                "var1": 0,
+                "var2": 0,
+                "var3": 0
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "relativeWinRate": {
+      "champions": [
+        {
+          "championName": "세트",
+          "gameCount": 536,
+          "winRate": 45.4582
+        },
+        {
+          "championName": "말파이트",
+          "gameCount": 112,
+          "winRate": 43.4668
+        },
+        {
+          "championName": "모데카이저",
+          "gameCount": 192,
+          "winRate": 40.6812
+        },
+        {
+          "championName": "리븐",
+          "gameCount": 213,
+          "winRate": 41.5862
+        },
+        {
+          "championName": "케일",
+          "gameCount": 725,
+          "winRate": 48.2115
+        },
+        {
+          "championName": "쉔",
+          "gameCount": 749,
+          "winRate": 57.7938
+        },
+        {
+          "championName": "아트록스",
+          "gameCount": 440,
+          "winRate": 41.6585
+        },
+        {
+          "championName": "이렐리아",
+          "gameCount": 516,
+          "winRate": 57.428
+        },
+        {
+          "championName": "문도 박사",
+          "gameCount": 376,
+          "winRate": 43.1558
+        },
+        {
+          "championName": "잭스",
+          "gameCount": 172,
+          "winRate": 42.9156
+        },
+        {
+          "championName": "퀸",
+          "gameCount": 540,
+          "winRate": 56.8868
+        },
+        {
+          "championName": "우르곳",
+          "gameCount": 652,
+          "winRate": 49.0479
+        },
+        {
+          "championName": "피오라",
+          "gameCount": 103,
+          "winRate": 52.1631
+        },
+        {
+          "championName": "레넥톤",
+          "gameCount": 712,
+          "winRate": 52.8093
+        },
+        {
+          "championName": "워윅",
+          "gameCount": 404,
+          "winRate": 57.8786
+        },
+        {
+          "championName": "초가스",
+          "gameCount": 971,
+          "winRate": 54.3594
+        },
+        {
+          "championName": "케넨",
+          "gameCount": 278,
+          "winRate": 41.8997
+        },
+        {
+          "championName": "오른",
+          "gameCount": 319,
+          "winRate": 44.8839
+        },
+        {
+          "championName": "카밀",
+          "gameCount": 26,
+          "winRate": 52.5872
+        },
+        {
+          "championName": "다리우스",
+          "gameCount": 734,
+          "winRate": 51.4709
+        },
+        {
+          "championName": "갱플랭크",
+          "gameCount": 781,
+          "winRate": 53.2114
+        },
+        {
+          "championName": "그라가스",
+          "gameCount": 956,
+          "winRate": 59.0415
+        },
+        {
+          "championName": "나서스",
+          "gameCount": 406,
+          "winRate": 43.5374
+        },
+        {
+          "championName": "티모",
+          "gameCount": 221,
+          "winRate": 50.6528
+        },
+        {
+          "championName": "가렌",
+          "gameCount": 220,
+          "winRate": 46.712
+        },
+        {
+          "championName": "블라디미르",
+          "gameCount": 158,
+          "winRate": 55.3436
+        },
+        {
+          "championName": "올라프",
+          "gameCount": 861,
+          "winRate": 40.932
+        },
+        {
+          "championName": "사이온",
+          "gameCount": 122,
+          "winRate": 48.5941
+        },
+        {
+          "championName": "렝가",
+          "gameCount": 986,
+          "winRate": 59.3671
+        },
+        {
+          "championName": "요네",
+          "gameCount": 280,
+          "winRate": 52.5364
+        },
+        {
+          "championName": "그웬",
+          "gameCount": 282,
+          "winRate": 56.0779
+        },
+        {
+          "championName": "요릭",
+          "gameCount": 166,
+          "winRate": 47.0224
+        },
+        {
+          "championName": "야스오",
+          "gameCount": 942,
+          "winRate": 40.9811
+        },
+        {
+          "championName": "신지드",
+          "gameCount": 316,
+          "winRate": 44.3949
+        },
+        {
+          "championName": "하이머딩거",
+          "gameCount": 541,
+          "winRate": 53.2774
+        },
+        {
+          "championName": "제이스",
+          "gameCount": 373,
+          "winRate": 58.1059
+        },
+        {
+          "championName": "클레드",
+          "gameCount": 804,
+          "winRate": 44.9324
+        },
+        {
+          "championName": "트런들",
+          "gameCount": 802,
+          "winRate": 53.2917
+        },
+        {
+          "championName": "볼리베어",
+          "gameCount": 128,
+          "winRate": 52.5549
+        },
+        {
+          "championName": "자크",
+          "gameCount": 663,
+          "winRate": 46.8837
+        },
+        {
+          "championName": "나르",
+          "gameCount": 562,
+          "winRate": 53.9019
+        },
+        {
+          "championName": "크산테",
+          "gameCount": 255,
+          "winRate": 53.7777
+        },
+        {
+          "championName": "럼블",
+          "gameCount": 92,
+          "winRate": 52.9341
+        },
+        {
+          "championName": "라이즈",
+          "gameCount": 910,
+          "winRate": 48.866
+        },
+        {
+          "championName": "일라오이",
+          "gameCount": 223,
+          "winRate": 47.7307
+        },
+        {
+          "championName": "사일러스",
+          "gameCount": 702,
+          "winRate": 56.9587
+        },
+        {
+          "championName": "베인",
+          "gameCount": 867,
+          "winRate": 43.8181
+        },
+        {
+          "championName": "카시오페아",
+          "gameCount": 304,
+          "winRate": 58.0683
+        },
+        {
+          "championName": "칼리스타",
+          "gameCount": 339,
+          "winRate": 53.3748
+        },
+        {
+          "championName": "탐 켄치",
+          "gameCount": 27,
+          "winRate": 53.1239
+        },
+        {
+          "championName": "판테온",
+          "gameCount": 605,
+          "winRate": 51.0373
+        },
+        {
+          "championName": "오로라",
+          "gameCount": 751,
+          "winRate": 40.916
+        },
+        {
+          "championName": "갈리오",
+          "gameCount": 192,
+          "winRate": 50.3596
+        },
+        {
+          "championName": "아크샨",
+          "gameCount": 965,
+          "winRate": 57.941
+        },
+        {
+          "championName": "세트",
+          "gameCount": 920,
+          "winRate": 57.1067
+        },
+        {
+          "championName": "말파이트",
+          "gameCount": 937,
+          "winRate": 43.2676
+        },
+        {
+          "championName": "모데카이저",
+          "gameCount": 965,
+          "winRate": 54.873
+        },
+        {
+          "championName": "리븐",
+          "gameCount": 460,
+          "winRate": 50.0355
+        },
+        {
+          "championName": "케일",
+          "gameCount": 348,
+          "winRate": 50.1083
+        },
+        {
+          "championName": "쉔",
+          "gameCount": 157,
+          "winRate": 45.8842
+        },
+        {
+          "championName": "아트록스",
+          "gameCount": 643,
+          "winRate": 49.2001
+        },
+        {
+          "championName": "이렐리아",
+          "gameCount": 990,
+          "winRate": 43.4919
+        },
+        {
+          "championName": "문도 박사",
+          "gameCount": 40,
+          "winRate": 47.3017
+        },
+        {
+          "championName": "잭스",
+          "gameCount": 72,
+          "winRate": 51.5113
+        },
+        {
+          "championName": "퀸",
+          "gameCount": 529,
+          "winRate": 47.233
+        },
+        {
+          "championName": "우르곳",
+          "gameCount": 708,
+          "winRate": 47.344
+        },
+        {
+          "championName": "피오라",
+          "gameCount": 96,
+          "winRate": 56.54
+        },
+        {
+          "championName": "레넥톤",
+          "gameCount": 744,
+          "winRate": 50.8728
+        },
+        {
+          "championName": "워윅",
+          "gameCount": 610,
+          "winRate": 42.9742
+        },
+        {
+          "championName": "초가스",
+          "gameCount": 400,
+          "winRate": 48.4435
+        },
+        {
+          "championName": "케넨",
+          "gameCount": 469,
+          "winRate": 43.1226
+        },
+        {
+          "championName": "오른",
+          "gameCount": 176,
+          "winRate": 58.4421
+        },
+        {
+          "championName": "카밀",
+          "gameCount": 283,
+          "winRate": 43.4788
+        },
+        {
+          "championName": "다리우스",
+          "gameCount": 291,
+          "winRate": 52.2417
+        },
+        {
+          "championName": "갱플랭크",
+          "gameCount": 657,
+          "winRate": 43.7816
+        },
+        {
+          "championName": "그라가스",
+          "gameCount": 645,
+          "winRate": 43.8688
+        },
+        {
+          "championName": "나서스",
+          "gameCount": 952,
+          "winRate": 48.2074
+        },
+        {
+          "championName": "티모",
+          "gameCount": 931,
+          "winRate": 57.6102
+        },
+        {
+          "championName": "가렌",
+          "gameCount": 128,
+          "winRate": 49.7348
+        },
+        {
+          "championName": "블라디미르",
+          "gameCount": 878,
+          "winRate": 55.2378
+        },
+        {
+          "championName": "올라프",
+          "gameCount": 503,
+          "winRate": 56.8078
+        },
+        {
+          "championName": "사이온",
+          "gameCount": 883,
+          "winRate": 58.9813
+        },
+        {
+          "championName": "렝가",
+          "gameCount": 109,
+          "winRate": 42.9911
+        },
+        {
+          "championName": "요네",
+          "gameCount": 360,
+          "winRate": 59.4376
+        },
+        {
+          "championName": "그웬",
+          "gameCount": 249,
+          "winRate": 43.821
+        },
+        {
+          "championName": "요릭",
+          "gameCount": 428,
+          "winRate": 52.4862
+        },
+        {
+          "championName": "야스오",
+          "gameCount": 489,
+          "winRate": 47.6049
+        },
+        {
+          "championName": "신지드",
+          "gameCount": 83,
+          "winRate": 53.8452
+        },
+        {
+          "championName": "하이머딩거",
+          "gameCount": 287,
+          "winRate": 55.4005
+        },
+        {
+          "championName": "제이스",
+          "gameCount": 409,
+          "winRate": 55.6719
+        },
+        {
+          "championName": "클레드",
+          "gameCount": 611,
+          "winRate": 51.8576
+        },
+        {
+          "championName": "트런들",
+          "gameCount": 761,
+          "winRate": 53.4264
+        },
+        {
+          "championName": "볼리베어",
+          "gameCount": 591,
+          "winRate": 49.0228
+        },
+        {
+          "championName": "자크",
+          "gameCount": 422,
+          "winRate": 55.6956
+        },
+        {
+          "championName": "나르",
+          "gameCount": 312,
+          "winRate": 51.8089
+        },
+        {
+          "championName": "크산테",
+          "gameCount": 338,
+          "winRate": 56.5228
+        },
+        {
+          "championName": "럼블",
+          "gameCount": 801,
+          "winRate": 43.8726
+        },
+        {
+          "championName": "라이즈",
+          "gameCount": 214,
+          "winRate": 44.3144
+        },
+        {
+          "championName": "일라오이",
+          "gameCount": 395,
+          "winRate": 49.4866
+        },
+        {
+          "championName": "사일러스",
+          "gameCount": 188,
+          "winRate": 50.9806
+        },
+        {
+          "championName": "베인",
+          "gameCount": 741,
+          "winRate": 49.2201
+        },
+        {
+          "championName": "카시오페아",
+          "gameCount": 848,
+          "winRate": 59.0871
+        },
+        {
+          "championName": "칼리스타",
+          "gameCount": 98,
+          "winRate": 44.6793
+        },
+        {
+          "championName": "탐 켄치",
+          "gameCount": 996,
+          "winRate": 40.7663
+        },
+        {
+          "championName": "판테온",
+          "gameCount": 93,
+          "winRate": 47.8802
+        },
+        {
+          "championName": "오로라",
+          "gameCount": 394,
+          "winRate": 57.9692
+        },
+        {
+          "championName": "갈리오",
+          "gameCount": 756,
+          "winRate": 50.9465
+        },
+        {
+          "championName": "아크샨",
+          "gameCount": 431,
+          "winRate": 45.8017
+        }
+      ]
+    },
+    "synergyChampion": {
+      "champions": [
+        {
+          "championName": "세트",
+          "gameCount": 536,
+          "winRate": 45.4582
+        },
+        {
+          "championName": "말파이트",
+          "gameCount": 112,
+          "winRate": 43.4668
+        },
+        {
+          "championName": "모데카이저",
+          "gameCount": 192,
+          "winRate": 40.6812
+        },
+        {
+          "championName": "리븐",
+          "gameCount": 213,
+          "winRate": 41.5862
+        },
+        {
+          "championName": "케일",
+          "gameCount": 725,
+          "winRate": 48.2115
+        },
+        {
+          "championName": "쉔",
+          "gameCount": 749,
+          "winRate": 57.7938
+        },
+        {
+          "championName": "아트록스",
+          "gameCount": 440,
+          "winRate": 41.6585
+        },
+        {
+          "championName": "이렐리아",
+          "gameCount": 516,
+          "winRate": 57.428
+        },
+        {
+          "championName": "문도 박사",
+          "gameCount": 376,
+          "winRate": 43.1558
+        },
+        {
+          "championName": "잭스",
+          "gameCount": 172,
+          "winRate": 42.9156
+        },
+        {
+          "championName": "퀸",
+          "gameCount": 540,
+          "winRate": 56.8868
+        },
+        {
+          "championName": "우르곳",
+          "gameCount": 652,
+          "winRate": 49.0479
+        },
+        {
+          "championName": "피오라",
+          "gameCount": 103,
+          "winRate": 52.1631
+        },
+        {
+          "championName": "레넥톤",
+          "gameCount": 712,
+          "winRate": 52.8093
+        },
+        {
+          "championName": "워윅",
+          "gameCount": 404,
+          "winRate": 57.8786
+        },
+        {
+          "championName": "초가스",
+          "gameCount": 971,
+          "winRate": 54.3594
+        },
+        {
+          "championName": "케넨",
+          "gameCount": 278,
+          "winRate": 41.8997
+        },
+        {
+          "championName": "오른",
+          "gameCount": 319,
+          "winRate": 44.8839
+        },
+        {
+          "championName": "카밀",
+          "gameCount": 26,
+          "winRate": 52.5872
+        },
+        {
+          "championName": "다리우스",
+          "gameCount": 734,
+          "winRate": 51.4709
+        },
+        {
+          "championName": "갱플랭크",
+          "gameCount": 781,
+          "winRate": 53.2114
+        },
+        {
+          "championName": "그라가스",
+          "gameCount": 956,
+          "winRate": 59.0415
+        },
+        {
+          "championName": "나서스",
+          "gameCount": 406,
+          "winRate": 43.5374
+        },
+        {
+          "championName": "티모",
+          "gameCount": 221,
+          "winRate": 50.6528
+        },
+        {
+          "championName": "가렌",
+          "gameCount": 220,
+          "winRate": 46.712
+        },
+        {
+          "championName": "블라디미르",
+          "gameCount": 158,
+          "winRate": 55.3436
+        },
+        {
+          "championName": "올라프",
+          "gameCount": 861,
+          "winRate": 40.932
+        },
+        {
+          "championName": "사이온",
+          "gameCount": 122,
+          "winRate": 48.5941
+        },
+        {
+          "championName": "렝가",
+          "gameCount": 986,
+          "winRate": 59.3671
+        },
+        {
+          "championName": "요네",
+          "gameCount": 280,
+          "winRate": 52.5364
+        },
+        {
+          "championName": "그웬",
+          "gameCount": 282,
+          "winRate": 56.0779
+        },
+        {
+          "championName": "요릭",
+          "gameCount": 166,
+          "winRate": 47.0224
+        },
+        {
+          "championName": "야스오",
+          "gameCount": 942,
+          "winRate": 40.9811
+        },
+        {
+          "championName": "신지드",
+          "gameCount": 316,
+          "winRate": 44.3949
+        },
+        {
+          "championName": "하이머딩거",
+          "gameCount": 541,
+          "winRate": 53.2774
+        },
+        {
+          "championName": "제이스",
+          "gameCount": 373,
+          "winRate": 58.1059
+        },
+        {
+          "championName": "클레드",
+          "gameCount": 804,
+          "winRate": 44.9324
+        },
+        {
+          "championName": "트런들",
+          "gameCount": 802,
+          "winRate": 53.2917
+        },
+        {
+          "championName": "볼리베어",
+          "gameCount": 128,
+          "winRate": 52.5549
+        },
+        {
+          "championName": "자크",
+          "gameCount": 663,
+          "winRate": 46.8837
+        },
+        {
+          "championName": "나르",
+          "gameCount": 562,
+          "winRate": 53.9019
+        },
+        {
+          "championName": "크산테",
+          "gameCount": 255,
+          "winRate": 53.7777
+        },
+        {
+          "championName": "럼블",
+          "gameCount": 92,
+          "winRate": 52.9341
+        },
+        {
+          "championName": "라이즈",
+          "gameCount": 910,
+          "winRate": 48.866
+        },
+        {
+          "championName": "일라오이",
+          "gameCount": 223,
+          "winRate": 47.7307
+        },
+        {
+          "championName": "사일러스",
+          "gameCount": 702,
+          "winRate": 56.9587
+        },
+        {
+          "championName": "베인",
+          "gameCount": 867,
+          "winRate": 43.8181
+        },
+        {
+          "championName": "카시오페아",
+          "gameCount": 304,
+          "winRate": 58.0683
+        },
+        {
+          "championName": "칼리스타",
+          "gameCount": 339,
+          "winRate": 53.3748
+        },
+        {
+          "championName": "탐 켄치",
+          "gameCount": 27,
+          "winRate": 53.1239
+        },
+        {
+          "championName": "판테온",
+          "gameCount": 605,
+          "winRate": 51.0373
+        },
+        {
+          "championName": "오로라",
+          "gameCount": 751,
+          "winRate": 40.916
+        },
+        {
+          "championName": "갈리오",
+          "gameCount": 192,
+          "winRate": 50.3596
+        },
+        {
+          "championName": "아크샨",
+          "gameCount": 965,
+          "winRate": 57.941
+        },
+        {
+          "championName": "세트",
+          "gameCount": 920,
+          "winRate": 57.1067
+        },
+        {
+          "championName": "말파이트",
+          "gameCount": 937,
+          "winRate": 43.2676
+        },
+        {
+          "championName": "모데카이저",
+          "gameCount": 965,
+          "winRate": 54.873
+        },
+        {
+          "championName": "리븐",
+          "gameCount": 460,
+          "winRate": 50.0355
+        },
+        {
+          "championName": "케일",
+          "gameCount": 348,
+          "winRate": 50.1083
+        },
+        {
+          "championName": "쉔",
+          "gameCount": 157,
+          "winRate": 45.8842
+        },
+        {
+          "championName": "아트록스",
+          "gameCount": 643,
+          "winRate": 49.2001
+        },
+        {
+          "championName": "이렐리아",
+          "gameCount": 990,
+          "winRate": 43.4919
+        },
+        {
+          "championName": "문도 박사",
+          "gameCount": 40,
+          "winRate": 47.3017
+        },
+        {
+          "championName": "잭스",
+          "gameCount": 72,
+          "winRate": 51.5113
+        },
+        {
+          "championName": "퀸",
+          "gameCount": 529,
+          "winRate": 47.233
+        },
+        {
+          "championName": "우르곳",
+          "gameCount": 708,
+          "winRate": 47.344
+        },
+        {
+          "championName": "피오라",
+          "gameCount": 96,
+          "winRate": 56.54
+        },
+        {
+          "championName": "레넥톤",
+          "gameCount": 744,
+          "winRate": 50.8728
+        },
+        {
+          "championName": "워윅",
+          "gameCount": 610,
+          "winRate": 42.9742
+        },
+        {
+          "championName": "초가스",
+          "gameCount": 400,
+          "winRate": 48.4435
+        },
+        {
+          "championName": "케넨",
+          "gameCount": 469,
+          "winRate": 43.1226
+        },
+        {
+          "championName": "오른",
+          "gameCount": 176,
+          "winRate": 58.4421
+        },
+        {
+          "championName": "카밀",
+          "gameCount": 283,
+          "winRate": 43.4788
+        },
+        {
+          "championName": "다리우스",
+          "gameCount": 291,
+          "winRate": 52.2417
+        },
+        {
+          "championName": "갱플랭크",
+          "gameCount": 657,
+          "winRate": 43.7816
+        },
+        {
+          "championName": "그라가스",
+          "gameCount": 645,
+          "winRate": 43.8688
+        },
+        {
+          "championName": "나서스",
+          "gameCount": 952,
+          "winRate": 48.2074
+        },
+        {
+          "championName": "티모",
+          "gameCount": 931,
+          "winRate": 57.6102
+        },
+        {
+          "championName": "가렌",
+          "gameCount": 128,
+          "winRate": 49.7348
+        },
+        {
+          "championName": "블라디미르",
+          "gameCount": 878,
+          "winRate": 55.2378
+        },
+        {
+          "championName": "올라프",
+          "gameCount": 503,
+          "winRate": 56.8078
+        },
+        {
+          "championName": "사이온",
+          "gameCount": 883,
+          "winRate": 58.9813
+        },
+        {
+          "championName": "렝가",
+          "gameCount": 109,
+          "winRate": 42.9911
+        },
+        {
+          "championName": "요네",
+          "gameCount": 360,
+          "winRate": 59.4376
+        },
+        {
+          "championName": "그웬",
+          "gameCount": 249,
+          "winRate": 43.821
+        },
+        {
+          "championName": "요릭",
+          "gameCount": 428,
+          "winRate": 52.4862
+        },
+        {
+          "championName": "야스오",
+          "gameCount": 489,
+          "winRate": 47.6049
+        },
+        {
+          "championName": "신지드",
+          "gameCount": 83,
+          "winRate": 53.8452
+        },
+        {
+          "championName": "하이머딩거",
+          "gameCount": 287,
+          "winRate": 55.4005
+        },
+        {
+          "championName": "제이스",
+          "gameCount": 409,
+          "winRate": 55.6719
+        },
+        {
+          "championName": "클레드",
+          "gameCount": 611,
+          "winRate": 51.8576
+        },
+        {
+          "championName": "트런들",
+          "gameCount": 761,
+          "winRate": 53.4264
+        },
+        {
+          "championName": "볼리베어",
+          "gameCount": 591,
+          "winRate": 49.0228
+        },
+        {
+          "championName": "자크",
+          "gameCount": 422,
+          "winRate": 55.6956
+        },
+        {
+          "championName": "나르",
+          "gameCount": 312,
+          "winRate": 51.8089
+        },
+        {
+          "championName": "크산테",
+          "gameCount": 338,
+          "winRate": 56.5228
+        },
+        {
+          "championName": "럼블",
+          "gameCount": 801,
+          "winRate": 43.8726
+        },
+        {
+          "championName": "라이즈",
+          "gameCount": 214,
+          "winRate": 44.3144
+        },
+        {
+          "championName": "일라오이",
+          "gameCount": 395,
+          "winRate": 49.4866
+        },
+        {
+          "championName": "사일러스",
+          "gameCount": 188,
+          "winRate": 50.9806
+        },
+        {
+          "championName": "베인",
+          "gameCount": 741,
+          "winRate": 49.2201
+        },
+        {
+          "championName": "카시오페아",
+          "gameCount": 848,
+          "winRate": 59.0871
+        },
+        {
+          "championName": "칼리스타",
+          "gameCount": 98,
+          "winRate": 44.6793
+        },
+        {
+          "championName": "탐 켄치",
+          "gameCount": 996,
+          "winRate": 40.7663
+        },
+        {
+          "championName": "판테온",
+          "gameCount": 93,
+          "winRate": 47.8802
+        },
+        {
+          "championName": "오로라",
+          "gameCount": 394,
+          "winRate": 57.9692
+        },
+        {
+          "championName": "갈리오",
+          "gameCount": 756,
+          "winRate": 50.9465
+        },
+        {
+          "championName": "아크샨",
+          "gameCount": 431,
+          "winRate": 45.8017
+        }
+      ]
+    }
+  }
+]
