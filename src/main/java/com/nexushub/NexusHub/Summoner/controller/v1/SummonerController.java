@@ -9,6 +9,7 @@ import com.nexushub.NexusHub.Statistics.dto.ChampionSeasonStatisticsDto;
 import com.nexushub.NexusHub.Summoner.domain.Summoner;
 import com.nexushub.NexusHub.Summoner.dto.SummonerDto;
 import com.nexushub.NexusHub.Summoner.dto.SummonerRequestDto;
+import com.nexushub.NexusHub.Summoner.dto.SummonerResponseDto;
 import com.nexushub.NexusHub.Summoner.service.SummonerService;
 import com.nexushub.NexusHub.User.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +31,11 @@ public class SummonerController {
 
     // 티어 정보 검색
     @PostMapping("/tier")
-    public ResponseEntity<Summoner> summonerTierInfo(@RequestBody SummonerDto.Request dto) throws CannotFoundSummoner {
+    public ResponseEntity<SummonerResponseDto> summonerTierInfo(@RequestBody SummonerDto.Request dto) throws CannotFoundSummoner {
         Summoner summonerTierInfo = summonerService.getSummonerTierInfoV2(dto);
-        return ResponseEntity.ok(summonerTierInfo);
+        SummonerResponseDto resDto = new SummonerResponseDto(summonerTierInfo);
+
+        return ResponseEntity.ok(resDto);
 
     }
 
