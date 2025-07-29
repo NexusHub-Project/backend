@@ -4,6 +4,7 @@ import com.nexushub.NexusHub.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Match.dto.*;
 import com.nexushub.NexusHub.Match.dto.minimal.MinimalMatchDto;
 import com.nexushub.NexusHub.Riot.dto.*;
+import com.nexushub.NexusHub.Riot.dto.Ranker.ChallengerLeagueDto;
 import com.nexushub.NexusHub.Summoner.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,6 +64,7 @@ public class RiotApiService {
     public String getSummonerPuuid(String gameName, String tagLine) throws CannotFoundSummoner {
         return getSummonerInfo(gameName, tagLine).getPuuid();
     }
+
     public SummonerDto getSummonerTierInfo(SummonerDto dto){
         String url = baseUrlKR + "/lol/league/v4/entries/by-puuid/"+dto.getPuuid() ;
 
@@ -87,6 +89,31 @@ public class RiotApiService {
         }
         catch (Exception e) {
             log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    public RiotAccountDto getRiotAccountInfo(String puuid) {
+        String url = baseUrlAsia + "/riot/account/v1/accounts/by-puuid/"+puuid;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Riot-Token", apiKey);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<RiotAccountDto> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<>() {
+                    }
+            );
+            RiotAccountDto body = response.getBody();
+            log.info("riotAccountDto : {} {} {}", body.getGameName(), body.getTagLine(), body.getPuuid());
+            return response.getBody();
+        } catch (Exception e) {
+            log.info(e.getMessage());
             return null;
         }
     }
@@ -200,6 +227,27 @@ public class RiotApiService {
         }
     }
 
+    public ChallengerLeagueDto getChallengers(){
+        String url = baseUrlKR + "/lol/league/v4/challengerleagues/by-queue/RANKED_SOLO_5x5";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Riot-Token", apiKey);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        try{
+            ResponseEntity<ChallengerLeagueDto> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<>() {}
+            );
+            return response.getBody();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
 
     private SummonerDto setSummonerDto(SummonerDto dto, List<TierInfoDto> list){
         if (list.size() == 2) {
@@ -218,6 +266,7 @@ public class RiotApiService {
 
         return dto;
     }
+
 
 
 }

@@ -2,6 +2,7 @@ package com.nexushub.NexusHub.Summoner.domain;
 
 
 import com.nexushub.NexusHub.Match.domain.MatchParticipant;
+import com.nexushub.NexusHub.Riot.dto.Ranker.ChallengerDto;
 import com.nexushub.NexusHub.Summoner.dto.SummonerDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -102,6 +103,14 @@ public class Summoner {
         this.flexRankLP = dto.getFlexRankLP();
         this.flexRankWin = dto.getFlexRankWin();
         this.flexRankDefeat = dto.getFlexRankDefeat();
+        return this;
+    }
+
+    public Summoner updateTier(ChallengerDto dto) {
+        this.soloRankTier = "challenger";
+        this.soloRankLP = dto.getLeaguePoints();
+        this.soloRankWin = dto.getWins();
+        this.soloRankDefeat = dto.getLosses();
         return this;
     }
     public Summoner (String gameName, String tagLine, String puuid) {
