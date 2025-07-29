@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SummonerDto {
     private Long id;
 
@@ -40,6 +42,10 @@ public class SummonerDto {
     }
     public void test(){
         this.flexRankLP--;
+    }
+
+    public SummonerDto(String puuid) {
+        this.puuid = puuid;
     }
 
     @Data
