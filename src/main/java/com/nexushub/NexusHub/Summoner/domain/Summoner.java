@@ -1,6 +1,7 @@
 package com.nexushub.NexusHub.Summoner.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nexushub.NexusHub.Match.domain.MatchParticipant;
 
 import com.nexushub.NexusHub.Match.dto.ParticipantDto;
@@ -72,6 +73,7 @@ public class Summoner {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "summoner")
+    @JsonIgnore
     private List<MatchParticipant> matchHistory;
 
     @PrePersist
