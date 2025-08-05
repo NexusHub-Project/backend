@@ -5,6 +5,10 @@ import com.nexushub.NexusHub.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Match.dto.v2.MatchDataDto;
 import com.nexushub.NexusHub.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.dto.MasteryDto;
+import com.nexushub.NexusHub.Riot.dto.Ranker.ChallengerLeagueDto;
+import com.nexushub.NexusHub.Riot.dto.Ranker.ChallengersResponseDto;
+import com.nexushub.NexusHub.Riot.dto.RiotAccountDto;
+import com.nexushub.NexusHub.Riot.service.RiotApiService;
 import com.nexushub.NexusHub.Statistics.dto.ChampionSeasonStatisticsDto;
 import com.nexushub.NexusHub.Summoner.domain.Summoner;
 import com.nexushub.NexusHub.Summoner.dto.SummonerDto;
@@ -27,6 +31,7 @@ public class SummonerController {
     private final SummonerService summonerService;
     private final MatchService matchService;
     private final UserService userService;
+    private final RiotApiService riotApiService;
 
     // 티어 정보 검색
     @PostMapping("/tier")
@@ -92,5 +97,16 @@ public class SummonerController {
             */
         List<ChampionSeasonStatisticsDto> sortedStats = matchService.getSeasonChampionStatsV2(dto);
         return ResponseEntity.ok(sortedStats);
+    }
+    @GetMapping("/search/challenger")
+    public ResponseEntity<List<ChallengersResponseDto>> searchChallengers(){
+        ChallengerLeagueDto challengers = riotApiService.getChallengers();
+        List<ChallengersResponseDto> dtos = summonerService.setChallengersData(challengers);
+        return ResponseEntity.ok(dtos);
+    }
+    @GetMapping("/search/{puuid}")
+    public ResponseEntity<?> test(String puuid){
+        RiotAccountDto riotAccountInfo = riotApiService.getRiotAccountInfo(puuid);
+        return ResponseEntity.ok(riotAccountInfo);
     }
 }

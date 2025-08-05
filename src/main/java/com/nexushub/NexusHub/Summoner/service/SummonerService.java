@@ -11,6 +11,9 @@ import com.nexushub.NexusHub.Match.dto.ParticipantDto;
 import com.nexushub.NexusHub.Match.dto.v2.MatchDataDto;
 import com.nexushub.NexusHub.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.dto.MasteryDto;
+import com.nexushub.NexusHub.Riot.dto.Ranker.ChallengerDto;
+import com.nexushub.NexusHub.Riot.dto.Ranker.ChallengerLeagueDto;
+import com.nexushub.NexusHub.Riot.dto.Ranker.ChallengersResponseDto;
 import com.nexushub.NexusHub.Riot.dto.RiotAccountDto;
 import com.nexushub.NexusHub.Riot.service.RiotApiService;
 import com.nexushub.NexusHub.Summoner.domain.Summoner;
@@ -24,7 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -221,6 +226,30 @@ public class SummonerService {
         }
 
         return matchDataDtos;
+    }
+
+    public List<ChallengersResponseDto> setChallengersData(ChallengerLeagueDto dto) {
+        List<ChallengerDto> entries = dto.getEntries();
+        List<ChallengersResponseDto> dtos = new LinkedList<>();
+        for (ChallengerDto entry : entries) {
+            Optional<Summoner> summoner = summonerRepository.findSummonerByPuuid(entry.getPuuid());
+
+            if (summoner.isPresent()) {
+                dtos.add(new ChallengersResponseDto(entry, summoner.get()));
+            }
+            else {
+                // 1. puuid만으로 정보 얻어오기
+                RiotAccountDto riotAccountInfo = riotApiService.getRiotAccountInfo(entry.getPuuid());
+
+                // 2. 그거 summoner에 저장하기
+                Summoner newSummoner = new Summoner(riotAccountInfo.getGameName(), riotAccountInfo.getTagLine(), riotAccountInfo.getPuuid());
+                newSummoner.updateTier(entry);
+
+                // 3. 그리고 바로 Dtos.add 해버기리
+                dtos.add(new ChallengersResponseDto(entry,summonerRepository.save(newSummoner)));
+            }
+        }
+        return dtos;
     }
 
     private Summoner SaveOrUpateSummoner(SummonerDto dto, Optional<Summoner> summoner){
