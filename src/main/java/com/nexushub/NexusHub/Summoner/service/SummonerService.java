@@ -9,7 +9,6 @@ import com.nexushub.NexusHub.Match.dto.InfoDto;
 import com.nexushub.NexusHub.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Match.dto.ParticipantDto;
 import com.nexushub.NexusHub.Match.dto.v2.MatchDataDto;
-import com.nexushub.NexusHub.Match.repository.MatchRepository;
 import com.nexushub.NexusHub.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.dto.MasteryDto;
 import com.nexushub.NexusHub.Riot.dto.RiotAccountDto;
@@ -24,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,23 +67,31 @@ public class SummonerService {
     }
 
     public Summoner getSummonerTierInfoV2(SummonerDto.Request dto) throws CannotFoundSummoner {
+        log.info("Service 1) : {} ", dto);
         //1. 일단 gameName + tagLine으로 찾아보기
-        Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
+        Optional<Summoner> summoner = summonerRepository.findSummonerByTrimmedGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
+        log.info("Service 2) : {} ", summoner);
+
 
         //2. PUUID를 얻기 - 객체가 있을 수도 있고(최초 검색X) 없을 수도 있음(최초 검색O)
         //         객체가 있으면 그냥 바로 PUUID 뽑아오기
         //         객체가 없으면 PUUID를 얻어오기
-        String puuid = summoner.isPresent() ? summoner.get().getPuuid() : riotApiService.getSummonerPuuid(dto.getGameName(), dto.getTagLine());
-        //3. PUUID를 통해서 티어 검색하기
-        SummonerDto tierInfo = riotApiService.getSummonerTierInfo(SummonerDto.setInform(dto.getGameName(), dto.getTagLine(), puuid));
+        RiotAccountDto riotAccountDto = riotApiService.getSummonerInfo(dto.getGameName(), dto.getTagLine());
+        log.info("Summoner Service riotAccountDTO : {}",riotAccountDto.toString());
+        String puuid = summoner.isPresent() ? summoner.get().getPuuid() : riotAccountDto.getPuuid();
 
-        //4. Summoner 객체 적용하여 반환하기
+
+
+        //3. PUUID를 통해서 티어 검색하기
+        SummonerDto tierInfo = riotApiService.getSummonerTierInfo(SummonerDto.setInform(riotAccountDto.getGameName(), dto.getTagLine(), puuid));
+        log.info("Service 3) : {} ", tierInfo.toString());
+        //4. Summoner 객체 적용하여 반1환하기
         return this.SaveOrUpateSummoner(tierInfo, summoner);
     }
 
     public List<MasteryDto> getSummonerMasteryInfo(SummonerRequestDto dto) throws CannotFoundSummoner {
          //1. 일단 gameName + tagLine으로 찾아보기
-         Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
+         Optional<Summoner> summoner = summonerRepository.findSummonerByTrimmedGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
 
          //2. PUUID를 얻기 - 객체가 있을 수도 있고(최초 검색X) 없을 수도 있음(최초 검색O)
          //         객체가 있으면 그냥 바로 PUUID 뽑아오기
@@ -215,6 +221,7 @@ public class SummonerService {
         }
         else { // 최초 검색인 경우
             Summoner target = Summoner.update(dto);
+
             return summonerRepository.save(target);
         }
     }
@@ -251,7 +258,7 @@ public class SummonerService {
 
     private TempInfo getPuuid(SummonerRequestDto dto) throws CannotFoundSummoner {
         //1. 일단 gameName + tagLine으로 찾아보기
-        Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
+        Optional<Summoner> summoner = summonerRepository.findSummonerByTrimmedGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
 
         //2. PUUID를 얻기 - 객체가 있을 수도 있고(최초 검색X) 없을 수도 있음(최초 검색O)
         //         객체가 있으면 그냥 바로 PUUID 뽑아오기

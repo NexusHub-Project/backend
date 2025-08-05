@@ -31,7 +31,10 @@ public class SummonerController {
     // 티어 정보 검색
     @PostMapping("/tier")
     public ResponseEntity<Summoner> summonerTierInfo(@RequestBody SummonerDto.Request dto) throws CannotFoundSummoner {
+        log.info("Controller DTO : {}", dto);
         Summoner summonerTierInfo = summonerService.getSummonerTierInfoV2(dto);
+
+
         return ResponseEntity.ok(summonerTierInfo);
 
     }

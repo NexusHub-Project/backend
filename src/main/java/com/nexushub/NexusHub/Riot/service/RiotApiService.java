@@ -50,6 +50,8 @@ public class RiotApiService {
                     entity,
                     RiotAccountDto.class
             );
+            RiotAccountDto body = response.getBody();
+            log.info("RiotAPI SERVICE : RiotAccountDto : {}", body.toString());
             return response.getBody();
 
         } catch (HttpClientErrorException.NotFound e) {
@@ -64,6 +66,7 @@ public class RiotApiService {
         return getSummonerInfo(gameName, tagLine).getPuuid();
     }
     public SummonerDto getSummonerTierInfo(SummonerDto dto){
+        log.info("RiotApiService : dto : {}", dto.toString());
         String url = baseUrlKR + "/lol/league/v4/entries/by-puuid/"+dto.getPuuid() ;
 
         HttpHeaders headers = new HttpHeaders();
