@@ -47,7 +47,7 @@ public class PlayerDataDto {
     public static PlayerDataDto of(MatchParticipant matchParticipant) {
         return PlayerDataDto.builder()
                 .puuid(matchParticipant.getSummoner().getPuuid())
-                .gameName(matchParticipant.getSummoner().getGameName())
+                .gameName(matchParticipant.getSummoner().getTrimmedGameName())
                 .win(matchParticipant.getWin())
                 .championId(matchParticipant.getChampionId())
                 .champLevel(matchParticipant.getChampLevel())

@@ -36,7 +36,10 @@ public class SummonerController {
     // 티어 정보 검색
     @PostMapping("/tier")
     public ResponseEntity<Summoner> summonerTierInfo(@RequestBody SummonerDto.Request dto) throws CannotFoundSummoner {
+        log.info("Controller DTO : {}", dto);
         Summoner summonerTierInfo = summonerService.getSummonerTierInfoV2(dto);
+
+
         return ResponseEntity.ok(summonerTierInfo);
 
     }
@@ -61,8 +64,11 @@ public class SummonerController {
         return ResponseEntity.ok(dtos);
     }
     @GetMapping("/matches/v3")
-    public ResponseEntity<List<MatchDataDto>> summonerMatchesV3(@RequestBody SummonerRequestDto dto) throws CannotFoundSummoner {
+    public ResponseEntity<List<MatchDataDto>> summonerMatchesV3(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
 
+        SummonerRequestDto dto = new SummonerRequestDto();
+        dto.setGameName(gameName);
+        dto.setTagLine(tagLine);
         log.info("step 1) Summoner Controller : summonerMatchesV3 / dto : {}", dto.toString());
         List<MatchDataDto> matchDtos = summonerService.getSummonerMatchesInfoV1(dto);
 

@@ -9,7 +9,6 @@ import com.nexushub.NexusHub.Match.dto.InfoDto;
 import com.nexushub.NexusHub.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Match.dto.ParticipantDto;
 import com.nexushub.NexusHub.Match.dto.v2.MatchDataDto;
-import com.nexushub.NexusHub.Match.repository.MatchRepository;
 import com.nexushub.NexusHub.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.dto.MasteryDto;
 import com.nexushub.NexusHub.Riot.dto.Ranker.ChallengerDto;
@@ -27,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.security.PublicKey;
 import java.util.ArrayList;
@@ -74,23 +72,31 @@ public class SummonerService {
     }
 
     public Summoner getSummonerTierInfoV2(SummonerDto.Request dto) throws CannotFoundSummoner {
+        log.info("Service 1) : {} ", dto);
         //1. 일단 gameName + tagLine으로 찾아보기
-        Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
+        Optional<Summoner> summoner = summonerRepository.findSummonerByTrimmedGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
+        log.info("Service 2) : {} ", summoner);
+
 
         //2. PUUID를 얻기 - 객체가 있을 수도 있고(최초 검색X) 없을 수도 있음(최초 검색O)
         //         객체가 있으면 그냥 바로 PUUID 뽑아오기
         //         객체가 없으면 PUUID를 얻어오기
-        String puuid = summoner.isPresent() ? summoner.get().getPuuid() : riotApiService.getSummonerPuuid(dto.getGameName(), dto.getTagLine());
-        //3. PUUID를 통해서 티어 검색하기
-        SummonerDto tierInfo = riotApiService.getSummonerTierInfo(SummonerDto.setInform(dto.getGameName(), dto.getTagLine(), puuid));
+        RiotAccountDto riotAccountDto = riotApiService.getSummonerInfo(dto.getGameName(), dto.getTagLine());
+        log.info("Summoner Service riotAccountDTO : {}",riotAccountDto.toString());
+        String puuid = summoner.isPresent() ? summoner.get().getPuuid() : riotAccountDto.getPuuid();
 
-        //4. Summoner 객체 적용하여 반환하기
+
+
+        //3. PUUID를 통해서 티어 검색하기
+        SummonerDto tierInfo = riotApiService.getSummonerTierInfo(SummonerDto.setInform(riotAccountDto.getGameName(), dto.getTagLine(), puuid));
+        log.info("Service 3) : {} ", tierInfo.toString());
+        //4. Summoner 객체 적용하여 반1환하기
         return this.SaveOrUpateSummoner(tierInfo, summoner);
     }
 
     public List<MasteryDto> getSummonerMasteryInfo(SummonerRequestDto dto) throws CannotFoundSummoner {
          //1. 일단 gameName + tagLine으로 찾아보기
-         Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
+         Optional<Summoner> summoner = summonerRepository.findSummonerByTrimmedGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
 
          //2. PUUID를 얻기 - 객체가 있을 수도 있고(최초 검색X) 없을 수도 있음(최초 검색O)
          //         객체가 있으면 그냥 바로 PUUID 뽑아오기
@@ -107,6 +113,7 @@ public class SummonerService {
     public String[] getSummonerMatchesId(SummonerRequestDto dto) throws CannotFoundSummoner {
         TempInfo temp = getPuuid(dto);
         dto.setPuuid(temp.getPuuid());
+        log.info("After set Puuid : dto = {}", dto.toString());
         return riotApiService.getSummonerMatches(SummonerDto.setInform(temp.gameName, temp.tagLine, temp.puuid));
     }
 
@@ -122,14 +129,19 @@ public class SummonerService {
     public List<MatchDataDto> getSummonerMatchesInfoV1(SummonerRequestDto dto) throws CannotFoundSummoner {
         // step 2) : dto에 담겨 있는 gameName, tagLine를 통해서 해당 유저의 MatchId들을 받아오기
         String[] summonerMatchesId = getSummonerMatchesId(dto);
+
         List<MatchDataDto> matchDataDtos = new ArrayList<>();
 
         // step 3) : matchId를 통해서 Match_info 객체를 받아오기  => 있을 수도 있고 없을 수도 있음
         for (String matchId : summonerMatchesId) {
+            log.info("match Id : {}", matchId);
             Optional<Match> match = matchService.getMatchByMatchId(matchId);
 
             // step 4) : match가 있다면 바로 matchDataDto 구성하기
             if (match.isPresent()) {
+                log.info("{} 있음 ", matchId);
+                log.info("match INFO : {}", match.toString());
+
                 // step 4-1) : MatchDataDto에는 player01~10까지 넣기
                 List<MatchParticipant> participants = match.get().getParticipants();
                 MatchDataDto matchDataDto = MatchDataDto.of(participants);
@@ -140,13 +152,14 @@ public class SummonerService {
 
             // step 5) : match가 없다면 새로 만들어서 matchDataDto를 구성하기
             else {
+                log.info("{} 없음 ", matchId);
                 // step 5-1) : riot API 요청을 통해서 해당 matchId의 값을 받기
                 MatchDto matchDto = riotApiService.getMatchInfo(matchId);
-
+                log.info("matchDTO : {}", matchDto.toString());
                 // step 5-2) : matchDto 속의 infoDto를 통해서 participantDto를 통해, Summoner에 저장이 되어 있는 Summoner인지 체크하기
                 InfoDto infoDto = matchDto.getInfo();
                 List<ParticipantDto> participantsDtoFromApi = infoDto.getParticipants();
-
+                log.info("1)");
 
                 // 아직 저장 안 함
                 Match newMatch = Match.builder()
@@ -156,16 +169,19 @@ public class SummonerService {
                         .gameCreation(infoDto.getGameCreation())
                         .gameEndTimestamp(infoDto.getGameEndTimestamp())
                         .build();
-
+                log.info("2)");
                 List<MatchParticipant> matchParticipants = new ArrayList<>();
 
                 for (ParticipantDto participantDto : participantsDtoFromApi) {
+                    log.info("participantDto : {}", participantDto.toString());
                     // step 5-3) : puuid로 Summoner를 찾거나, 없으면 새로 저장합니다.
                     Summoner summoner = summonerRepository.findSummonerByPuuid(participantDto.getPuuid())
                             .orElseGet(() -> summonerRepository.save(
-                                    new Summoner(participantDto.getRiotIdGameName(), participantDto.getRiotIdTagline(), participantDto.getPuuid())
+                                    new Summoner(participantDto)
                             ));
 
+
+                    log.info("3)");
                     MatchParticipant participant = MatchParticipant.builder()
                             .match(newMatch)
                             .summoner(summoner)
@@ -193,12 +209,12 @@ public class SummonerService {
                             .quadraKills(participantDto.getQuadraKills())
                             .pentaKills(participantDto.getPentaKills())
                             .build();
-
+                    log.info("4)");
                     participant.setTeamLuckScore(ThreadLocalRandom.current().nextInt(35, 100));
                     participant.setOurScore(ThreadLocalRandom.current().nextInt(35, 100));
                     matchParticipants.add(participant);
                 }
-
+                log.info("5 )");
                 newMatch.setParticipants(matchParticipants);
 
                 MatchDataDto matchDataDto = MatchDataDto.of(matchParticipants);
@@ -244,6 +260,7 @@ public class SummonerService {
         }
         else { // 최초 검색인 경우
             Summoner target = Summoner.update(dto);
+
             return summonerRepository.save(target);
         }
     }
@@ -280,13 +297,13 @@ public class SummonerService {
 
     private TempInfo getPuuid(SummonerRequestDto dto) throws CannotFoundSummoner {
         //1. 일단 gameName + tagLine으로 찾아보기
-        Optional<Summoner> summoner = summonerRepository.findSummonerByGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
+        Optional<Summoner> summoner = summonerRepository.findSummonerByTrimmedGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
 
         //2. PUUID를 얻기 - 객체가 있을 수도 있고(최초 검색X) 없을 수도 있음(최초 검색O)
         //         객체가 있으면 그냥 바로 PUUID 뽑아오기
         //         객체가 없으면 PUUID를 얻어오기
         String puuid = summoner.isPresent() ? summoner.get().getPuuid() : riotApiService.getSummonerPuuid(dto.getGameName(), dto.getTagLine());
-
+        log.info(" puuid : {}", puuid);
         return new TempInfo(puuid, dto.getGameName(), dto.getTagLine());
     }
 

@@ -32,6 +32,9 @@ public class User {
     @Column(name="game_name", length = 100)
     private String gameName;
 
+    @Column(name="trimmed_game_name", length = 100)
+    private String trimmedGameName;
+
     @Column(name="nick_name",length = 20)
     private String nickName;
 
@@ -62,10 +65,13 @@ public class User {
     }
 
     public static User of (UserSignUpRequestDto dto, PasswordEncoder encoder) {
+        String trimmedGameName = dto.getGameName().replace(" ", ""); // 공백 제거 버전
+
         return User.builder()
                 .loginId(dto.getLoginId())
                 .loginPw(encoder.encode(dto.getLoginPw()))
                 .gameName(dto.getGameName())
+                .trimmedGameName(trimmedGameName)
                 .puuid(dto.getPuuid())
                 .tagLine(dto.getTagLine())
                 .nickName(dto.getNickName())

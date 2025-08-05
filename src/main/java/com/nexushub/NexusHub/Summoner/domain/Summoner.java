@@ -2,7 +2,11 @@ package com.nexushub.NexusHub.Summoner.domain;
 
 
 import com.nexushub.NexusHub.Match.domain.MatchParticipant;
+
+import com.nexushub.NexusHub.Match.dto.ParticipantDto;
+
 import com.nexushub.NexusHub.Riot.dto.Ranker.ChallengerDto;
+
 import com.nexushub.NexusHub.Summoner.dto.SummonerDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,6 +26,9 @@ public class Summoner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "trimmed_game_name", length = 100, nullable = false)
+    private String trimmedGameName;
 
     @Column(name = "game_name", length = 100, nullable = false)
     private String gameName;
@@ -92,6 +99,7 @@ public class Summoner {
                 .flexRankLP(dto.getFlexRankLP())
                 .flexRankWin(dto.getFlexRankWin())
                 .flexRankDefeat(dto.getFlexRankDefeat())
+                .trimmedGameName(dto.getGameName().replace(" ",""))
                 .build();
     }
     public Summoner updateTier(SummonerDto dto){
@@ -114,8 +122,15 @@ public class Summoner {
         return this;
     }
     public Summoner (String gameName, String tagLine, String puuid) {
-        this.gameName = gameName;
+        this.trimmedGameName = gameName;
         this.tagLine = tagLine;
         this.puuid = puuid;
+    }
+
+    public Summoner(ParticipantDto dto) {
+        this.gameName = dto.getRiotIdGameName();
+        this.trimmedGameName = dto.getRiotIdGameName().replace(" ","");
+        this.tagLine = dto.getRiotIdTagline();
+        this.puuid = dto.getPuuid();
     }
 }
