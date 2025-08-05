@@ -2,6 +2,7 @@ package com.nexushub.NexusHub.Summoner.domain;
 
 
 import com.nexushub.NexusHub.Match.domain.MatchParticipant;
+import com.nexushub.NexusHub.Match.dto.ParticipantDto;
 import com.nexushub.NexusHub.Summoner.dto.SummonerDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -112,5 +113,12 @@ public class Summoner {
         this.trimmedGameName = gameName;
         this.tagLine = tagLine;
         this.puuid = puuid;
+    }
+
+    public Summoner(ParticipantDto dto) {
+        this.gameName = dto.getRiotIdGameName();
+        this.trimmedGameName = dto.getRiotIdGameName().replace(" ","");
+        this.tagLine = dto.getRiotIdTagline();
+        this.puuid = dto.getPuuid();
     }
 }
