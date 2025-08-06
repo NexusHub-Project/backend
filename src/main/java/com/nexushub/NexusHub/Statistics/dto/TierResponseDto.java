@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class TierResponseDto {
     private String championName;
+    private String championNameEn;
     private Integer tier;
     private Integer score;
     private Float pickRate;
@@ -14,6 +15,7 @@ public class TierResponseDto {
 
     public TierResponseDto(ChampionStatsByPosition stats) {
         this.championName = stats.getChampion().getNameKo();
+        this.championNameEn = stats.getChampion().getNameEn();
         this.tier = stats.getTier();
         this.score = stats.getScore();
         this.pickRate = stats.getPickRate();
