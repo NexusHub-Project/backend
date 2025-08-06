@@ -9,6 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class ChampionDetailWith {
     private String championName;
+    private String championNameEn;
     private Integer gameCount;
     private Float winRate;
 }

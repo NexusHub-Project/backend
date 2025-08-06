@@ -7,6 +7,7 @@ import com.nexushub.NexusHub.Statistics.domain.Champion.ChampionStatsByPosition;
 import com.nexushub.NexusHub.Statistics.domain.MatchUp.MatchUp;
 import com.nexushub.NexusHub.Statistics.domain.Position;
 import com.nexushub.NexusHub.Statistics.dto.ChampionDetailDto;
+import com.nexushub.NexusHub.Statistics.dto.ChampionNameResDto;
 import com.nexushub.NexusHub.Statistics.dto.detail.ChampionDetailBuild;
 import com.nexushub.NexusHub.Statistics.dto.detail.ChampionDetailChampInfo;
 import com.nexushub.NexusHub.Statistics.dto.detail.ChampionDetailList;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -108,7 +110,7 @@ public class StatisticsService {
 
             ChampionDetailChampInfo info = new ChampionDetailChampInfo(stat);
 
-            if (stats.size() != 0) {
+            if (stats.size() != 0 && totalGamePlayed!=0) {
                 percent = info.getGameCount()/totalGamePlayed * 100;
             }
             info.setPercent(percent);
@@ -123,8 +125,17 @@ public class StatisticsService {
         return dtos;
     }
 
+    public Queue<ChampionNameResDto> getAllName() {
+        List<Champion> all = championRepository.findAll();
+        Queue<ChampionNameResDto> dtos = new LinkedList<>();
+        for (Champion champion : all) {
+            dtos.add(ChampionNameResDto.of(champion));
+        }
+        return dtos;
+    }
+
     private Champion findByChampionName(String championName) {
-        return championRepository.findByNameKo(championName)
+        return championRepository.findByNameEn(championName)
                 .orElseThrow(() -> new CannotFoundChampion(championName + "라는 이름의 챔피언은 존재하지 않습니다"));
     }
 

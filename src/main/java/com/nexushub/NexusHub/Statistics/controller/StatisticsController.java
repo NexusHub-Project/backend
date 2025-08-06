@@ -2,6 +2,7 @@ package com.nexushub.NexusHub.Statistics.controller;
 
 import com.nexushub.NexusHub.Statistics.domain.Champion.ChampionStatsByPosition;
 import com.nexushub.NexusHub.Statistics.dto.ChampionDetailDto;
+import com.nexushub.NexusHub.Statistics.dto.ChampionNameResDto;
 import com.nexushub.NexusHub.Statistics.dto.TierResponseDto;
 import com.nexushub.NexusHub.Statistics.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 @RestController
 @RequestMapping("/api/v1/statistics")
@@ -45,6 +47,12 @@ public class StatisticsController {
     @GetMapping("/championDetail/{championName}")
     public ResponseEntity<List<ChampionDetailDto>> getChampionDetail(@PathVariable String championName){
         List<ChampionDetailDto> dtos = statisticsService.getChampionDetail(championName);
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/champions/all")
+    public ResponseEntity<Queue<ChampionNameResDto>> getAllChampionsName() {
+        Queue<ChampionNameResDto> dtos = statisticsService.getAllName();
         return ResponseEntity.ok(dtos);
     }
 

@@ -14,7 +14,7 @@ public class ChampionDetailList {
     public ChampionDetailList(List<MatchUp> matchUps){
         this.champions = new LinkedList<>();
         for (MatchUp matchUp : matchUps) {
-            champions.add(new ChampionDetailWith(matchUp.getOpponent().getNameKo(), matchUp.getGamesPlayed(), matchUp.getRelativeWinRate()));
+            champions.add(new ChampionDetailWith(matchUp.getOpponent().getNameKo(), matchUp.getOpponent().getNameEn(), matchUp.getGamesPlayed(), matchUp.getRelativeWinRate()));
         }
     }
 }
