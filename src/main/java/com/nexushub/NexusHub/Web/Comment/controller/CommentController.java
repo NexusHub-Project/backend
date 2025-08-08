@@ -118,8 +118,8 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
-    @GetMapping("/{id}/{type}")
-    public ResponseEntity<List<CommentDto.CommentDetailDto>> getComment(@PathVariable Long id, @PathVariable String type) throws CannotFoundPatchNote, CannotFoundGuide {
+    @GetMapping
+    public ResponseEntity<List<CommentDto.CommentDetailDto>> getComment(@RequestParam Long id, @RequestParam String type) throws CannotFoundPatchNote, CannotFoundGuide {
         List<Comment> comments;
         List<CommentDto.CommentDetailDto> commentDtoResponses = new ArrayList<>();
 
