@@ -51,8 +51,8 @@ public class PatchNoteController {
     }
 
     // 패치노트 찾기
-    @GetMapping("/find/{id}")
-    public ResponseEntity<PatchNoteDto.PatchNoteResponseDto> findPatchNoteById(@PathVariable("id") Long id) throws CannotFoundPatchNote {
+    @GetMapping("/find")
+    public ResponseEntity<PatchNoteDto.PatchNoteResponseDto> findPatchNoteById(@RequestParam("id") Long id) throws CannotFoundPatchNote {
 
         PatchNote patchNote = patchNoteService.findById(id)
                 .orElseThrow(() -> new CannotFoundPatchNote("해당 패치노트를 찾을 수 없습니다."));
