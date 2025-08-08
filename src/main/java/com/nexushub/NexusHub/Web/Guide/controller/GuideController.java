@@ -79,8 +79,8 @@ public class GuideController {
         return ResponseEntity.ok(guideDtoList);
     }
     // 챔피언 별로 공략글 찾기
-    @GetMapping("/find/champion/{id}")
-    public ResponseEntity<List<GuideDto.GuideListResponseDto>> findChampGuide(@PathVariable Long id) throws CannotFoundGuide {
+    @GetMapping("/find/champion")
+    public ResponseEntity<List<GuideDto.GuideListResponseDto>> findChampGuide(@RequestParam Long id) throws CannotFoundGuide {
         Champion champion = championService.getChampionById(id)
                 .orElseThrow(() -> new CannotFoundChampion("id = " + id + " 인 챔피언을 찾을 수 없습니다. "));
 
@@ -99,8 +99,8 @@ public class GuideController {
     // 수정 사항 2) /detail -> /find : 전체 게시물 찾는거랑 일관성 부여
     // 수정 사항 8) 싫어요는 DTO에 넣지 않아서 추가 함
 
-    @GetMapping("/find/{id}")
-    public ResponseEntity<GuideDto.GuideResponseDto> getGuideById(@PathVariable Long id) throws CannotFoundGuide {
+    @GetMapping("/find")
+    public ResponseEntity<GuideDto.GuideResponseDto> getGuideById(@RequestParam Long id) throws CannotFoundGuide {
         Guide guideEntity = guideService.findById(id)
                 .orElseThrow(()-> new CannotFoundGuide("해당 공략 정보를 찾을 수 없습니다.")); // 이미 예외처리 포함된 서비스 메서드 👍
         guideService.addViews(guideEntity);
