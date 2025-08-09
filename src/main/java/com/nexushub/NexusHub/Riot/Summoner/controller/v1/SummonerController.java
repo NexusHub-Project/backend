@@ -33,11 +33,10 @@ public class SummonerController {
     private final RiotApiService riotApiService;
 
     // 티어 정보 검색
-    @PostMapping("/tier/{gameName}/{tagLine}")
-    public ResponseEntity<Summoner> summonerTierInfo(@PathVariable String gameName,
-                                                     @PathVariable String tagLine) throws CannotFoundSummoner {
-        log.info("Controller Path Variable: gameName = {}, tagLine = {}", gameName, tagLine);
-        Summoner summonerTierInfo = summonerService.getSummonerTierInfoV2(gameName, tagLine);
+    @PostMapping("/tier")
+    public ResponseEntity<Summoner> summonerTierInfo(@RequestBody SummonerDto.Request dto) throws CannotFoundSummoner {
+        log.info("Controller DTO : {}", dto);
+        Summoner summonerTierInfo = summonerService.getSummonerTierInfoV2(dto);
 
 
         return ResponseEntity.ok(summonerTierInfo);
