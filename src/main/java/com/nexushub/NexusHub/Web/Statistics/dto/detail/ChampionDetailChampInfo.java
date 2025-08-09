@@ -5,6 +5,10 @@ import lombok.Data;
 
 @Data
 public class ChampionDetailChampInfo {
+
+    private String championName;
+    private String championNameEn;
+
     // 티어 -> 몇 티어인지?
     private Integer tier;
     // 승률
@@ -24,5 +28,7 @@ public class ChampionDetailChampInfo {
         this.pickRate = stats.getPickRate();
         this.banRate = stats.getBanRate();
         this.gameCount = stats.getTotalGamesPlayed();
+        this.championNameEn = stats.getChampion().getNameEn();
+        this.championName = stats.getChampion().getNameKo();
     }
 }

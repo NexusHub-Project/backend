@@ -94,7 +94,7 @@ public class StatisticsService {
     }
 
     public List<ChampionDetailDto> getChampionDetail(String championName) {
-        Champion champion = findByChampionName(championName);
+        Champion champion = findByChampionNameEn(championName);
         List<ChampionStatsByPosition> stats = championStatisticsRepository.findByChampion(champion);
 
         List<ChampionDetailDto> dtos = new LinkedList<>();
@@ -133,6 +133,12 @@ public class StatisticsService {
         }
         return dtos;
     }
+
+    private Champion findByChampionNameEn(String championNameEn){
+        return championRepository.findByNameEn(championNameEn)
+                .orElseThrow(() -> new CannotFoundChampion(championNameEn + "라는 이름의 챔피언은 존재하지 않습니다"));
+    }
+
 
     private Champion findByChampionName(String championName) {
         return championRepository.findByNameKo(championName)
