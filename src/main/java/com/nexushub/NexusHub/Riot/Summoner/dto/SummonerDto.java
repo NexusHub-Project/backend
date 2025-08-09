@@ -54,5 +54,6 @@ public class SummonerDto {
     public static class Request{
         private String gameName;
         private String tagLine;
+        private String trimmedGameName;
     }
 }

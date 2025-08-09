@@ -74,24 +74,21 @@ public class SummonerService {
         SummonerDto.Request dto = new SummonerDto.Request();
         dto.setGameName(gameName);
         dto.setTagLine(tagLine);
-        log.info("Service 1) : {} ", dto);
+        dto.setTrimmedGameName(gameName.replace(" ",""));
         //1. 일단 gameName + tagLine으로 찾아보기
-        Optional<Summoner> summoner = summonerRepository.findSummonerByTrimmedGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
-        log.info("Service 2) : {} ", summoner);
-
+        Optional<Summoner> summoner = summonerRepository.findSummonerByTrimmedGameNameAndTagLine(dto.getTrimmedGameName(), dto.getTagLine());
 
         //2. PUUID를 얻기 - 객체가 있을 수도 있고(최초 검색X) 없을 수도 있음(최초 검색O)
         //         객체가 있으면 그냥 바로 PUUID 뽑아오기
         //         객체가 없으면 PUUID를 얻어오기
         RiotAccountDto riotAccountDto = riotApiService.getSummonerInfo(dto.getGameName(), dto.getTagLine());
-        log.info("Summoner Service riotAccountDTO : {}",riotAccountDto.toString());
         String puuid = summoner.isPresent() ? summoner.get().getPuuid() : riotAccountDto.getPuuid();
 
 
 
         //3. PUUID를 통해서 티어 검색하기
         SummonerDto tierInfo = riotApiService.getSummonerTierInfo(SummonerDto.setInform(riotAccountDto.getGameName(), dto.getTagLine(), puuid));
-        log.info("Service 3) : {} ", tierInfo.toString());
+
         //4. Summoner 객체 적용하여 반1환하기
         return this.SaveOrUpateSummoner(tierInfo, summoner);
     }
@@ -258,6 +255,8 @@ public class SummonerService {
     }
 
     private Summoner SaveOrUpateSummoner(SummonerDto dto, Optional<Summoner> summoner){
+        // 문제 : 여기서 summoner가 empty인 점 ㅇㅇ
+
         if (summoner.isPresent()){ // 최초 검색이 아닌 경우
             Summoner target = summoner.get();
             target.updateTier(dto);
