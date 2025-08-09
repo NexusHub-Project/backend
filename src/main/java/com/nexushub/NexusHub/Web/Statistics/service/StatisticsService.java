@@ -135,7 +135,7 @@ public class StatisticsService {
     }
 
     private Champion findByChampionName(String championName) {
-        return championRepository.findByNameEn(championName)
+        return championRepository.findByNameKo(championName)
                 .orElseThrow(() -> new CannotFoundChampion(championName + "라는 이름의 챔피언은 존재하지 않습니다"));
     }
 
