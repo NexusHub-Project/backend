@@ -33,36 +33,22 @@ public class SummonerController {
     private final RiotApiService riotApiService;
 
     // 티어 정보 검색
-    @PostMapping("/tier")
-    public ResponseEntity<Summoner> summonerTierInfo(@RequestBody SummonerDto.Request dto) throws CannotFoundSummoner {
-        log.info("Controller DTO : {}", dto);
-        Summoner summonerTierInfo = summonerService.getSummonerTierInfoV2(dto);
-
-
+    @GetMapping("/tier")
+    public ResponseEntity<Summoner> summonerTierInfo(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
+        Summoner summonerTierInfo = summonerService.getSummonerTierInfoV2(gameName, tagLine);
         return ResponseEntity.ok(summonerTierInfo);
-
     }
 
     // 숙련도 정보 검색 (모든 챔피언의 숙련도 리턴)
     @GetMapping("/mastery")
-    public ResponseEntity<List<MasteryDto>> summonerMasteryInfo(@RequestBody SummonerRequestDto dto) throws CannotFoundSummoner {
-        List<MasteryDto> masteryInfo = summonerService.getSummonerMasteryInfo(dto);
+    public ResponseEntity<List<MasteryDto>> summonerMasteryInfo(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
+        List<MasteryDto> masteryInfo = summonerService.getSummonerMasteryInfo(gameName, tagLine);
         return ResponseEntity.ok(masteryInfo);
     }
 
 
     // 전적 검색
-    @GetMapping("/matches/v1")
-    public ResponseEntity<String[]> summonerMatchesV1(@RequestBody SummonerRequestDto dto) throws CannotFoundSummoner{
-        String[] matches = summonerService.getSummonerMatchesId(dto);
-        return ResponseEntity.ok(matches);
-    }
-    @GetMapping("/matches/v2")
-    public ResponseEntity<List<MatchDto>> summonerMatchesV2(@RequestBody SummonerRequestDto dto) throws CannotFoundSummoner{
-        List<MatchDto> dtos = summonerService.getSummonerMatchesInfo(dto);
-        return ResponseEntity.ok(dtos);
-    }
-    @GetMapping("/matches/v3")
+    @GetMapping("/matches")
     public ResponseEntity<List<MatchDataDto>> summonerMatchesV3(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
 
         SummonerRequestDto dto = new SummonerRequestDto();
@@ -84,7 +70,9 @@ public class SummonerController {
 
     // most 챔피언 검색
     @GetMapping("/most")
-    public ResponseEntity<List<ChampionSeasonStatisticsDto>> summonerMostInfo(@RequestBody SummonerRequestDto dto) throws CannotFoundSummoner{
+    public ResponseEntity<List<ChampionSeasonStatisticsDto>> summonerMostInfo(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner{
+        // 필요한 거 : gameName, tagLine
+
 
             /*    모스트 챔피언 V1 -> 차이는 새롭게 DTO를 정의해서 필요한 것만 뽑아 왔다
             Map<Long, ChampionStatsDto> stats = matchService.getSeasonChampionStatsV1(dto);
@@ -94,7 +82,7 @@ public class SummonerController {
                     .sorted(Comparator.comparingInt(ChampionStatsDto::getGamesPlayed).reversed())
                     .collect(Collectors.toList());
             */
-        List<ChampionSeasonStatisticsDto> sortedStats = matchService.getSeasonChampionStatsV2(dto);
+        List<ChampionSeasonStatisticsDto> sortedStats = matchService.getSeasonChampionStatsV2(gameName, tagLine);
         return ResponseEntity.ok(sortedStats);
     }
     @GetMapping("/search/challenger")
@@ -102,10 +90,5 @@ public class SummonerController {
         ChallengerLeagueDto challengers = riotApiService.getChallengers();
         List<ChallengersResponseDto> dtos = summonerService.setChallengersData(challengers);
         return ResponseEntity.ok(dtos);
-    }
-    @GetMapping("/search/{puuid}")
-    public ResponseEntity<?> test(String puuid){
-        RiotAccountDto riotAccountInfo = riotApiService.getRiotAccountInfo(puuid);
-        return ResponseEntity.ok(riotAccountInfo);
     }
 }

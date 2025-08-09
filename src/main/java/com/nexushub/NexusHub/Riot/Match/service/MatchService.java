@@ -104,8 +104,8 @@ public class MatchService {
         }
         return statsMap;
     }
-    public List<ChampionSeasonStatisticsDto> getSeasonChampionStatsV2(SummonerRequestDto dto) throws CannotFoundSummoner {
-        String puuid = riotApiService.getSummonerPuuid(dto.getGameName(), dto.getTagLine());
+    public List<ChampionSeasonStatisticsDto> getSeasonChampionStatsV2(String gameName, String tagLine) throws CannotFoundSummoner {
+        String puuid = riotApiService.getSummonerPuuid(gameName, tagLine);
 
 
         // 1) 이번 시즌의 전적 matchID를 가져옴

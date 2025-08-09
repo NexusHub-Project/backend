@@ -70,7 +70,10 @@ public class SummonerService {
         }
     }
 
-    public Summoner getSummonerTierInfoV2(SummonerDto.Request dto) throws CannotFoundSummoner {
+    public Summoner getSummonerTierInfoV2(String gameName, String tagLine) throws CannotFoundSummoner {
+        SummonerDto.Request dto = new SummonerDto.Request();
+        dto.setGameName(gameName);
+        dto.setTagLine(tagLine);
         log.info("Service 1) : {} ", dto);
         //1. 일단 gameName + tagLine으로 찾아보기
         Optional<Summoner> summoner = summonerRepository.findSummonerByTrimmedGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
@@ -93,7 +96,10 @@ public class SummonerService {
         return this.SaveOrUpateSummoner(tierInfo, summoner);
     }
 
-    public List<MasteryDto> getSummonerMasteryInfo(SummonerRequestDto dto) throws CannotFoundSummoner {
+    public List<MasteryDto> getSummonerMasteryInfo(String gameName, String tagLine) throws CannotFoundSummoner {
+         SummonerRequestDto dto = new SummonerRequestDto();
+         dto.setGameName(gameName);
+         dto.setTagLine(tagLine);
          //1. 일단 gameName + tagLine으로 찾아보기
          Optional<Summoner> summoner = summonerRepository.findSummonerByTrimmedGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
 
