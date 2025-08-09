@@ -48,11 +48,4 @@ public class SummonerDto {
         this.puuid = puuid;
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Request{
-        private String gameName;
-        private String tagLine;
-    }
 }
