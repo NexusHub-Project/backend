@@ -47,4 +47,13 @@ public class Match {
     public void setParticipants(List<MatchParticipant> participants){
         this.participants = participants;
     }
+
+    public MatchParticipant getMyDataByPuuid(String puuid) {
+        for (MatchParticipant participant : participants) {
+            if (participant.getSummoner().getPuuid().equals(puuid)) {
+                return participant;
+            }
+        }
+        return null;
+    }
 }

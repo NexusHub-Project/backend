@@ -1,5 +1,6 @@
 package com.nexushub.NexusHub.Riot.Summoner.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data

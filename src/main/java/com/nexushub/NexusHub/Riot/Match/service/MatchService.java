@@ -104,6 +104,7 @@ public class MatchService {
         }
         return statsMap;
     }
+
     public List<ChampionSeasonStatisticsDto> getSeasonChampionStatsV2(String gameName, String tagLine) throws CannotFoundSummoner {
         String puuid = riotApiService.getSummonerPuuid(gameName, tagLine);
 
