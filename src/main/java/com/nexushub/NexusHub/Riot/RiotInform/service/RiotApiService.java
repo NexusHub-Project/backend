@@ -124,8 +124,8 @@ public class RiotApiService {
             return null;
         }
     }
-    public List<MasteryDto> getMasteryInfo(SummonerDto dto) throws CannotFoundSummoner {
-        String url = baseUrlKR + "/lol/champion-mastery/v4/champion-masteries/by-puuid/" + dto.getPuuid();
+    public List<MasteryDto> getMasteryInfo(String puuid) throws CannotFoundSummoner {
+        String url = baseUrlKR + "/lol/champion-mastery/v4/champion-masteries/by-puuid/" + puuid;
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Riot-Token", apiKey);

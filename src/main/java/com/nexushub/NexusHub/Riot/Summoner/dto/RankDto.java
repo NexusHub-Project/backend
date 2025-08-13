@@ -1,4 +1,4 @@
-package com.nexushub.NexusHub.Riot.Summoner.dto.v2;
+package com.nexushub.NexusHub.Riot.Summoner.dto;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,7 +1,5 @@
-package com.nexushub.NexusHub.Riot.Summoner.dto.v2;
+package com.nexushub.NexusHub.Riot.Summoner.dto;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.nexushub.NexusHub.Riot.Summoner.controller.v1.SummonerController;
 import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
 import lombok.Builder;
 import lombok.Data;

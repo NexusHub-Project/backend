@@ -1,17 +1,16 @@
 package com.nexushub.NexusHub.Riot.Summoner.controller.v1;
 
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
+import com.nexushub.NexusHub.Common.Filter.GameNameTrimFilter;
 import com.nexushub.NexusHub.Riot.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Riot.Match.dto.v2.MatchDataDto;
 import com.nexushub.NexusHub.Riot.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.MasteryDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
-import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengersResponseDto;
+import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengersResDto;
 import com.nexushub.NexusHub.Riot.RiotInform.service.RiotApiService;
-import com.nexushub.NexusHub.Riot.Summoner.dto.v2.SummonerTierResDto;
+import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerTierResDto;
 import com.nexushub.NexusHub.Web.Statistics.dto.ChampionSeasonStatisticsDto;
-import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
-import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerRequestDto;
 import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +27,10 @@ public class SummonerController {
     private final SummonerService summonerService;
     private final MatchService matchService;
     private final RiotApiService riotApiService;
+    private final GameNameTrimFilter gameNameTrimFilter;
 
     /** gameName과 tagLine을 통해서 티어 정보를 검색하는 API이다.
-     *
+     * - DTO 수정 완료
      * @param gameName
      * @param tagLine
      * @return Summoner
@@ -39,7 +39,7 @@ public class SummonerController {
     @GetMapping("/tier")
     public ResponseEntity<SummonerTierResDto> summonerTierInfo(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
         log.info("SummonerController - summonerTierInfo /tier 호출 ");
-        SummonerTierResDto summonerTierInfo = summonerService.getSummonerTierInfoV2(gameName, tagLine);
+        SummonerTierResDto summonerTierInfo = summonerService.getSummonerTierInfo(gameName, tagLine);
         return ResponseEntity.ok(summonerTierInfo);
     }
 
@@ -68,7 +68,7 @@ public class SummonerController {
     @GetMapping("/matches")
     public ResponseEntity<List<MatchDataDto>> summonerMatches(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
         log.info("SummonerController - summonerMatches /matches 호출 ");
-        List<MatchDataDto> matchDtos = summonerService.getSummonerMatchesInfoV1(new SummonerRequestDto(gameName, tagLine));
+        List<MatchDataDto> matchDtos = summonerService.getSummonerMatches(gameName, tagLine);
         return ResponseEntity.ok(matchDtos);
     }
 
@@ -84,8 +84,7 @@ public class SummonerController {
         return ResponseEntity.ok(matchInfo);
     }
 
-    /** 🚨미완성 🚨
-     *  전적을 검색한 소환사의 이번 시즌에 가장 많이 챔피언을 보내주는 API이다.
+    /** 🚨미완성 🚨 전적을 검색한 소환사의 이번 시즌에 가장 많이 챔피언을 보내주는 API이다.
      *
      * @param gameName
      * @param tagLine
@@ -104,10 +103,10 @@ public class SummonerController {
      * @return
      */
     @GetMapping("/search/challenger")
-    public ResponseEntity<List<ChallengersResponseDto>> searchChallengers(){
+    public ResponseEntity<List<ChallengersResDto>> searchChallengers(){
         log.info("SummonerController - searchChallengers /search/challenger 호출 ");
         ChallengerLeagueDto challengers = riotApiService.getChallengers();
-        List<ChallengersResponseDto> dtos = summonerService.setChallengersData(challengers);
+        List<ChallengersResDto> dtos = summonerService.setChallengersData(challengers);
         return ResponseEntity.ok(dtos);
     }
 }
