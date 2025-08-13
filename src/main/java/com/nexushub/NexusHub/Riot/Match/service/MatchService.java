@@ -30,10 +30,15 @@ public class MatchService {
     private final MatchRepository matchRepository;
     private final MatchParticipantRepository matchParticipantRepository;
 
-
     @Value("${riot.season2025-1}")
     private long seasonStartTime;
 
+    /**
+     *
+     * @param matchId
+     * @param puuid
+     * @return
+     */
     public MatchDto getMatchInfo(String matchId, String puuid) {
         // 1) 매치 정보 받아오기
         MatchDto matchInfo = riotApiService.getMatchInfo(matchId);
