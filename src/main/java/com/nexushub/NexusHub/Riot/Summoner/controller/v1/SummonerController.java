@@ -2,6 +2,7 @@ package com.nexushub.NexusHub.Riot.Summoner.controller.v1;
 
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Common.Filter.GameNameTrimFilter;
+import com.nexushub.NexusHub.Riot.Match.dto.InfoDto;
 import com.nexushub.NexusHub.Riot.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Riot.Match.dto.v2.MatchDataDto;
 import com.nexushub.NexusHub.Riot.Match.dto.v3.MatchInfoResDto;
@@ -82,6 +83,8 @@ public class SummonerController {
     public ResponseEntity<MatchDto> summonerMatchInfo(@RequestParam String matchId) {
         log.info("SummonerController - summonerMatchInfo /matchInfo 호출 ");
         MatchDto matchInfo = matchService.getMatchInfoById(matchId);
+        InfoDto info = matchInfo.getInfo();
+        log.info("info : {}", info);
         return ResponseEntity.ok(matchInfo);
     }
 

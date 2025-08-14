@@ -12,6 +12,7 @@ public class MetaDataResDto {
     private long gameDuration; // 게임 시간 (초)
     private long gameEndTimestamp; // 게임 종료 시각 (타임스탬프)
     private String gameMode; // 게임 모드
+    private Integer queueId;
 
     public static MetaDataResDto of(Match match) {
         return MetaDataResDto.builder()
@@ -20,6 +21,7 @@ public class MetaDataResDto {
                 .gameDuration(match.getGameDuration())
                 .gameEndTimestamp(match.getGameEndTimestamp())
                 .gameMode(match.getGameMode())
+                .queueId(match.getQueueId())
                 .build();
     }
 }

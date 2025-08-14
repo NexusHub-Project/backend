@@ -36,6 +36,9 @@ public class Match {
     @Column(name = "game_mode", nullable = false)
     private String gameMode; // 게임 모드
 
+    @Column(name = "queue_id", nullable = false)
+    private Integer queueId;
+
     // 지금 이 매치에 참여자들의 기록 리스트
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
     @Column(nullable = false)

@@ -133,7 +133,7 @@ public class SummonerService {
         String puuid = this.findPuuid(gameName, tagLine,s);
 
         String[] summonerMatchesId = getSummonerMatchesId(gameName, tagLine);
-        List<MatchDataDto> matchDataDtos = new ArrayList<>();
+
 
         // step 1) : matchId를 통해서 Match_info 객체를 받아오기  => 있을 수도 있고 없을 수도 있음
         for (String matchId : summonerMatchesId) {
@@ -154,11 +154,15 @@ public class SummonerService {
                 Match match1 = match.get();
                 ParticipantsResDto participantsResDto = ParticipantsResDto.of(match1.getParticipants());
                 MetaDataResDto metaDataResDto = MetaDataResDto.of(match1);
+                log.info("queueID : {}", match1.getQueueId());
+                log.info("queueId : {}", metaDataResDto.getQueueId());
                 MatchParticipant myDataByPuuid = match1.getMyDataByPuuid(puuid);
                 MyDataResDto myDataResDto = MyDataResDto.of(myDataByPuuid);
                 myDataResDto.setPerks(myDataByPuuid);
                 // step 4-2) : MatchDataDto 객체를 List에 넣어준다
-                matchInfoResDtos.add(MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto));
+                MatchInfoResDto dto = MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto);
+                log.info("queueIOD : {}", dto.getMetaData().getQueueId());
+                matchInfoResDtos.add(dto);
             }
             // step 2-2) : match가 없다면 만들고 matchDataDto 구성하기
             else {
@@ -172,6 +176,7 @@ public class SummonerService {
                 List<ParticipantDto> participantsDtoFromApi = infoDto.getParticipants(); // 참가자 정보 찾아 왔음
 
 
+                //여기서 queueID 넣어야 함
                 // 기본 정보 저장
                 Match newMatch = Match.builder()
                         .matchId(matchId) // Riot API에서 받은 matchId
@@ -179,6 +184,7 @@ public class SummonerService {
                         .gameDuration(infoDto.getGameDuration())
                         .gameCreation(infoDto.getGameCreation())
                         .gameEndTimestamp(infoDto.getGameEndTimestamp())
+                        .queueId(infoDto.getQueueId())
                         .build();
 
                 List<MatchParticipant> matchParticipants = new ArrayList<>();
@@ -217,7 +223,6 @@ public class SummonerService {
                             .quadraKills(participantDto.getQuadraKills())
                             .pentaKills(participantDto.getPentaKills())
                             .build();
-                    log.info("4)");
                     participant.setTeamLuckScore(ThreadLocalRandom.current().nextInt(35, 100));
                     participant.setOurScore(ThreadLocalRandom.current().nextInt(35, 100));
                     matchParticipants.add(participant);
@@ -232,7 +237,6 @@ public class SummonerService {
                 myDataResDto.setPerks(myDataByPuuid);
 
                 matchInfoResDtos.add(MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto));
-
                 matchService.save(newMatch);
             }
         }

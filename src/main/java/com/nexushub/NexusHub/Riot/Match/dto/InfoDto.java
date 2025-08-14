@@ -23,4 +23,7 @@ public class InfoDto {
 
     @JsonProperty("gameMode")
     private String gameMode; // 게임 모드
+
+    @JsonProperty("queueId")
+    private Integer queueId; // 솔랭인지 자랭인지 뭔지 등등
 }

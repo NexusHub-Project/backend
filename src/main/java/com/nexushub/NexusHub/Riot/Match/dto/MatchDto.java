@@ -7,9 +7,6 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MatchDto {
-
-    private DataDto myData;
-
     @JsonProperty("metadata")
     private MetadataDto metadata;
 
