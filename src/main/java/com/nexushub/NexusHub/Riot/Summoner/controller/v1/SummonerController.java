@@ -3,6 +3,7 @@ package com.nexushub.NexusHub.Riot.Summoner.controller.v1;
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Riot.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Riot.Match.dto.v2.MatchDataDto;
+import com.nexushub.NexusHub.Riot.Match.dto.v3.MatchInfoResDto;
 import com.nexushub.NexusHub.Riot.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.MasteryDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Queue;
 
 @RestController
 @RequestMapping("/api/v1/summoner")
@@ -58,6 +60,12 @@ public class SummonerController {
         List<MatchDataDto> matchDtos = summonerService.getSummonerMatchesInfoV1(dto);
 
         return ResponseEntity.ok(matchDtos);
+    }
+
+    @GetMapping("/matches/v4")
+    public ResponseEntity<Queue<MatchInfoResDto>> findSummonerMatchesV4(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
+        Queue<MatchInfoResDto> dtos = summonerService.getSummonerMatchesV2(gameName, tagLine);
+        return ResponseEntity.ok(dtos);
     }
 
 

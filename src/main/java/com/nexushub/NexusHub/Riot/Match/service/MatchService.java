@@ -104,6 +104,7 @@ public class MatchService {
         }
         return statsMap;
     }
+
     public List<ChampionSeasonStatisticsDto> getSeasonChampionStatsV2(String gameName, String tagLine) throws CannotFoundSummoner {
         String puuid = riotApiService.getSummonerPuuid(gameName, tagLine);
 
@@ -118,12 +119,13 @@ public class MatchService {
         // 3) 각 전적 순회하며 데이터 집계
         for (String matchId : matchIds) {
             // 3-1) 전적의 matchID로 경기의 상세 정보를 가져 옴
-            MatchDto matchInfo = riotApiService.getMatchInfo(matchId);
+//            MatchDto matchInfo = riotApiService.getMatchInfo(matchId);
 
             // API 호출 제한을 피하기 위해 각 호출 사이에 약간의 딜레이
-            try { Thread.sleep(50); } catch (InterruptedException e) {}
+            try { Thread.sleep(500); } catch (InterruptedException e) {}
 
             MinimalMatchDto minimalMatchInfo = riotApiService.getMinimalMatchInfo(matchId);
+            log.info("minimalMatchInfo : {}", minimalMatchInfo);
             if (minimalMatchInfo == null || minimalMatchInfo.getInfo() == null) {
                 log.warn("매치 정보를 가져오지 못했습니다: {}", matchId);
                 continue;

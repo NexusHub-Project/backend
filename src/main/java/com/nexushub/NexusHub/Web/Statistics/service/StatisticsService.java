@@ -54,7 +54,9 @@ public class StatisticsService {
         log.info("모든 포지션 통계 데이터 생성이 완료되었습니다.");
     }
 
+
     private void processPositionData(List<String> championNames, Position position) {
+
         log.info("{} 포지션 데이터 처리 중...", position);
 
         for (String championName : championNames) {
