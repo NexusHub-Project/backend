@@ -9,23 +9,17 @@ import com.nexushub.NexusHub.Riot.Match.dto.InfoDto;
 import com.nexushub.NexusHub.Riot.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Riot.Match.dto.ParticipantDto;
 import com.nexushub.NexusHub.Riot.Match.dto.v2.MatchDataDto;
-import com.nexushub.NexusHub.Riot.Match.dto.v3.MatchInfoResDto;
-import com.nexushub.NexusHub.Riot.Match.dto.v3.MetaDataResDto;
-import com.nexushub.NexusHub.Riot.Match.dto.v3.MyDataResDto;
-import com.nexushub.NexusHub.Riot.Match.dto.v3.ParticipantsResDto;
 import com.nexushub.NexusHub.Riot.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.MasteryDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
-import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengersResponseDto;
+import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengersResDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.RiotAccountDto;
 import com.nexushub.NexusHub.Riot.RiotInform.service.RiotApiService;
 import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerDto;
-import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerRequestDto;
+import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerTierResDto;
 import com.nexushub.NexusHub.Riot.Summoner.repository.SummonerRepository;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,127 +38,122 @@ public class SummonerService {
     private final ChampionRepository championRepository;
     private final MatchService matchService;
 
-
-    public Summoner getSummonerTierInfoV1(SummonerRequestDto dto) throws CannotFoundSummoner {
-        log.info("티어 찾기 2) : {}", dto);
-        String puuid;
-        SummonerDto summonerDto;
-
-        if (dto.getSummonerId() == null){
-            log.info("티어 찾기 3) : {}", dto);
-            RiotAccountDto summonerInfo = riotApiService.getSummonerInfo(dto.getGameName(), dto.getTagLine());
-            log.info("티어 찾기 4) : {}", summonerInfo);
-            puuid = summonerInfo.getPuuid();
-            summonerDto = SummonerDto.setInform(dto.getGameName(), dto.getTagLine(), puuid);
-            riotApiService.getSummonerTierInfo(summonerDto);
-
-            Summoner sum = Summoner.update(summonerDto);
-            return summonerRepository.save(sum);
-        }
-        else {
-            Summoner summoner = summonerRepository.findById(dto.getSummonerId()).get();
-            puuid = summoner.getPuuid();
-            summonerDto = SummonerDto.setInform(dto.getGameName(), dto.getTagLine(), puuid);
-            riotApiService.getSummonerTierInfo(summonerDto);
-            summoner.updateTier(summonerDto);
-            return summoner;
-        }
+    /** gameName, tagLine으로 Optional<Summoner>를 반환하는 메소드
+     *
+     * @param gameName
+     * @param tagLine
+     * @return
+     */
+    @Transactional(readOnly = true)
+    protected Optional<Summoner> findSummoner(String gameName, String tagLine) {
+        return summonerRepository.findSummonerByTrimmedGameNameAndTagLine(gameName, tagLine);
+    }
+    /** 최근 전적 MatchId를 반환하는 메소드
+     *
+     * @param gameName, tagLine
+     * @return
+     * @throws CannotFoundSummoner
+     */
+    private String[] getSummonerMatchesId(String gameName, String tagLine) throws CannotFoundSummoner {
+        Optional<Summoner> summoner = this.findSummoner(gameName, tagLine);
+        return riotApiService.getSummonerMatches(SummonerDto.setInform(gameName, tagLine, findPuuid(gameName, tagLine, summoner)));
     }
 
-    public Summoner getSummonerTierInfoV2(String gameName, String tagLine) throws CannotFoundSummoner {
-        SummonerDto.Request dto = new SummonerDto.Request();
-        dto.setGameName(gameName);
-        dto.setTagLine(tagLine);
-        dto.setTrimmedGameName(gameName.replace(" ",""));
-        //1. 일단 gameName + tagLine으로 찾아보기
-        Optional<Summoner> summoner = summonerRepository.findSummonerByTrimmedGameNameAndTagLine(dto.getTrimmedGameName(), dto.getTagLine());
-
-        //2. PUUID를 얻기 - 객체가 있을 수도 있고(최초 검색X) 없을 수도 있음(최초 검색O)
-        //         객체가 있으면 그냥 바로 PUUID 뽑아오기
-        //         객체가 없으면 PUUID를 얻어오기
-        RiotAccountDto riotAccountDto = riotApiService.getSummonerInfo(dto.getGameName(), dto.getTagLine());
-        String puuid = summoner.isPresent() ? summoner.get().getPuuid() : riotAccountDto.getPuuid();
-
-
-
-        //3. PUUID를 통해서 티어 검색하기
-        SummonerDto tierInfo = riotApiService.getSummonerTierInfo(SummonerDto.setInform(riotAccountDto.getGameName(), dto.getTagLine(), puuid));
-
-        //4. Summoner 객체 적용하여 반1환하기
-        return this.SaveOrUpateSummoner(tierInfo, summoner);
+    /** gameName, tagLine, Optional<Summoner>로 puuid 반환하는 메소드
+     *
+     * @param gameName
+     * @param tagLine
+     * @param summoner
+     * @return
+     * @throws CannotFoundSummoner
+     */
+    private String findPuuid(String gameName, String tagLine, Optional<Summoner> summoner) throws CannotFoundSummoner {
+        return summoner.isPresent()
+                ? summoner.get().getPuuid()
+                : riotApiService.getSummonerInfo(gameName, tagLine).getPuuid();
     }
 
+
+    /** gameName, tagLine을 통해서 티어 정보를 반한 하는 메소드
+     *
+     * @param gameName
+     * @param tagLine
+     * @return
+     * @throws CannotFoundSummoner
+     */
+    public SummonerTierResDto getSummonerTierInfo(String gameName, String tagLine) throws CannotFoundSummoner {
+        log.info("SummonerService - getSummonerTierInfo : {}#{}", gameName, tagLine);
+        Optional<Summoner> summoner = findSummoner(gameName, tagLine);
+        String puuid = findPuuid(gameName, tagLine, summoner);
+
+        SummonerDto tierInfo = riotApiService.getSummonerTierInfo(SummonerDto.setInform(gameName, tagLine, puuid));
+
+        Summoner savedS = this.SaveOrUpateSummoner(tierInfo, summoner);
+        return SummonerTierResDto.of(savedS);
+    }
+
+    /** gameName, tagLine을 통해서 숙련도 리스트를 반환하는 메소드
+     *
+     * @param gameName
+     * @param tagLine
+     * @return
+     * @throws CannotFoundSummoner
+     */
     public List<MasteryDto> getSummonerMasteryInfo(String gameName, String tagLine) throws CannotFoundSummoner {
-         SummonerRequestDto dto = new SummonerRequestDto();
-         dto.setGameName(gameName);
-         dto.setTagLine(tagLine);
-         //1. 일단 gameName + tagLine으로 찾아보기
-         Optional<Summoner> summoner = summonerRepository.findSummonerByTrimmedGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
+        log.info("Summoner Service - getSummonerMasteryInfo : {}#{}", gameName, tagLine);
 
-         //2. PUUID를 얻기 - 객체가 있을 수도 있고(최초 검색X) 없을 수도 있음(최초 검색O)
-         //         객체가 있으면 그냥 바로 PUUID 뽑아오기
-         //         객체가 없으면 PUUID를 얻어오기
-         String puuid = summoner.isPresent() ? summoner.get().getPuuid() : riotApiService.getSummonerPuuid(dto.getGameName(), dto.getTagLine());
+        Optional<Summoner> summoner = findSummoner(gameName, tagLine);
+        String puuid = findPuuid(gameName, tagLine, summoner);
 
-         List<MasteryDto> masteryInfo = riotApiService.getMasteryInfo(SummonerDto.setInform(dto.getGameName(), dto.getTagLine(), puuid));
+        List<MasteryDto> masteryInfo = riotApiService.getMasteryInfo(puuid);
 
-         setChampionNameV2(masteryInfo);
+        setChampionName(masteryInfo);
 
-         return masteryInfo;
+        return masteryInfo;
     }
 
-    public String[] getSummonerMatchesId(SummonerRequestDto dto) throws CannotFoundSummoner {
-        TempInfo temp = getPuuid(dto);
-        dto.setPuuid(temp.getPuuid());
-        log.info("After set Puuid : dto = {}", dto.toString());
-        return riotApiService.getSummonerMatches(SummonerDto.setInform(temp.gameName, temp.tagLine, temp.puuid));
-    }
 
-    public List<MatchDto> getSummonerMatchesInfo(SummonerRequestDto dto) throws CannotFoundSummoner {
-        String[] summonerMatchesId = getSummonerMatchesId(dto);
-        List<MatchDto> dtos = new ArrayList<>();
-        for (String matchId : summonerMatchesId) {
-            dtos.add(matchService.getMatchInfo(matchId, dto.getPuuid()));
-        }
-        return dtos;
-    }
-
-    public List<MatchDataDto> getSummonerMatchesInfoV1(SummonerRequestDto dto) throws CannotFoundSummoner {
-        // step 2) : dto에 담겨 있는 gameName, tagLine를 통해서 해당 유저의 MatchId들을 받아오기
-        String[] summonerMatchesId = getSummonerMatchesId(dto);
-
+    /** gameName, tagLine을 통해서 전적을 검색 내용을 반환하는 메소드
+     *
+     * @param gameName
+     * @param tagLine
+     * @return
+     * @throws CannotFoundSummoner
+     */
+    public List<MatchDataDto> getSummonerMatches(String gameName, String tagLine) throws CannotFoundSummoner {
+        log.info("Summoner Service - getSummonerMatches : {}#{}", gameName, tagLine);
+        String[] summonerMatchesId = getSummonerMatchesId(gameName, tagLine);
         List<MatchDataDto> matchDataDtos = new ArrayList<>();
 
-        // step 3) : matchId를 통해서 Match_info 객체를 받아오기  => 있을 수도 있고 없을 수도 있음
+        // step 1) : matchId를 통해서 Match_info 객체를 받아오기  => 있을 수도 있고 없을 수도 있음
         for (String matchId : summonerMatchesId) {
             log.info("match Id : {}", matchId);
             Optional<Match> match = matchService.getMatchByMatchId(matchId);
 
-            // step 4) : match가 있다면 바로 matchDataDto 구성하기
+            // step 2-1) : match가 있다면 바로 matchDataDto 구성하기
             if (match.isPresent()) {
                 log.info("{} 있음 ", matchId);
-                log.info("match INFO : {}", match.toString());
 
-                // step 4-1) : MatchDataDto에는 player01~10까지 넣기
+                // step 3-1) : MatchDataDto에는 player01~10까지 넣기
                 List<MatchParticipant> participants = match.get().getParticipants();
                 MatchDataDto matchDataDto = MatchDataDto.of(participants);
                 matchDataDto.setMatchInform(match.get());
-                // step 4-2) : MatchDataDto 객체를 List에 넣어준다
+                // step 4-1) : MatchDataDto 객체를 List에 넣어준다
                 matchDataDtos.add(matchDataDto);
             }
-
-            // step 5) : match가 없다면 새로 만들어서 matchDataDto를 구성하기
+            // step 2-2) : match가 없다면 만들고 matchDataDto 구성하기
             else {
                 log.info("{} 없음 ", matchId);
-                // step 5-1) : riot API 요청을 통해서 해당 matchId의 값을 받기
-                MatchDto matchDto = riotApiService.getMatchInfo(matchId);
-                log.info("matchDTO : {}", matchDto.toString());
-                // step 5-2) : matchDto 속의 infoDto를 통해서 participantDto를 통해, Summoner에 저장이 되어 있는 Summoner인지 체크하기
-                InfoDto infoDto = matchDto.getInfo();
-                List<ParticipantDto> participantsDtoFromApi = infoDto.getParticipants();
-                log.info("1)");
 
-                // 아직 저장 안 함
+                // step 3-2) : riot API 요청을 통해서 해당 matchId의 값을 받기
+                MatchDto matchDto = riotApiService.getMatchInfo(matchId);
+
+                // step 4-2) : matchDto 속의 infoDto를 통해서 participantDto를 통해, Summoner에 저장이 되어 있는 Summoner인지 체크하기
+                InfoDto infoDto = matchDto.getInfo();
+                List<ParticipantDto> participantsDtoFromApi = infoDto.getParticipants(); // 참가자 정보 찾아 왔음
+
+
+                // 기본 정보 저장
                 Match newMatch = Match.builder()
                         .matchId(matchId) // Riot API에서 받은 matchId
                         .gameMode(infoDto.getGameMode())
@@ -172,19 +161,16 @@ public class SummonerService {
                         .gameCreation(infoDto.getGameCreation())
                         .gameEndTimestamp(infoDto.getGameEndTimestamp())
                         .build();
-                log.info("2)");
+
                 List<MatchParticipant> matchParticipants = new ArrayList<>();
 
                 for (ParticipantDto participantDto : participantsDtoFromApi) {
-                    log.info("participantDto : {}", participantDto.toString());
-                    // step 5-3) : puuid로 Summoner를 찾거나, 없으면 새로 저장합니다.
+                    // step 5-2) : puuid로 Summoner를 찾거나, 없으면 새로 저장
                     Summoner summoner = summonerRepository.findSummonerByPuuid(participantDto.getPuuid())
                             .orElseGet(() -> summonerRepository.save(
                                     new Summoner(participantDto)
                             ));
 
-
-                    log.info("3)");
                     MatchParticipant participant = MatchParticipant.builder()
                             .match(newMatch)
                             .summoner(summoner)
@@ -217,13 +203,14 @@ public class SummonerService {
                     participant.setOurScore(ThreadLocalRandom.current().nextInt(35, 100));
                     matchParticipants.add(participant);
                 }
-                log.info("5 )");
+
                 newMatch.setParticipants(matchParticipants);
 
                 MatchDataDto matchDataDto = MatchDataDto.of(matchParticipants);
                 matchDataDto.setMatchInform(newMatch);
                 matchDataDtos.add(matchDataDto);
 
+                // 매치정보 저장
                 matchService.save(newMatch);
             }
         }
@@ -231,130 +218,19 @@ public class SummonerService {
         return matchDataDtos;
     }
 
-    public Queue<MatchInfoResDto> getSummonerMatchesV2(String gameName, String tagLine) throws CannotFoundSummoner {
-        Queue<MatchInfoResDto> matchInfoResDtos = new LinkedList<>();
-
-        // Dto 만들기
-        SummonerRequestDto dto = new SummonerRequestDto();
-        dto.setGameName(gameName);
-        dto.setTagLine(tagLine);
-
-        // matchId 받아오기
-        String[] summonerMatchesId = getSummonerMatchesId(dto);
-        String puuid = dto.getPuuid();
-
-
-
-        // step 3) : matchId를 통해서 Match_info 객체를 받아오기  => 있을 수도 있고 없을 수도 있음
-        for (String matchId : summonerMatchesId) {
-            Optional<Match> match = matchService.getMatchByMatchId(matchId);
-
-            // step 4) : match가 있다면 바로 matchDataDto 구성하기
-            if (match.isPresent()) {
-
-                // step 4-1) : MatchDataDto에는 player01~10까지 넣기
-                Match match1 = match.get();
-                ParticipantsResDto participantsResDto = ParticipantsResDto.of(match1.getParticipants());
-                MetaDataResDto metaDataResDto = MetaDataResDto.of(match1);
-                MatchParticipant myDataByPuuid = match1.getMyDataByPuuid(puuid);
-                MyDataResDto myDataResDto = MyDataResDto.of(myDataByPuuid);
-                myDataResDto.setPerks(myDataByPuuid);
-                // step 4-2) : MatchDataDto 객체를 List에 넣어준다
-                matchInfoResDtos.add(MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto));
-
-            }
-
-            // step 5) : match가 없다면 새로 만들어서 matchDataDto를 구성하기
-            else {
-                // step 5-1) : riot API 요청을 통해서 해당 matchId의 값을 받기
-                MatchDto matchDto = riotApiService.getMatchInfo(matchId);
-                log.info("matchDTO : {}", matchDto.toString());
-                // step 5-2) : matchDto 속의 infoDto를 통해서 participantDto를 통해, Summoner에 저장이 되어 있는 Summoner인지 체크하기
-                InfoDto infoDto = matchDto.getInfo();
-                List<ParticipantDto> participantsDtoFromApi = infoDto.getParticipants();
-                log.info("1)");
-
-                // 아직 저장 안 함
-                Match newMatch = Match.builder()
-                        .matchId(matchId) // Riot API에서 받은 matchId
-                        .gameMode(infoDto.getGameMode())
-                        .gameDuration(infoDto.getGameDuration())
-                        .gameCreation(infoDto.getGameCreation())
-                        .gameEndTimestamp(infoDto.getGameEndTimestamp())
-                        .build();
-                log.info("2)");
-                List<MatchParticipant> matchParticipants = new ArrayList<>();
-
-                for (ParticipantDto participantDto : participantsDtoFromApi) {
-                    log.info("participantDto : {}", participantDto.toString());
-                    // step 5-3) : puuid로 Summoner를 찾거나, 없으면 새로 저장합니다.
-                    Summoner summoner = summonerRepository.findSummonerByPuuid(participantDto.getPuuid())
-                            .orElseGet(() -> summonerRepository.save(
-                                    new Summoner(participantDto)
-                            ));
-
-
-                    log.info("3)");
-                    MatchParticipant participant = MatchParticipant.builder()
-                            .match(newMatch)
-                            .summoner(summoner)
-                            .win(participantDto.getWin())
-                            .championId(participantDto.getChampionId())
-                            .champLevel(participantDto.getChampLevel())
-                            .teamPosition(participantDto.getTeamPosition())
-                            .item0(participantDto.getItem0())
-                            .item1(participantDto.getItem1())
-                            .item2(participantDto.getItem2())
-                            .item3(participantDto.getItem3())
-                            .item4(participantDto.getItem4())
-                            .item5(participantDto.getItem5())
-                            .item6(participantDto.getItem6())
-                            .perks(participantDto.getPerks())
-                            .kda(participantDto.getKda())
-                            .kills(participantDto.getKills())
-                            .assists(participantDto.getAssists())
-                            .deaths(participantDto.getDeaths())
-                            .totalMinionKills(participantDto.getTotalMinionsKilled() + participantDto.getNeutralMinionsKilled())
-                            .totalDamageTaken(participantDto.getTotalDamageTaken())
-                            .totalDamageDealtToChampions(participantDto.getTotalDamageDealtToChampions())
-                            .doubleKills(participantDto.getDoubleKills())
-                            .tripleKills(participantDto.getTripleKills())
-                            .quadraKills(participantDto.getQuadraKills())
-                            .pentaKills(participantDto.getPentaKills())
-                            .build();
-                    log.info("4)");
-                    participant.setTeamLuckScore(ThreadLocalRandom.current().nextInt(35, 100));
-                    participant.setOurScore(ThreadLocalRandom.current().nextInt(35, 100));
-                    matchParticipants.add(participant);
-                }
-                log.info("5 )");
-                newMatch.setParticipants(matchParticipants);
-
-                ParticipantsResDto participantsResDto = ParticipantsResDto.of(matchParticipants);
-                MetaDataResDto metaDataResDto = MetaDataResDto.of(newMatch);
-                MatchParticipant myDataByPuuid = newMatch.getMyDataByPuuid(puuid);
-                MyDataResDto myDataResDto = MyDataResDto.of(myDataByPuuid);
-                myDataResDto.setPerks(myDataByPuuid);
-
-                matchInfoResDtos.add(MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto));
-
-                matchService.save(newMatch);
-            }
-        }
-
-
-
-        return matchInfoResDtos;
-    }
-
-    public List<ChallengersResponseDto> setChallengersData(ChallengerLeagueDto dto) {
+    /** 챌린저 dto를 통해서 해당 유저를 저장하고 ResponseDTo로 변환하는 메소드
+     *
+     * @param dto
+     * @return
+     */
+    public List<ChallengersResDto> setChallengersData(ChallengerLeagueDto dto) {
         List<ChallengerDto> entries = dto.getEntries();
-        List<ChallengersResponseDto> dtos = new LinkedList<>();
+        List<ChallengersResDto> dtos = new LinkedList<>();
         for (ChallengerDto entry : entries) {
             Optional<Summoner> summoner = summonerRepository.findSummonerByPuuid(entry.getPuuid());
 
             if (summoner.isPresent()) {
-                dtos.add(new ChallengersResponseDto(entry, summoner.get()));
+                dtos.add(new ChallengersResDto(entry, summoner.get()));
             }
             else {
                 // 1. puuid만으로 정보 얻어오기
@@ -365,14 +241,19 @@ public class SummonerService {
                 newSummoner.updateTier(entry);
 
                 // 3. 그리고 바로 Dtos.add 해버기리
-                dtos.add(new ChallengersResponseDto(entry,summonerRepository.save(newSummoner)));
+                dtos.add(new ChallengersResDto(entry,summonerRepository.save(newSummoner)));
             }
         }
         return dtos;
     }
 
+    /** Summoner 객체를 저장과 업데이트를 하는 메소드
+     *
+     * @param dto
+     * @param summoner
+     * @return
+     */
     private Summoner SaveOrUpateSummoner(SummonerDto dto, Optional<Summoner> summoner){
-        // 문제 : 여기서 summoner가 empty인 점 ㅇㅇ
 
         if (summoner.isPresent()){ // 최초 검색이 아닌 경우
             Summoner target = summoner.get();
@@ -387,15 +268,12 @@ public class SummonerService {
     }
 
 
-    private List<MasteryDto> setChampionNameV1(List<MasteryDto> dtos){
-        for (MasteryDto dto : dtos) {
-            Champion champion = championRepository.findById(dto.getChampionId()).get();
-            log.info("champId : {}, ChampName : {}",dto.getChampionId(), dto.getChampionName());
-        }
-        return dtos;
-    }
-
-    private List<MasteryDto> setChampionNameV2(List<MasteryDto> dtos) {
+    /** 숙련도 할 때 세팅하는 메소드
+     *
+     * @param dtos
+     * @return
+     */
+    private List<MasteryDto> setChampionName(List<MasteryDto> dtos) {
         for (MasteryDto dto : dtos) {
             // 1. championId로 Champion 정보를 조회합니다.
             Optional<Champion> championOptional = championRepository.findById(dto.getChampionId());
@@ -416,23 +294,5 @@ public class SummonerService {
         return dtos;
     }
 
-    private TempInfo getPuuid(SummonerRequestDto dto) throws CannotFoundSummoner {
-        //1. 일단 gameName + tagLine으로 찾아보기
-        Optional<Summoner> summoner = summonerRepository.findSummonerByTrimmedGameNameAndTagLine(dto.getGameName(), dto.getTagLine());
 
-        //2. PUUID를 얻기 - 객체가 있을 수도 있고(최초 검색X) 없을 수도 있음(최초 검색O)
-        //         객체가 있으면 그냥 바로 PUUID 뽑아오기
-        //         객체가 없으면 PUUID를 얻어오기
-        String puuid = summoner.isPresent() ? summoner.get().getPuuid() : riotApiService.getSummonerPuuid(dto.getGameName(), dto.getTagLine());
-        log.info(" puuid : {}", puuid);
-        return new TempInfo(puuid, dto.getGameName(), dto.getTagLine());
-    }
-
-    @Data
-    @AllArgsConstructor
-    private class TempInfo{
-        private String puuid;
-        private String gameName;
-        private String tagLine;
-    }
 }

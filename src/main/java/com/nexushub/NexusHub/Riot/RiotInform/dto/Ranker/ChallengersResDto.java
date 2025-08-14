@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class ChallengersResponseDto {
+public class ChallengersResDto {
     private String puuid;
     private String gameName;
     private String tagLine;
@@ -16,7 +16,7 @@ public class ChallengersResponseDto {
     private Double winRate;
 
     @Builder
-    public ChallengersResponseDto(ChallengerDto dto, Summoner summoner) {
+    public ChallengersResDto(ChallengerDto dto, Summoner summoner) {
         this.gameName = summoner.getGameName();
         this.tagLine = summoner.getTagLine();
         this.puuid = summoner.getPuuid();
