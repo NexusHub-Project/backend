@@ -45,8 +45,8 @@ public class SummonerService {
      * @return
      */
     @Transactional(readOnly = true)
-    protected Optional<Summoner> findSummoner(String gameName, String tagLine) {
-        return summonerRepository.findSummonerByTrimmedGameNameAndTagLine(gameName, tagLine);
+    public Optional<Summoner> findSummoner(String gameName, String tagLine) {
+        return summonerRepository.findSummonerByTrimmedGameNameAndTagLine(gameName.replace(" ", ""), tagLine);
     }
     /** 최근 전적 MatchId를 반환하는 메소드
      *
@@ -67,7 +67,7 @@ public class SummonerService {
      * @return
      * @throws CannotFoundSummoner
      */
-    private String findPuuid(String gameName, String tagLine, Optional<Summoner> summoner) throws CannotFoundSummoner {
+    public String findPuuid(String gameName, String tagLine, Optional<Summoner> summoner) throws CannotFoundSummoner {
         return summoner.isPresent()
                 ? summoner.get().getPuuid()
                 : riotApiService.getSummonerInfo(gameName, tagLine).getPuuid();
@@ -88,6 +88,7 @@ public class SummonerService {
 
         SummonerDto tierInfo = riotApiService.getSummonerTierInfo(SummonerDto.setInform(gameName, tagLine, puuid));
 
+        log.info("문제 예상 1)");
         Summoner savedS = this.SaveOrUpateSummoner(tierInfo, summoner);
         return SummonerTierResDto.of(savedS);
     }
