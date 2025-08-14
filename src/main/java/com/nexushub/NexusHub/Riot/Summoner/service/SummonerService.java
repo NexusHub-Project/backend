@@ -25,10 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -201,6 +198,7 @@ public class SummonerService {
                             .quadraKills(participantDto.getQuadraKills())
                             .pentaKills(participantDto.getPentaKills())
                             .build();
+                    log.info("4)");
                     participant.setTeamLuckScore(ThreadLocalRandom.current().nextInt(35, 100));
                     participant.setOurScore(ThreadLocalRandom.current().nextInt(35, 100));
                     matchParticipants.add(participant);

@@ -4,7 +4,6 @@ import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Riot.Data.Champion.ChampionRepository;
 import com.nexushub.NexusHub.Riot.Match.domain.Match;
 import com.nexushub.NexusHub.Riot.Match.dto.MatchDto;
-import com.nexushub.NexusHub.Riot.Match.dto.ParticipantDto;
 import com.nexushub.NexusHub.Riot.Match.dto.minimal.MinimalMatchDto;
 import com.nexushub.NexusHub.Riot.Match.repository.MatchParticipantRepository;
 import com.nexushub.NexusHub.Riot.Match.repository.MatchRepository;
@@ -51,6 +50,7 @@ public class MatchService {
             try { Thread.sleep(50); } catch (InterruptedException e) {}
 
             MinimalMatchDto minimalMatchInfo = riotApiService.getMinimalMatchInfo(matchId);
+            log.info("minimalMatchInfo : {}", minimalMatchInfo);
             if (minimalMatchInfo == null || minimalMatchInfo.getInfo() == null) {
                 log.warn("매치 정보를 가져오지 못했습니다: {}", matchId);
                 continue;

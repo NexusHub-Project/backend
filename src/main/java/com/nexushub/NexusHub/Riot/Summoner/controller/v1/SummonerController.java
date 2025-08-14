@@ -21,8 +21,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/summoner")
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class SummonerController {
     private final SummonerService summonerService;
     private final MatchService matchService;
