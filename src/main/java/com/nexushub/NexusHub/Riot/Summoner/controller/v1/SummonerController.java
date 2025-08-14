@@ -27,7 +27,6 @@ public class SummonerController {
     private final SummonerService summonerService;
     private final MatchService matchService;
     private final RiotApiService riotApiService;
-    private final GameNameTrimFilter gameNameTrimFilter;
 
     /** gameName과 tagLine을 통해서 티어 정보를 검색하는 API이다.
      * - DTO 수정 완료
@@ -94,7 +93,8 @@ public class SummonerController {
     @GetMapping("/most")
     public ResponseEntity<List<ChampionSeasonStatisticsDto>> summonerMostInfo(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner{
         log.info("SummonerController - summonerMostInfo /most 호출 ");
-        List<ChampionSeasonStatisticsDto> sortedStats = matchService.getStatisticsOfMostChampion(gameName, tagLine);
+        String puuid = summonerService.findPuuid(gameName, tagLine, summonerService.findSummoner(gameName, tagLine));
+        List<ChampionSeasonStatisticsDto> sortedStats = matchService.getStatisticsOfMostChampion(puuid);
         return ResponseEntity.ok(sortedStats);
     }
 
