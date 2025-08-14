@@ -9,6 +9,10 @@ import com.nexushub.NexusHub.Riot.Match.dto.InfoDto;
 import com.nexushub.NexusHub.Riot.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Riot.Match.dto.ParticipantDto;
 import com.nexushub.NexusHub.Riot.Match.dto.v2.MatchDataDto;
+import com.nexushub.NexusHub.Riot.Match.dto.v3.MatchInfoResDto;
+import com.nexushub.NexusHub.Riot.Match.dto.v3.MetaDataResDto;
+import com.nexushub.NexusHub.Riot.Match.dto.v3.MyDataResDto;
+import com.nexushub.NexusHub.Riot.Match.dto.v3.ParticipantsResDto;
 import com.nexushub.NexusHub.Riot.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.MasteryDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerDto;
@@ -121,8 +125,13 @@ public class SummonerService {
      * @return
      * @throws CannotFoundSummoner
      */
-    public List<MatchDataDto> getSummonerMatches(String gameName, String tagLine) throws CannotFoundSummoner {
+    public Queue<MatchInfoResDto> getSummonerMatches(String gameName, String tagLine) throws CannotFoundSummoner {
         log.info("Summoner Service - getSummonerMatches : {}#{}", gameName, tagLine);
+        Queue<MatchInfoResDto> matchInfoResDtos = new LinkedList<>();
+
+        Optional<Summoner> s = this.findSummoner(gameName, tagLine);
+        String puuid = this.findPuuid(gameName, tagLine,s);
+
         String[] summonerMatchesId = getSummonerMatchesId(gameName, tagLine);
         List<MatchDataDto> matchDataDtos = new ArrayList<>();
 
@@ -134,13 +143,22 @@ public class SummonerService {
             // step 2-1) : match가 있다면 바로 matchDataDto 구성하기
             if (match.isPresent()) {
                 log.info("{} 있음 ", matchId);
-
+/*
                 // step 3-1) : MatchDataDto에는 player01~10까지 넣기
                 List<MatchParticipant> participants = match.get().getParticipants();
                 MatchDataDto matchDataDto = MatchDataDto.of(participants);
                 matchDataDto.setMatchInform(match.get());
                 // step 4-1) : MatchDataDto 객체를 List에 넣어준다
                 matchDataDtos.add(matchDataDto);
+*/
+                Match match1 = match.get();
+                ParticipantsResDto participantsResDto = ParticipantsResDto.of(match1.getParticipants());
+                MetaDataResDto metaDataResDto = MetaDataResDto.of(match1);
+                MatchParticipant myDataByPuuid = match1.getMyDataByPuuid(puuid);
+                MyDataResDto myDataResDto = MyDataResDto.of(myDataByPuuid);
+                myDataResDto.setPerks(myDataByPuuid);
+                // step 4-2) : MatchDataDto 객체를 List에 넣어준다
+                matchInfoResDtos.add(MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto));
             }
             // step 2-2) : match가 없다면 만들고 matchDataDto 구성하기
             else {
@@ -207,16 +225,19 @@ public class SummonerService {
 
                 newMatch.setParticipants(matchParticipants);
 
-                MatchDataDto matchDataDto = MatchDataDto.of(matchParticipants);
-                matchDataDto.setMatchInform(newMatch);
-                matchDataDtos.add(matchDataDto);
+                ParticipantsResDto participantsResDto = ParticipantsResDto.of(matchParticipants);
+                MetaDataResDto metaDataResDto = MetaDataResDto.of(newMatch);
+                MatchParticipant myDataByPuuid = newMatch.getMyDataByPuuid(puuid);
+                MyDataResDto myDataResDto = MyDataResDto.of(myDataByPuuid);
+                myDataResDto.setPerks(myDataByPuuid);
 
-                // 매치정보 저장
+                matchInfoResDtos.add(MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto));
+
                 matchService.save(newMatch);
             }
         }
 
-        return matchDataDtos;
+        return matchInfoResDtos;
     }
 
     /** 챌린저 dto를 통해서 해당 유저를 저장하고 ResponseDTo로 변환하는 메소드
