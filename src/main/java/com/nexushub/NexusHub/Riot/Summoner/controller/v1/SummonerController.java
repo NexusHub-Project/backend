@@ -94,7 +94,7 @@ public class SummonerController {
     @GetMapping("/most")
     public ResponseEntity<List<ChampionSeasonStatisticsDto>> summonerMostInfo(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner{
         log.info("SummonerController - summonerMostInfo /most 호출 ");
-        List<ChampionSeasonStatisticsDto> sortedStats = matchService.getSeasonChampionStatsV2(gameName, tagLine);
+        List<ChampionSeasonStatisticsDto> sortedStats = matchService.getStatisticsOfMostChampion(gameName, tagLine);
         return ResponseEntity.ok(sortedStats);
     }
 

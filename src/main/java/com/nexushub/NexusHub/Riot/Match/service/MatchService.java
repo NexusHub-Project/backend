@@ -8,6 +8,8 @@ import com.nexushub.NexusHub.Riot.Match.dto.minimal.MinimalMatchDto;
 import com.nexushub.NexusHub.Riot.Match.repository.MatchParticipantRepository;
 import com.nexushub.NexusHub.Riot.Match.repository.MatchRepository;
 import com.nexushub.NexusHub.Riot.RiotInform.service.RiotApiService;
+import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
+import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
 import com.nexushub.NexusHub.Web.Statistics.dto.ChampionSeasonStatisticsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,26 +27,34 @@ public class MatchService {
     private final ChampionRepository championRepository;
     private final MatchRepository matchRepository;
     private final MatchParticipantRepository matchParticipantRepository;
+    private final SummonerService summonerService;
+
 
     @Value("${riot.season2025-1}")
     private long seasonStartTime;
 
 
-    public List<ChampionSeasonStatisticsDto> getSeasonChampionStatsV2(String gameName, String tagLine) throws CannotFoundSummoner {
-        String puuid = riotApiService.getSummonerPuuid(gameName, tagLine);
+    /** 이번 시즌에 플레이한 챔피언 정보 반환하는 메소드
+     *
+     * @param gameName
+     * @param tagLine
+     * @return
+     * @throws CannotFoundSummoner
+     */
+    public List<ChampionSeasonStatisticsDto> getStatisticsOfMostChampion(String gameName, String tagLine) throws CannotFoundSummoner {
+        log.info("MatchService - getStatisticsOfMostChampion : {}#{}",gameName, tagLine);
+        String puuid = summonerService.findPuuid(gameName, tagLine, summonerService.findSummoner(gameName, tagLine));
 
 
         // 1) 이번 시즌의 전적 matchID를 가져옴
         List<String> matchIds = riotApiService.getMatchIdByPuuid(puuid, seasonStartTime);
-        log.info("{}의 시즌 전적 {}개 분석 시작", puuid, matchIds.size());
+        log.info("{}#{}의 시즌 전적 {}개 분석 시작",gameName,tagLine, matchIds.size());
 
         // 2) 챔피언 별 통계를 저장할 MAP 생성
         Map<Long, ChampionSeasonStatisticsDto> statsMap = new HashMap<>();
 
         // 3) 각 전적 순회하며 데이터 집계
         for (String matchId : matchIds) {
-            // 3-1) 전적의 matchID로 경기의 상세 정보를 가져 옴
-            MatchDto matchInfo = riotApiService.getMatchInfo(matchId);
 
             // API 호출 제한을 피하기 위해 각 호출 사이에 약간의 딜레이
             try { Thread.sleep(50); } catch (InterruptedException e) {}
