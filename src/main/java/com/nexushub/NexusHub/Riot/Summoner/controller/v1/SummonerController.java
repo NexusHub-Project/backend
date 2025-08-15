@@ -8,9 +8,11 @@ import com.nexushub.NexusHub.Riot.Match.dto.v2.MatchDataDto;
 import com.nexushub.NexusHub.Riot.Match.dto.v3.MatchInfoResDto;
 import com.nexushub.NexusHub.Riot.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.MasteryDto;
+import com.nexushub.NexusHub.Riot.RiotInform.dto.ProfileResDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengersResDto;
 import com.nexushub.NexusHub.Riot.RiotInform.service.RiotApiService;
+import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerTierResDto;
 import com.nexushub.NexusHub.Web.Statistics.dto.ChampionSeasonStatisticsDto;
 import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
@@ -20,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Queue;
 
 @RestController
@@ -114,4 +117,15 @@ public class SummonerController {
         List<ChallengersResDto> dtos = summonerService.setChallengersData(challengers);
         return ResponseEntity.ok(dtos);
     }
+    @GetMapping("/profile")
+    public ResponseEntity<ProfileResDto> getProfile(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
+        log.info("SummonerController - getProfile  호출 ");
+        gameName = gameName.replace(" ", "");
+        Optional<Summoner> summoner = summonerService.findSummoner(gameName, tagLine);
+        String puuid = summonerService.findPuuid(gameName, tagLine, summoner);
+        log.info("puuid : {}", puuid);
+        ProfileResDto profileInfo = riotApiService.getProfileInfo(puuid);
+        return ResponseEntity.ok(profileInfo);
+    }
+
 }

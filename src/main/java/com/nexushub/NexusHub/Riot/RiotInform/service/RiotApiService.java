@@ -3,9 +3,7 @@ package com.nexushub.NexusHub.Riot.RiotInform.service;
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Riot.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Riot.Match.dto.minimal.MinimalMatchDto;
-import com.nexushub.NexusHub.Riot.RiotInform.dto.MasteryDto;
-import com.nexushub.NexusHub.Riot.RiotInform.dto.RiotAccountDto;
-import com.nexushub.NexusHub.Riot.RiotInform.dto.TierInfoDto;
+import com.nexushub.NexusHub.Riot.RiotInform.dto.*;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerDto;
 import com.zaxxer.hikari.util.IsolationLevel;
@@ -71,6 +69,34 @@ public class RiotApiService {
     }
     public String getSummonerPuuid(String gameName, String tagLine) throws CannotFoundSummoner {
         return getSummonerInfo(gameName, tagLine).getPuuid();
+    }
+
+    public ProfileResDto getProfileInfo(String puuid) throws CannotFoundSummoner {
+        // uuid 정보 얻기
+        String url = baseUrlKR + "/lol/summoner/v4/summoners/by-puuid/" + puuid;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Riot-Token", apiKey);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<ProfileDto> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    ProfileDto.class
+            );
+            ProfileDto body = response.getBody();
+            return ProfileResDto.of(body);
+
+        } catch (HttpClientErrorException.NotFound e) {
+            // 404 에러일 경우 직접 메시지 던짐
+            throw new CannotFoundSummoner(puuid + " 소환사를 찾을 수 없습니다.");
+        } catch (RestClientException e) {
+            log.error(" Riot API ERROR : {}", e.getMessage());
+            throw new CannotFoundSummoner("소환사 정보를 가져오는 중 오류가 발생했습니다.");
+        }
     }
 
     public SummonerDto getSummonerTierInfo(SummonerDto dto){
