@@ -1,5 +1,6 @@
 package com.nexushub.NexusHub.Riot.Match.dto.v3;
 
+import com.nexushub.NexusHub.Riot.Data.Champion.Champion;
 import com.nexushub.NexusHub.Riot.Match.domain.MatchParticipant;
 import com.nexushub.NexusHub.Riot.Match.dto.perks.PerksDto;
 import com.nexushub.NexusHub.Riot.Match.dto.perks.StyleDto;
@@ -16,6 +17,8 @@ public class MyDataResDto {
     private String puuid;
     private Boolean win;
     private Long championId;
+    private String championNameEn;
+    private String championNameKo;
     private Integer champLevel;
     private String teamPosition;
     private Long item0, item1, item2, item3, item4, item5, item6;
@@ -43,13 +46,15 @@ public class MyDataResDto {
     private Integer primaryStyle;
     private Integer subStyle;
 
-    public static MyDataResDto of(MatchParticipant participants) {
+    public static MyDataResDto of(MatchParticipant participants, Champion champion) {
         Summoner summoner = participants.getSummoner();
         return MyDataResDto.builder()
                 .puuid(summoner.getPuuid())
                 .win(participants.getWin())
                 .championId(participants.getChampionId())
                 .champLevel(participants.getChampLevel())
+                .championNameEn(champion.getNameEn())
+                .championNameKo(champion.getNameKo())
                 .teamPosition(participants.getTeamPosition())
                 .item0(participants.getItem0()).item1(participants.getItem1()).item2(participants.getItem2())
                 .item3(participants.getItem3()).item4(participants.getItem4()).item5(participants.getItem5())

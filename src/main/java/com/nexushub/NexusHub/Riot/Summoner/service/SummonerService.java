@@ -1,8 +1,10 @@
 package com.nexushub.NexusHub.Riot.Summoner.service;
 
+import com.nexushub.NexusHub.Common.Exception.Normal.CannotFoundChampion;
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Riot.Data.Champion.Champion;
 import com.nexushub.NexusHub.Riot.Data.Champion.ChampionRepository;
+import com.nexushub.NexusHub.Riot.Data.Champion.ChampionService;
 import com.nexushub.NexusHub.Riot.Match.domain.Match;
 import com.nexushub.NexusHub.Riot.Match.domain.MatchParticipant;
 import com.nexushub.NexusHub.Riot.Match.dto.InfoDto;
@@ -26,6 +28,7 @@ import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerTierResDto;
 import com.nexushub.NexusHub.Riot.Summoner.repository.SummonerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +44,7 @@ public class SummonerService {
     private final RiotApiService riotApiService;
     private final ChampionRepository championRepository;
     private final MatchService matchService;
+    private final ChampionService championService;
 
     /** gameName, tagLine으로 Optional<Summoner>를 반환하는 메소드
      *
@@ -152,12 +156,19 @@ public class SummonerService {
                 matchDataDtos.add(matchDataDto);
 */
                 Match match1 = match.get();
-                ParticipantsResDto participantsResDto = ParticipantsResDto.of(match1.getParticipants());
+                List<MatchParticipant> participants = match1.getParticipants();
+                ParticipantsResDto participantsResDto = new ParticipantsResDto();
+                addParticipant(participants, participantsResDto);
+
+
+
                 MetaDataResDto metaDataResDto = MetaDataResDto.of(match1);
                 log.info("queueID : {}", match1.getQueueId());
                 log.info("queueId : {}", metaDataResDto.getQueueId());
                 MatchParticipant myDataByPuuid = match1.getMyDataByPuuid(puuid);
-                MyDataResDto myDataResDto = MyDataResDto.of(myDataByPuuid);
+                Long championId = myDataByPuuid.getChampionId();
+                Champion champion = championService.getChampionById(championId).orElseThrow(()->new CannotFoundChampion(championId+"에 해당하는 챔피언이 없습니다."));
+                MyDataResDto myDataResDto = MyDataResDto.of(myDataByPuuid,champion);
                 myDataResDto.setPerks(myDataByPuuid);
                 // step 4-2) : MatchDataDto 객체를 List에 넣어준다
                 MatchInfoResDto dto = MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto);
@@ -230,10 +241,13 @@ public class SummonerService {
 
                 newMatch.setParticipants(matchParticipants);
 
-                ParticipantsResDto participantsResDto = ParticipantsResDto.of(matchParticipants);
+                ParticipantsResDto participantsResDto = new ParticipantsResDto();
+                addParticipant(matchParticipants, participantsResDto);
                 MetaDataResDto metaDataResDto = MetaDataResDto.of(newMatch);
                 MatchParticipant myDataByPuuid = newMatch.getMyDataByPuuid(puuid);
-                MyDataResDto myDataResDto = MyDataResDto.of(myDataByPuuid);
+                Long championId = myDataByPuuid.getChampionId();
+                Champion champion = championService.getChampionById(championId).orElseThrow(()->new CannotFoundChampion(championId+"에 해당하는 챔피언이 없습니다."));
+                MyDataResDto myDataResDto = MyDataResDto.of(myDataByPuuid,champion);
                 myDataResDto.setPerks(myDataByPuuid);
 
                 matchInfoResDtos.add(MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto));
@@ -242,6 +256,49 @@ public class SummonerService {
         }
 
         return matchInfoResDtos;
+    }
+    private void addParticipant(List<MatchParticipant> participants, ParticipantsResDto participantsResDto) {
+        Long championId0 = participants.get(0).getChampionId();
+        Champion champion0 = championService.getChampionById(championId0).orElseThrow(()->new CannotFoundChampion(championId0+"에 해당하는 챔피언이 없습니다."));
+        participantsResDto.addPlayer0(participants.get(0),champion0);
+
+        Long championId1 = participants.get(1).getChampionId();
+        Champion champion1 = championService.getChampionById(championId1).orElseThrow(()->new CannotFoundChampion(championId1+"에 해당하는 챔피언이 없습니다."));
+        participantsResDto.addPlayer1(participants.get(1),champion1);
+
+        Long championId2 = participants.get(2).getChampionId();
+        Champion champion2 = championService.getChampionById(championId2).orElseThrow(()->new CannotFoundChampion(championId2+"에 해당하는 챔피언이 없습니다."));
+        participantsResDto.addPlayer2(participants.get(2),champion2);
+
+        Long championId3 = participants.get(3).getChampionId();
+        Champion champion3 = championService.getChampionById(championId3).orElseThrow(()->new CannotFoundChampion(championId3+"에 해당하는 챔피언이 없습니다."));
+        participantsResDto.addPlayer3(participants.get(3),champion3);
+
+        Long championId4 = participants.get(4).getChampionId();
+        Champion champion4 = championService.getChampionById(championId4).orElseThrow(()->new CannotFoundChampion(championId4+"에 해당하는 챔피언이 없습니다."));
+        participantsResDto.addPlayer4(participants.get(4),champion4);
+
+
+
+        Long championId5 = participants.get(5).getChampionId();
+        Champion champion5 = championService.getChampionById(championId5).orElseThrow(()->new CannotFoundChampion(championId5+"에 해당하는 챔피언이 없습니다."));
+        participantsResDto.addPlayer5(participants.get(5),champion5);
+
+        Long championId6 = participants.get(6).getChampionId();
+        Champion champion6 = championService.getChampionById(championId6).orElseThrow(()->new CannotFoundChampion(championId6+"에 해당하는 챔피언이 없습니다."));
+        participantsResDto.addPlayer6(participants.get(6),champion6);
+
+        Long championId7 = participants.get(7).getChampionId();
+        Champion champion7 = championService.getChampionById(championId7).orElseThrow(()->new CannotFoundChampion(championId7+"에 해당하는 챔피언이 없습니다."));
+        participantsResDto.addPlayer7(participants.get(7),champion7);
+
+        Long championId8 = participants.get(8).getChampionId();
+        Champion champion8 = championService.getChampionById(championId8).orElseThrow(()->new CannotFoundChampion(championId8+"에 해당하는 챔피언이 없습니다."));
+        participantsResDto.addPlayer8(participants.get(8),champion8);
+
+        Long championId9 = participants.get(9).getChampionId();
+        Champion champion9 = championService.getChampionById(championId9).orElseThrow(()->new CannotFoundChampion(championId9+"에 해당하는 챔피언이 없습니다."));
+        participantsResDto.addPlayer9(participants.get(9),champion9);
     }
 
     /** 챌린저 dto를 통해서 해당 유저를 저장하고 ResponseDTo로 변환하는 메소드
