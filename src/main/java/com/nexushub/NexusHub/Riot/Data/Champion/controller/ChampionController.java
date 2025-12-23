@@ -4,6 +4,7 @@ package com.nexushub.NexusHub.Riot.Data.Champion.controller;
 import com.nexushub.NexusHub.Common.Exception.Normal.CannotFoundChampion;
 import com.nexushub.NexusHub.Riot.Data.Champion.Champion;
 import com.nexushub.NexusHub.Riot.Data.Champion.ChampionService;
+import com.nexushub.NexusHub.Riot.Data.Champion.ChampionStats;
 import com.nexushub.NexusHub.Riot.Data.Champion.dto.ChampionReturnDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,5 +24,9 @@ public class ChampionController {
     @GetMapping("/{id}")
     public ChampionReturnDto getChampInfo(@PathVariable Long id){
         return championService.getChampionInfoDto(id);
+    }
+    @GetMapping("/{nameEn}")
+    public ChampionReturnDto getChampInfoByName(@PathVariable String nameEn){
+        return championService.getChampionInfoDtoByName(nameEn);
     }
 }

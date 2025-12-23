@@ -12,4 +12,5 @@ import java.util.Optional;
 @Repository
 public interface ChampionSpellRepository extends JpaRepository<ChampionSpell, Long> {
     List<ChampionSpell> getSpellsFindByChampion(Champion champion);
+
 }

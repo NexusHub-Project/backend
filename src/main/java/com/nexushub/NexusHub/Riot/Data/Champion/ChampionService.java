@@ -156,4 +156,8 @@ public class ChampionService {
         Champion champion = getChampionById(id).orElseThrow();
         return new ChampionReturnDto(champion);
     }
+    public ChampionReturnDto getChampionInfoDtoByName(String nameEn){
+        Champion byNameEn = championRepository.findByNameEn(nameEn).orElseThrow();
+        return new ChampionReturnDto(byNameEn);
+    }
 }
