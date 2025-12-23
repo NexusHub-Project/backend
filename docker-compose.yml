@@ -9,7 +9,8 @@ services:
     container_name: nexushub-app
     # 이 서비스는 'nexushub-db' 서비스가 시작된 후에 시작되도록 설정
     depends_on:
-      - nexushub-db
+      nexushub-db:
+          condition: service_healthy
     ports:
       - "8080:8080"
     # 환경 변수 설정: .env 파일에 정의된 변수들을 불러와서 사용
