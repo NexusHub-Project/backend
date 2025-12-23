@@ -3,6 +3,7 @@ package com.nexushub.NexusHub.Riot.Data;
 
 import com.nexushub.NexusHub.Riot.Data.Champion.ChampionService;
 import com.nexushub.NexusHub.Riot.Data.Rune.RuneService;
+import com.nexushub.NexusHub.Riot.Data.SummonerSpell.SummonerSpellService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DataController {
     private final ChampionService championService;
     private final RuneService runeService;
+    private final SummonerSpellService summonerSpellService;
 
     @GetMapping("/champion")
     public ResponseEntity<String> importChampions() {
@@ -39,6 +41,18 @@ public class DataController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("룬 데이터 저장 실패: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/spell")
+    public ResponseEntity<String> importSpells(){
+        try{
+            summonerSpellService.importSummonerSpells();
+            return ResponseEntity.ok("소환사 주문 데이터 저장 완료");
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("소환사 주문 데이터 저장 실패: " + e.getMessage());
         }
     }
 }

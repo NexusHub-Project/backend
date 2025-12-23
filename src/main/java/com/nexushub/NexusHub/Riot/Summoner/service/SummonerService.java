@@ -145,14 +145,6 @@ public class SummonerService {
             // step 2-1) : match가 있다면 바로 matchDataDto 구성하기
             if (match.isPresent()) {
                 log.info("{} 있음 ", matchId);
-/*
-                // step 3-1) : MatchDataDto에는 player01~10까지 넣기
-                List<MatchParticipant> participants = match.get().getParticipants();
-                MatchDataDto matchDataDto = MatchDataDto.of(participants);
-                matchDataDto.setMatchInform(match.get());
-                // step 4-1) : MatchDataDto 객체를 List에 넣어준다
-                matchDataDtos.add(matchDataDto);
-*/
                 Match match1 = match.get();
                 List<MatchParticipant> participants = match1.getParticipants();
                 ParticipantsResDto participantsResDto = new ParticipantsResDto();
@@ -167,6 +159,7 @@ public class SummonerService {
                 Long championId = myDataByPuuid.getChampionId();
                 Champion champion = championService.getChampionById(championId).orElseThrow(()->new CannotFoundChampion(championId+"에 해당하는 챔피언이 없습니다."));
                 MyDataResDto myDataResDto = MyDataResDto.of(myDataByPuuid,champion);
+
                 myDataResDto.setPerks(myDataByPuuid);
                 // step 4-2) : MatchDataDto 객체를 List에 넣어준다
                 MatchInfoResDto dto = MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto);

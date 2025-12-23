@@ -46,6 +46,17 @@ public class MyDataResDto {
     private Integer primaryStyle;
     private Integer subStyle;
 
+    // 스펠, 스킬 정보
+    private Integer spell1Casts;
+    private Integer spell2Casts;
+    private Integer spell3Casts;
+    private Integer spell4Casts;
+    private Integer summoner1Id;
+    private Integer summoner1Casts;
+    private Integer summoner2Id;
+    private Integer summoner2Casts;
+
+
     public static MyDataResDto of(MatchParticipant participants, Champion champion) {
         Summoner summoner = participants.getSummoner();
         return MyDataResDto.builder()

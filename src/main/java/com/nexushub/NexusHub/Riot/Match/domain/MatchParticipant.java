@@ -54,6 +54,16 @@ public class MatchParticipant {
     @Convert(converter = PerksDtoConverter.class)
     private PerksDto perks;
 
+    // 스펠, 스킬 정보 (스펠은 id, 스킬은 횟수)
+    private Integer spell1Casts;
+    private Integer spell2Casts;
+    private Integer spell3Casts;
+    private Integer spell4Casts;
+    private Integer summoner1Id;
+    private Integer summoner1Casts;
+    private Integer summoner2Id;
+    private Integer summoner2Casts;
+
     // 지금은 분석 툴이 없으니 100~20 사이의 랜덤 점수 부여 (자체 분석 점수, 팀운 점수)
     private Integer teamLuckScore;
     private Integer ourScore;
