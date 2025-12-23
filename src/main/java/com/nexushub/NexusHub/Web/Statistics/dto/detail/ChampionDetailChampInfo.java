@@ -22,6 +22,7 @@ public class ChampionDetailChampInfo {
     // 비율
     private Float percent = (float) 0.0;
 
+
     public ChampionDetailChampInfo(ChampionStatsByPosition stats) {
         this.tier = stats.getTier();
         this.winRate = stats.getWinRate();

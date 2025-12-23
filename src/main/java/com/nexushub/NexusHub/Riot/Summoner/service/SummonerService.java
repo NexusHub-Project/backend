@@ -224,6 +224,14 @@ public class SummonerService {
                             .tripleKills(participantDto.getTripleKills())
                             .quadraKills(participantDto.getQuadraKills())
                             .pentaKills(participantDto.getPentaKills())
+                            .summoner1Casts(participantDto.getSummoner1Casts())
+                            .summoner1Id(participantDto.getSummoner1Id())
+                            .summoner2Id(participantDto.getSummoner2Id())
+                            .summoner2Casts(participantDto.getSummoner2Casts())
+                            .spell1Casts(participantDto.getSpell1Casts())
+                            .spell2Casts(participantDto.getSpell2Casts())
+                            .spell3Casts(participantDto.getSpell3Casts())
+                            .spell4Casts(participantDto.getSpell4Casts())
                             .build();
                     participant.setTeamLuckScore(ThreadLocalRandom.current().nextInt(35, 100));
                     participant.setOurScore(ThreadLocalRandom.current().nextInt(35, 100));

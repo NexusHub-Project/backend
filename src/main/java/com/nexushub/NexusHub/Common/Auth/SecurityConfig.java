@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 "/api/v1/comment/**",
                                 "/api/v1/champion/**",
                                 "/api/v1/rune/**",
+                                "/api/v1/summoner-spell/*",
                                 "/api/v1/strategy/**",
                                 "/api/v1/statistics/**",
                                 "/swagger-ui/**",

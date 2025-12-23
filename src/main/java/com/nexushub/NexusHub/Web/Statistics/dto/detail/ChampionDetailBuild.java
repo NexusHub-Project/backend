@@ -17,6 +17,10 @@ public class ChampionDetailBuild {
     private Integer item05;
     private Integer item06;
 
+    private Integer summoner1Id;
+    private Integer summoner2Id;
+    private Integer summoner3Id;
+    private Integer summoner4Id;
     // 룬 정보
     private PerksDto perks;
 
@@ -29,6 +33,9 @@ public class ChampionDetailBuild {
         this.item04 = 6333; // 죽무
         this.item05 = 3026; // 가엔
         this.item06 = 2055; // 제어와드
-
+        this.summoner1Id = stats.getSummoner1Id();
+        this.summoner2Id = stats.getSummoner2Id();
+        this.summoner3Id = stats.getSummoner3Id();
+        this.summoner4Id = stats.getSummoner4Id();
     }
 }

@@ -1,6 +1,7 @@
 package com.nexushub.NexusHub.Web.Statistics.domain.Champion;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexushub.NexusHub.Riot.Data.Champion.Champion;
 import com.nexushub.NexusHub.Riot.Match.dto.perks.PerksDto;
 import com.nexushub.NexusHub.Riot.Match.dto.perks.PerksDtoConverter;
@@ -57,6 +58,11 @@ public class ChampionStatsByPosition {
     @Column(name = "total_games_played")
     private Integer totalGamesPlayed = 0;
 
+    private Integer summoner1Id;
+    private Integer summoner2Id;
+    private Integer summoner3Id;
+    private Integer summoner4Id;
+
     @Column(columnDefinition = "TEXT")
     @Convert(converter = PerksDtoConverter.class)
     private PerksDto perks;
@@ -89,5 +95,9 @@ public class ChampionStatsByPosition {
         this.winRate = ThreadLocalRandom.current().nextFloat((float)44.0, (float)59.8);
         this.banRate = ThreadLocalRandom.current().nextFloat((float)1.0, (float)20.8);
         this.perks = PerksDto.createMock();
+        this.summoner1Id = 4;
+        this.summoner2Id = 7;
+        this.summoner3Id = 4;
+        this.summoner4Id = 12;
     }
 }

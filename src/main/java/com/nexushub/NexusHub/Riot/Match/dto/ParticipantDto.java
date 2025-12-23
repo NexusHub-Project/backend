@@ -116,6 +116,27 @@ public class ParticipantDto {
     @JsonProperty("perks")
     private PerksDto perks;
 
+    @JsonProperty("summoner1Id")
+    private Integer summoner1Id;
+
+    @JsonProperty("summoner2Id")
+    private Integer summoner2Id;
+
+    @JsonProperty("summoner2Casts")
+    private Integer summoner2Casts;
+
+    @JsonProperty("summoner1Casts")
+    private Integer summoner1Casts;
+
+    @JsonProperty("spell1Casts")
+    private Integer spell1Casts;
+    @JsonProperty("spell2Casts")
+    private Integer spell2Casts;
+    @JsonProperty("spell3Casts")
+    private Integer spell3Casts;
+    @JsonProperty("spell4Casts")
+    private Integer spell4Casts;
+
     // 지금은 분석 툴이 없으니 100~20 사이의 랜덤 점수 부여
     private Integer ourScore;
     private Integer teamScore;

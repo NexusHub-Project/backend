@@ -84,6 +84,14 @@ public class MyDataResDto {
                 .pentaKills(participants.getPentaKills())
                 .teamLuckScore((int)Math.random()*45+40)
                 .ourScore((int)Math.random()*45+40)
+                .summoner1Casts(participants.getSummoner1Casts())
+                .summoner2Casts(participants.getSummoner2Casts())
+                .summoner1Id(participants.getSummoner1Id())
+                .summoner2Id(participants.getSummoner2Id())
+                .spell1Casts(participants.getSpell1Casts())
+                .spell2Casts(participants.getSpell2Casts())
+                .spell3Casts(participants.getSpell3Casts())
+                .spell4Casts(participants.getSpell4Casts())
                 .build();
     }
 
