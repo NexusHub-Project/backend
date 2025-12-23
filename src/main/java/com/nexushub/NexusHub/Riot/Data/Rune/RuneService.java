@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexushub.NexusHub.Riot.Data.Rune.domain.Rune;
 import com.nexushub.NexusHub.Riot.Data.Rune.domain.RunePath;
 import com.nexushub.NexusHub.Riot.Data.Rune.domain.RuneSlot;
+import com.nexushub.NexusHub.Riot.Data.Rune.dto.RuneResponseDto;
 import com.nexushub.NexusHub.Riot.Data.Rune.repository.RunePathRepository;
 import com.nexushub.NexusHub.Riot.Data.Rune.repository.RuneRepository;
 import lombok.RequiredArgsConstructor;
@@ -62,5 +63,9 @@ public class RuneService {
             path.setSlots(slots);
             runePathRepository.save(path);
         }
+    }
+    public RuneResponseDto getRuneInfoById(Long id){
+        Rune rune = runeRepository.findById(id).orElseThrow();
+        return new RuneResponseDto(rune);
     }
 }
