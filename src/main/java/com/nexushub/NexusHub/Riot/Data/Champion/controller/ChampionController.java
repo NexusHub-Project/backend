@@ -21,11 +21,11 @@ public class ChampionController {
 
     private final ChampionService championService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ChampionReturnDto getChampInfo(@PathVariable Long id){
         return championService.getChampionInfoDto(id);
     }
-    @GetMapping("/{nameEn}")
+    @GetMapping("/name/{nameEn}")
     public ChampionReturnDto getChampInfoByName(@PathVariable String nameEn){
         return championService.getChampionInfoDtoByName(nameEn);
     }
