@@ -1,15 +1,12 @@
 package com.nexushub.NexusHub.Riot.Match.service;
 
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
-import com.nexushub.NexusHub.Riot.Data.Champion.ChampionRepository;
+import com.nexushub.NexusHub.Riot.Data.Champion.repository.ChampionRepository;
 import com.nexushub.NexusHub.Riot.Match.domain.Match;
 import com.nexushub.NexusHub.Riot.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Riot.Match.dto.minimal.MinimalMatchDto;
-import com.nexushub.NexusHub.Riot.Match.repository.MatchParticipantRepository;
 import com.nexushub.NexusHub.Riot.Match.repository.MatchRepository;
 import com.nexushub.NexusHub.Riot.RiotInform.service.RiotApiService;
-import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
-import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
 import com.nexushub.NexusHub.Web.Statistics.dto.ChampionSeasonStatisticsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

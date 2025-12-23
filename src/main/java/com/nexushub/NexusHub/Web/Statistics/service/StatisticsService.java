@@ -2,7 +2,7 @@ package com.nexushub.NexusHub.Web.Statistics.service;
 
 import com.nexushub.NexusHub.Common.Exception.Normal.CannotFoundChampion;
 import com.nexushub.NexusHub.Riot.Data.Champion.Champion;
-import com.nexushub.NexusHub.Riot.Data.Champion.ChampionRepository;
+import com.nexushub.NexusHub.Riot.Data.Champion.repository.ChampionRepository;
 import com.nexushub.NexusHub.Web.Statistics.domain.Champion.ChampionStatsByPosition;
 import com.nexushub.NexusHub.Web.Statistics.domain.MatchUp.MatchUp;
 import com.nexushub.NexusHub.Web.Statistics.domain.Position;

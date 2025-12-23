@@ -1,5 +1,6 @@
-package com.nexushub.NexusHub.Riot.Data.Champion;
+package com.nexushub.NexusHub.Riot.Data.Champion.repository;
 
+import com.nexushub.NexusHub.Riot.Data.Champion.Champion;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
