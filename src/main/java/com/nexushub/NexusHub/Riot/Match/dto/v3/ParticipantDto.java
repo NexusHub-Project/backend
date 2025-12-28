@@ -59,6 +59,11 @@ public class ParticipantDto {
     private Integer teamLuckScore;
     private Integer ourScore;
 
+    private Integer wardKilled;
+    private Integer wardPlaced;
+    private Integer visionWardsBoughtInGame;
+    private Integer visionScore;
+
     public static ParticipantDto of(MatchParticipant participants, Champion champion) {
         Summoner summoner = participants.getSummoner();
 
@@ -99,6 +104,10 @@ public class ParticipantDto {
                 .spell2Casts(participants.getSpell2Casts())
                 .spell3Casts(participants.getSpell3Casts())
                 .spell4Casts(participants.getSpell4Casts())
+                .wardKilled(participants.getWardKilled())
+                .wardPlaced(participants.getWardPlaced())
+                .visionWardsBoughtInGame(participants.getVisionWardsBoughtInGame())
+                .visionScore(participants.getVisionScore())
                 .rune(MatchRuneResDto.of(participants.getPerks()))
                 .build();
     }

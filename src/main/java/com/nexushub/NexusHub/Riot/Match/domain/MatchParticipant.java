@@ -1,5 +1,6 @@
 package com.nexushub.NexusHub.Riot.Match.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexushub.NexusHub.Riot.Match.dto.perks.PerksDto;
 import com.nexushub.NexusHub.Riot.Match.dto.perks.PerksDtoConverter;
 import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
@@ -67,6 +68,12 @@ public class MatchParticipant {
     // 지금은 분석 툴이 없으니 100~20 사이의 랜덤 점수 부여 (자체 분석 점수, 팀운 점수)
     private Integer teamLuckScore;
     private Integer ourScore;
+
+    // 시야 점수 정보
+    private Integer wardKilled;
+    private Integer wardPlaced;
+    private Integer visionWardsBoughtInGame;
+    private Integer visionScore;
 
 
     public void setTeamLuckScore(Integer score) {

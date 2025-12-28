@@ -60,6 +60,12 @@ public class MyDataResDto {
     // 추가사항
     private MatchRuneResDto rune;
 
+    // 시야 점수 정보
+    private Integer wardKilled;
+    private Integer wardPlaced;
+    private Integer visionWardsBoughtInGame;
+    private Integer visionScore;
+
 
     public static MyDataResDto of(MatchParticipant participants, Champion champion) {
         Summoner summoner = participants.getSummoner();
@@ -97,6 +103,10 @@ public class MyDataResDto {
                 .spell3Casts(participants.getSpell3Casts())
                 .spell4Casts(participants.getSpell4Casts())
                 .rune(MatchRuneResDto.of(participants.getPerks()))
+                .wardKilled(participants.getWardKilled())
+                .wardPlaced(participants.getWardPlaced())
+                .visionWardsBoughtInGame(participants.getVisionWardsBoughtInGame())
+                .visionScore(participants.getVisionScore())
                 .build();
     }
 

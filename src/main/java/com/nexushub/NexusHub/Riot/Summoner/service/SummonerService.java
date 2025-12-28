@@ -235,6 +235,10 @@ public class SummonerService {
                             .spell2Casts(participantDto.getSpell2Casts())
                             .spell3Casts(participantDto.getSpell3Casts())
                             .spell4Casts(participantDto.getSpell4Casts())
+                            .wardKilled(participantDto.getWardKilled())
+                            .wardPlaced(participantDto.getWardPlaced())
+                            .visionWardsBoughtInGame(participantDto.getVisionWardsBoughtInGame())
+                            .visionScore(participantDto.getVisionScore())
                             .build();
                     participant.setTeamLuckScore(rand.nextInt(100 - 35 + 1) + 35);
                     participant.setOurScore(rand.nextInt(100 - 35 + 1) + 35);
