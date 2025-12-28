@@ -70,9 +70,8 @@ public class RuneService {
         }
     }
     public RuneResponseDto getRuneInfoById(Long id){
-
-        Rune rune = runeRepository.findById(id).orElseThrow();
-
-        return new RuneResponseDto(rune);
+        return id%100 == 0
+                ? new RuneResponseDto(runePathRepository.findById(id).orElseThrow())
+                : new RuneResponseDto(runeRepository.findById(id).orElseThrow());
     }
 }

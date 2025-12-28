@@ -14,10 +14,7 @@ public class RuneResponseDto {
     private String key;
     private String icon;
     private String description;
-    private Long pathId;
-    private String pathName;
-    private String pathIcon;
-    private String pathRuneKey;
+
 
 
     public RuneResponseDto(Rune rune) {
@@ -26,14 +23,11 @@ public class RuneResponseDto {
         this.key = rune.getRuneKey();
         this.icon = rune.getIcon();
         this.description = rune.getShortDesc();
-        RunePath runePath = rune.getSlot().getRunePath();
-        this.setPath(runePath);
     }
-
-    private void setPath(RunePath path){
-        this.pathId = path.getId();
-        this.pathName = path.getName();
-        this.pathIcon = path.getIcon();
-        this.pathRuneKey = path.getRuneKey();
+    public RuneResponseDto(RunePath runePath){
+        this.id = runePath.getId();
+        this.name = runePath.getName();
+        this.key = runePath.getRuneKey();
+        this.icon = runePath.getIcon();
     }
 }
