@@ -5,11 +5,13 @@ import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Riot.Data.Champion.Champion;
 import com.nexushub.NexusHub.Riot.Data.Champion.repository.ChampionRepository;
 import com.nexushub.NexusHub.Riot.Data.Champion.ChampionService;
+import com.nexushub.NexusHub.Riot.Data.Rune.dto.MatchRuneResDto;
 import com.nexushub.NexusHub.Riot.Match.domain.Match;
 import com.nexushub.NexusHub.Riot.Match.domain.MatchParticipant;
 import com.nexushub.NexusHub.Riot.Match.dto.InfoDto;
 import com.nexushub.NexusHub.Riot.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Riot.Match.dto.ParticipantDto;
+import com.nexushub.NexusHub.Riot.Match.dto.perks.PerksDto;
 import com.nexushub.NexusHub.Riot.Match.dto.v3.MatchInfoResDto;
 import com.nexushub.NexusHub.Riot.Match.dto.v3.MetaDataResDto;
 import com.nexushub.NexusHub.Riot.Match.dto.v3.MyDataResDto;
@@ -138,7 +140,7 @@ public class SummonerService {
 
 
         // step 1) : matchId를 통해서 Match_info 객체를 받아오기  => 있을 수도 있고 없을 수도 있음
-        for (String matchId : summonerMatchesId) {
+        for (String matchId : summonerMatchesId) { // match id 가져와서 반복문 돌림
             log.info("match Id : {}", matchId);
             Optional<Match> match = matchService.getMatchByMatchId(matchId);
 
@@ -161,6 +163,7 @@ public class SummonerService {
                 MyDataResDto myDataResDto = MyDataResDto.of(myDataByPuuid,champion);
 
                 myDataResDto.setPerks(myDataByPuuid);
+
                 // step 4-2) : MatchDataDto 객체를 List에 넣어준다
                 MatchInfoResDto dto = MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto);
                 log.info("queueIOD : {}", dto.getMetaData().getQueueId());
@@ -190,7 +193,7 @@ public class SummonerService {
                         .build();
 
                 List<MatchParticipant> matchParticipants = new ArrayList<>();
-
+                Random rand = new Random();
                 for (ParticipantDto participantDto : participantsDtoFromApi) {
                     // step 5-2) : puuid로 Summoner를 찾거나, 없으면 새로 저장
                     Summoner summoner = summonerRepository.findSummonerByPuuid(participantDto.getPuuid())
@@ -233,8 +236,8 @@ public class SummonerService {
                             .spell3Casts(participantDto.getSpell3Casts())
                             .spell4Casts(participantDto.getSpell4Casts())
                             .build();
-                    participant.setTeamLuckScore(ThreadLocalRandom.current().nextInt(35, 100));
-                    participant.setOurScore(ThreadLocalRandom.current().nextInt(35, 100));
+                    participant.setTeamLuckScore(rand.nextInt(100 - 35 + 1) + 35);
+                    participant.setOurScore(rand.nextInt(100 - 35 + 1) + 35);
                     matchParticipants.add(participant);
                 }
 
@@ -376,5 +379,8 @@ public class SummonerService {
         return dtos;
     }
 
+    private MatchRuneResDto reOrderRunes(PerksDto perksDto){
+        return MatchRuneResDto.of(perksDto);
+    }
 
 }

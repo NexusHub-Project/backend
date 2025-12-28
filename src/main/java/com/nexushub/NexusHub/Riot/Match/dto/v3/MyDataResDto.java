@@ -1,6 +1,7 @@
 package com.nexushub.NexusHub.Riot.Match.dto.v3;
 
 import com.nexushub.NexusHub.Riot.Data.Champion.Champion;
+import com.nexushub.NexusHub.Riot.Data.Rune.dto.MatchRuneResDto;
 import com.nexushub.NexusHub.Riot.Match.domain.MatchParticipant;
 import com.nexushub.NexusHub.Riot.Match.dto.perks.PerksDto;
 import com.nexushub.NexusHub.Riot.Match.dto.perks.StyleDto;
@@ -56,6 +57,8 @@ public class MyDataResDto {
     private Integer summoner2Id;
     private Integer summoner2Casts;
 
+    // 추가사항
+    private MatchRuneResDto rune;
 
 
     public static MyDataResDto of(MatchParticipant participants, Champion champion) {
@@ -93,6 +96,7 @@ public class MyDataResDto {
                 .spell2Casts(participants.getSpell2Casts())
                 .spell3Casts(participants.getSpell3Casts())
                 .spell4Casts(participants.getSpell4Casts())
+                .rune(MatchRuneResDto.of(participants.getPerks()))
                 .build();
     }
 
