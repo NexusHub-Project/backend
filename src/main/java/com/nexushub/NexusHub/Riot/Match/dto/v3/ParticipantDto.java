@@ -20,6 +20,8 @@ public class ParticipantDto {
     private Integer champLevel;
     private String teamPosition;
     private Long item0, item1, item2, item3, item4, item5, item6;
+    private String soloRankTier;
+    private Integer soloRankLP;
 
     // 룬 정보
     private MatchRuneResDto rune;
@@ -62,6 +64,8 @@ public class ParticipantDto {
 
 
         return ParticipantDto.builder()
+                .soloRankTier(summoner.getSoloRankTier())
+                .soloRankLP(summoner.getSoloRankLP())
                 .puuid(summoner.getPuuid())
                 .gameName(summoner.getGameName())
                 .tagLine(summoner.getTagLine())

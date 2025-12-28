@@ -102,6 +102,8 @@
         "item4": 0,
         "item5": 1001,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -178,6 +180,8 @@
         "item4": 1102,
         "item5": 6610,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -254,6 +258,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -330,6 +336,8 @@
         "item4": 1001,
         "item5": 0,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -406,6 +414,8 @@
         "item4": 2055,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -482,6 +492,8 @@
         "item4": 1054,
         "item5": 3044,
         "item6": 3340,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -558,6 +570,8 @@
         "item4": 3100,
         "item5": 1082,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -634,6 +648,8 @@
         "item4": 3134,
         "item5": 3010,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -710,6 +726,8 @@
         "item4": 1083,
         "item5": 1042,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -786,6 +804,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -951,6 +971,8 @@
         "item4": 6610,
         "item5": 1054,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -1027,6 +1049,8 @@
         "item4": 6333,
         "item5": 3071,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -1103,6 +1127,8 @@
         "item4": 3171,
         "item5": 1082,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -1179,6 +1205,8 @@
         "item4": 6672,
         "item5": 1037,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -1255,6 +1283,8 @@
         "item4": 3174,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -1331,6 +1361,8 @@
         "item4": 6655,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -1407,6 +1439,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -1483,6 +1517,8 @@
         "item4": 3158,
         "item5": 6694,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -1559,6 +1595,8 @@
         "item4": 3046,
         "item5": 0,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -1635,6 +1673,8 @@
         "item4": 0,
         "item5": 3158,
         "item6": 3364,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -1800,6 +1840,8 @@
         "item4": 3041,
         "item5": 8010,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -1876,6 +1918,8 @@
         "item4": 2022,
         "item5": 3041,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -1952,6 +1996,8 @@
         "item4": 3137,
         "item5": 0,
         "item6": 3340,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -2028,6 +2074,8 @@
         "item4": 6695,
         "item5": 3042,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -2104,6 +2152,8 @@
         "item4": 2019,
         "item5": 3179,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -2180,6 +2230,8 @@
         "item4": 1057,
         "item5": 1031,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -2256,6 +2308,8 @@
         "item4": 2422,
         "item5": 6610,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -2332,6 +2386,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -2408,6 +2464,8 @@
         "item4": 1037,
         "item5": 1018,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -2484,6 +2542,8 @@
         "item4": 3114,
         "item5": 3158,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -2649,6 +2709,8 @@
         "item4": 3161,
         "item5": 2422,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -2725,6 +2787,8 @@
         "item4": 1036,
         "item5": 3047,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -2801,6 +2865,8 @@
         "item4": 1056,
         "item5": 3116,
         "item6": 3363,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -2877,6 +2943,8 @@
         "item4": 3046,
         "item5": 6673,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -2953,6 +3021,8 @@
         "item4": 3076,
         "item5": 3158,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -3029,6 +3099,8 @@
         "item4": 0,
         "item5": 3047,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -3105,6 +3177,8 @@
         "item4": 6694,
         "item5": 6695,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -3181,6 +3255,8 @@
         "item4": 3041,
         "item5": 6655,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -3257,6 +3333,8 @@
         "item4": 3031,
         "item5": 3035,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -3333,6 +3411,8 @@
         "item4": 3916,
         "item5": 1029,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -3498,6 +3578,8 @@
         "item4": 3047,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -3574,6 +3656,8 @@
         "item4": 6694,
         "item5": 3158,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -3650,6 +3734,8 @@
         "item4": 3089,
         "item5": 3158,
         "item6": 3364,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -3726,6 +3812,8 @@
         "item4": 3033,
         "item5": 3031,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -3802,6 +3890,8 @@
         "item4": 3504,
         "item5": 6617,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -3878,6 +3968,8 @@
         "item4": 3078,
         "item5": 3156,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -3954,6 +4046,8 @@
         "item4": 6333,
         "item5": 2055,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -4030,6 +4124,8 @@
         "item4": 3108,
         "item5": 3171,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -4106,6 +4202,8 @@
         "item4": 6675,
         "item5": 3123,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -4182,6 +4280,8 @@
         "item4": 3009,
         "item5": 3082,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -4347,6 +4447,8 @@
         "item4": 3161,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -4423,6 +4525,8 @@
         "item4": 3171,
         "item5": 6653,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -4499,6 +4603,8 @@
         "item4": 3153,
         "item5": 6673,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -4575,6 +4681,8 @@
         "item4": 3035,
         "item5": 3072,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -4651,6 +4759,8 @@
         "item4": 3173,
         "item5": 3050,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -4727,6 +4837,8 @@
         "item4": 8010,
         "item5": 3047,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -4803,6 +4915,8 @@
         "item4": 0,
         "item5": 3158,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -4879,6 +4993,8 @@
         "item4": 1026,
         "item5": 1082,
         "item6": 3363,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -4955,6 +5071,8 @@
         "item4": 3051,
         "item5": 1055,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -5031,6 +5149,8 @@
         "item4": 0,
         "item5": 3158,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -5196,6 +5316,8 @@
         "item4": 3173,
         "item5": 6662,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -5272,6 +5394,8 @@
         "item4": 3111,
         "item5": 3161,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -5348,6 +5472,8 @@
         "item4": 3135,
         "item5": 4632,
         "item6": 3363,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -5424,6 +5550,8 @@
         "item4": 1018,
         "item5": 1037,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -5500,6 +5628,8 @@
         "item4": 6617,
         "item5": 3158,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -5576,6 +5706,8 @@
         "item4": 3078,
         "item5": 1043,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -5652,6 +5784,8 @@
         "item4": 4630,
         "item5": 1001,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -5728,6 +5862,8 @@
         "item4": 2503,
         "item5": 4628,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -5804,6 +5940,8 @@
         "item4": 6672,
         "item5": 3124,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -5880,6 +6018,8 @@
         "item4": 3158,
         "item5": 1028,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -6045,6 +6185,8 @@
         "item4": 0,
         "item5": 3111,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -6121,6 +6263,8 @@
         "item4": 0,
         "item5": 6696,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -6197,6 +6341,8 @@
         "item4": 1058,
         "item5": 1058,
         "item6": 3363,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -6273,6 +6419,8 @@
         "item4": 3042,
         "item5": 1001,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -6349,6 +6497,8 @@
         "item4": 1029,
         "item5": 3047,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -6425,6 +6575,8 @@
         "item4": 0,
         "item5": 3175,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -6501,6 +6653,8 @@
         "item4": 2021,
         "item5": 1028,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -6577,6 +6731,8 @@
         "item4": 1056,
         "item5": 3175,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -6653,6 +6809,8 @@
         "item4": 1055,
         "item5": 3172,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -6729,6 +6887,8 @@
         "item4": 3504,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -6894,6 +7054,8 @@
         "item4": 6692,
         "item5": 2422,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -6970,6 +7132,8 @@
         "item4": 0,
         "item5": 1001,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -7046,6 +7210,8 @@
         "item4": 3035,
         "item5": 1036,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -7122,6 +7288,8 @@
         "item4": 3133,
         "item5": 1055,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -7198,6 +7366,8 @@
         "item4": 3134,
         "item5": 3009,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -7274,6 +7444,8 @@
         "item4": 3174,
         "item5": 2019,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -7350,6 +7522,8 @@
         "item4": 3036,
         "item5": 6676,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -7426,6 +7600,8 @@
         "item4": 0,
         "item5": 6657,
         "item6": 3340,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -7502,6 +7678,8 @@
         "item4": 3035,
         "item5": 0,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -7578,6 +7756,8 @@
         "item4": 3067,
         "item5": 3009,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -7743,6 +7923,8 @@
         "item4": 3083,
         "item5": 3066,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -7819,6 +8001,8 @@
         "item4": 2422,
         "item5": 3033,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -7895,6 +8079,8 @@
         "item4": 1056,
         "item5": 3145,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -7971,6 +8157,8 @@
         "item4": 1038,
         "item5": 0,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -8047,6 +8235,8 @@
         "item4": 3111,
         "item5": 2055,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -8123,6 +8313,8 @@
         "item4": 3123,
         "item5": 3111,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -8199,6 +8391,8 @@
         "item4": 1031,
         "item5": 1028,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -8275,6 +8469,8 @@
         "item4": 4629,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -8351,6 +8547,8 @@
         "item4": 0,
         "item5": 1055,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -8427,6 +8625,8 @@
         "item4": 1029,
         "item5": 3170,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -8592,6 +8792,8 @@
         "item4": 0,
         "item5": 3173,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -8668,6 +8870,8 @@
         "item4": 4645,
         "item5": 1082,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -8744,6 +8948,8 @@
         "item4": 1037,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -8820,6 +9026,8 @@
         "item4": 1037,
         "item5": 1055,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -8896,6 +9104,8 @@
         "item4": 3067,
         "item5": 1033,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -8972,6 +9182,8 @@
         "item4": 0,
         "item5": 3047,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -9048,6 +9260,8 @@
         "item4": 4633,
         "item5": 1033,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -9124,6 +9338,8 @@
         "item4": 1058,
         "item5": 1082,
         "item6": 3363,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -9200,6 +9416,8 @@
         "item4": 1038,
         "item5": 3006,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -9276,6 +9494,8 @@
         "item4": 3111,
         "item5": 1033,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -9441,6 +9661,8 @@
         "item4": 1001,
         "item5": 3057,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -9517,6 +9739,8 @@
         "item4": 0,
         "item5": 2422,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -9593,6 +9817,8 @@
         "item4": 1056,
         "item5": 1082,
         "item6": 3340,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -9669,6 +9895,8 @@
         "item4": 3070,
         "item5": 3133,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -9745,6 +9973,8 @@
         "item4": 3067,
         "item5": 1029,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -9821,6 +10051,8 @@
         "item4": 1056,
         "item5": 0,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -9897,6 +10129,8 @@
         "item4": 2422,
         "item5": 1028,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -9973,6 +10207,8 @@
         "item4": 3006,
         "item5": 1053,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -10049,6 +10285,8 @@
         "item4": 1055,
         "item5": 3006,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -10125,6 +10363,8 @@
         "item4": 2422,
         "item5": 2055,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -10290,6 +10530,8 @@
         "item4": 3067,
         "item5": 1037,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -10366,6 +10608,8 @@
         "item4": 2422,
         "item5": 0,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -10442,6 +10686,8 @@
         "item4": 1056,
         "item5": 3145,
         "item6": 3363,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -10518,6 +10764,8 @@
         "item4": 3508,
         "item5": 1055,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -10594,6 +10842,8 @@
         "item4": 1001,
         "item5": 6657,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -10670,6 +10920,8 @@
         "item4": 1028,
         "item5": 1037,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -10746,6 +10998,8 @@
         "item4": 1036,
         "item5": 1037,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -10822,6 +11076,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -10898,6 +11154,8 @@
         "item4": 2031,
         "item5": 0,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -10974,6 +11232,8 @@
         "item4": 3114,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -11139,6 +11399,8 @@
         "item4": 1056,
         "item5": 0,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -11215,6 +11477,8 @@
         "item4": 6610,
         "item5": 3071,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -11291,6 +11555,8 @@
         "item4": 3089,
         "item5": 3111,
         "item6": 3340,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -11367,6 +11633,8 @@
         "item4": 3078,
         "item5": 1038,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -11443,6 +11711,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -11519,6 +11789,8 @@
         "item4": 3175,
         "item5": 1082,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -11595,6 +11867,8 @@
         "item4": 6701,
         "item5": 3026,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -11671,6 +11945,8 @@
         "item4": 1082,
         "item5": 1052,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -11747,6 +12023,8 @@
         "item4": 4628,
         "item5": 3171,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -11823,6 +12101,8 @@
         "item4": 4645,
         "item5": 3013,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -11988,6 +12268,8 @@
         "item4": 0,
         "item5": 3174,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -12064,6 +12346,8 @@
         "item4": 3134,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -12140,6 +12424,8 @@
         "item4": 1056,
         "item5": 6657,
         "item6": 3363,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -12216,6 +12502,8 @@
         "item4": 6673,
         "item5": 3036,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -12292,6 +12580,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -12368,6 +12658,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -12444,6 +12736,8 @@
         "item4": 6694,
         "item5": 3047,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -12520,6 +12814,8 @@
         "item4": 0,
         "item5": 3020,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -12596,6 +12892,8 @@
         "item4": 6672,
         "item5": 1055,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -12672,6 +12970,8 @@
         "item4": 3066,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -12837,6 +13137,8 @@
         "item4": 6692,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -12913,6 +13215,8 @@
         "item4": 6694,
         "item5": 2021,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -12989,6 +13293,8 @@
         "item4": 6653,
         "item5": 1058,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -13065,6 +13371,8 @@
         "item4": 1036,
         "item5": 3009,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -13141,6 +13449,8 @@
         "item4": 3067,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -13217,6 +13527,8 @@
         "item4": 6333,
         "item5": 1011,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -13293,6 +13605,8 @@
         "item4": 3071,
         "item5": 0,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -13369,6 +13683,8 @@
         "item4": 1056,
         "item5": 1082,
         "item6": 3340,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -13445,6 +13761,8 @@
         "item4": 3042,
         "item5": 3024,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -13521,6 +13839,8 @@
         "item4": 3173,
         "item5": 1028,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -13686,6 +14006,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3348,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -13762,6 +14084,8 @@
         "item4": 223158,
         "item5": 0,
         "item6": 3348,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -13838,6 +14162,8 @@
         "item4": 224633,
         "item5": 223089,
         "item6": 3348,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -13914,6 +14240,8 @@
         "item4": 223087,
         "item5": 0,
         "item6": 3348,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -13990,6 +14318,8 @@
         "item4": 223158,
         "item5": 0,
         "item6": 3348,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -14066,6 +14396,8 @@
         "item4": 223068,
         "item5": 223111,
         "item6": 3348,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -14142,6 +14474,8 @@
         "item4": 224633,
         "item5": 223135,
         "item6": 3348,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -14218,6 +14552,8 @@
         "item4": 446632,
         "item5": 223026,
         "item6": 3348,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -14294,6 +14630,8 @@
         "item4": 223089,
         "item5": 222503,
         "item6": 3348,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -14370,6 +14708,8 @@
         "item4": 223137,
         "item5": 447113,
         "item6": 3348,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -14535,6 +14875,8 @@
         "item4": 1054,
         "item5": 2422,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -14611,6 +14953,8 @@
         "item4": 1001,
         "item5": 2022,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -14687,6 +15031,8 @@
         "item4": 3020,
         "item5": 0,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -14763,6 +15109,8 @@
         "item4": 1055,
         "item5": 6690,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -14839,6 +15187,8 @@
         "item4": 6695,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -14915,6 +15265,8 @@
         "item4": 1055,
         "item5": 3071,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -14991,6 +15343,8 @@
         "item4": 3041,
         "item5": 3158,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -15067,6 +15421,8 @@
         "item4": 1055,
         "item5": 1028,
         "item6": 3340,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -15143,6 +15499,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -15219,6 +15577,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -15384,6 +15744,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -15460,6 +15822,8 @@
         "item4": 1028,
         "item5": 1036,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -15536,6 +15900,8 @@
         "item4": 3020,
         "item5": 0,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -15612,6 +15978,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -15688,6 +16056,8 @@
         "item4": 6690,
         "item5": 1036,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -15764,6 +16134,8 @@
         "item4": 1082,
         "item5": 1052,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -15840,6 +16212,8 @@
         "item4": 2020,
         "item5": 1036,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -15916,6 +16290,8 @@
         "item4": 1054,
         "item5": 3145,
         "item6": 3340,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -15992,6 +16368,8 @@
         "item4": 3006,
         "item5": 6672,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -16068,6 +16446,8 @@
         "item4": 1031,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -16233,6 +16613,8 @@
         "item4": 3047,
         "item5": 3026,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -16309,6 +16691,8 @@
         "item4": 2503,
         "item5": 3020,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -16385,6 +16769,8 @@
         "item4": 3137,
         "item5": 0,
         "item6": 3363,
+        "soloRankTier": "MASTER I",
+        "soloRankLP": 185,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -16461,6 +16847,8 @@
         "item4": 3036,
         "item5": 1018,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -16537,6 +16925,8 @@
         "item4": 0,
         "item5": 3009,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -16613,6 +17003,8 @@
         "item4": 6333,
         "item5": 0,
         "item6": 3340,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -16689,6 +17081,8 @@
         "item4": 0,
         "item5": 0,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -16765,6 +17159,8 @@
         "item4": 3006,
         "item5": 3031,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -16841,6 +17237,8 @@
         "item4": 3094,
         "item5": 1038,
         "item6": 3363,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
@@ -16917,6 +17315,8 @@
         "item4": 3071,
         "item5": 3161,
         "item6": 3364,
+        "soloRankTier": null,
+        "soloRankLP": null,
         "rune": {
           "mainRune": {
             "typeDesc": null,
