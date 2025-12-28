@@ -27,9 +27,11 @@ public class RuneService {
     private final RuneRepository runeRepository;
 
     public void importRunes() throws IOException {
-        String url = "https://ddragon.leagueoflegends.com/cdn/"+patchVersion+"/data/ko_KR/runesReforged.json";
-        ObjectMapper mapper = new ObjectMapper();
+        String url = "https://ddragon.leagueoflegends.com/cdn/" + patchVersion + "/data/ko_KR/runesReforged.json";
+        // 이미지용 기본 URL (Data Dragon은 img 폴더 경로가 별도입니다)
+        String imgBaseUrl = "https://ddragon.leagueoflegends.com/cdn/img/";
 
+        ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(new URL(url));
 
         for (JsonNode pathNode : root) {
@@ -37,7 +39,9 @@ public class RuneService {
             path.setId(pathNode.get("id").asLong());
             path.setRuneKey(pathNode.get("key").asText());
             path.setName(pathNode.get("name").asText());
-            path.setIcon(pathNode.get("icon").asText());
+
+            // ★ 수정 포인트: 저장할 때 전체 URL로 저장
+            path.setIcon(imgBaseUrl + pathNode.get("icon").asText());
 
             List<RuneSlot> slots = new ArrayList<>();
             for (JsonNode slotNode : pathNode.get("slots")) {
@@ -50,22 +54,25 @@ public class RuneService {
                     rune.setId(runeNode.get("id").asLong());
                     rune.setRuneKey(runeNode.get("key").asText());
                     rune.setName(runeNode.get("name").asText());
-                    rune.setIcon(runeNode.get("icon").asText());
+
+                    // ★ 수정 포인트: 여기도 전체 URL로 저장
+                    rune.setIcon(imgBaseUrl + runeNode.get("icon").asText());
+
                     rune.setShortDesc(runeNode.get("shortDesc").asText());
                     rune.setSlot(slot);
                     runes.add(rune);
                 }
-
                 slot.setRunes(runes);
                 slots.add(slot);
             }
-
             path.setSlots(slots);
             runePathRepository.save(path);
         }
     }
     public RuneResponseDto getRuneInfoById(Long id){
+
         Rune rune = runeRepository.findById(id).orElseThrow();
+
         return new RuneResponseDto(rune);
     }
 }

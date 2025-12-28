@@ -57,6 +57,7 @@ public class MyDataResDto {
     private Integer summoner2Casts;
 
 
+
     public static MyDataResDto of(MatchParticipant participants, Champion champion) {
         Summoner summoner = participants.getSummoner();
         return MyDataResDto.builder()
