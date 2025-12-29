@@ -28,6 +28,7 @@ import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerDto;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerTierResDto;
 import com.nexushub.NexusHub.Riot.Summoner.repository.SummonerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -323,11 +324,20 @@ public class SummonerService {
             }
             else {
                 // 1. puuid만으로 정보 얻어오기
+
                 RiotAccountDto riotAccountInfo = riotApiService.getRiotAccountInfo(entry.getPuuid());
+
+                if (riotAccountInfo == null){
+                    log.warn("계정 정보 이상");
+                    continue;
+                }
 
                 // 2. 그거 summoner에 저장하기
                 Summoner newSummoner = new Summoner(riotAccountInfo.getGameName(), riotAccountInfo.getTagLine(), riotAccountInfo.getPuuid());
+
                 newSummoner.updateTier(entry);
+
+                // 여기서 저장할 때 gameName이 비어 있으면 안되는데, 비어 있는 것이 문제임 ..
 
                 // 3. 그리고 바로 Dtos.add 해버기리
                 dtos.add(new ChallengersResDto(entry,summonerRepository.save(newSummoner)));

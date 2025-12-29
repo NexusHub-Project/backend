@@ -128,7 +128,7 @@ public class RiotApiService {
 
     public RiotAccountDto getRiotAccountInfo(String puuid) {
         String url = baseUrlAsia + "/riot/account/v1/accounts/by-puuid/"+puuid;
-
+        log.info("getRiotAccountInfo puuid = {}", puuid);
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Riot-Token", apiKey);
 
@@ -145,6 +145,9 @@ public class RiotApiService {
             RiotAccountDto body = response.getBody();
             log.info("riotAccountDto : {} {} {}", body.getGameName(), body.getTagLine(), body.getPuuid());
             return response.getBody();
+        } catch (HttpClientErrorException.NotFound e) {
+            log.warn("PUUID : {} 에 해당하는 소환사가 없다", puuid);
+            return null;
         } catch (Exception e) {
             log.info(e.getMessage());
             return null;
@@ -274,6 +277,7 @@ public class RiotApiService {
                     entity,
                     new ParameterizedTypeReference<>() {}
             );
+            log.info("문제 예상 지점 1) ");
             return response.getBody();
         } catch (Exception e) {
             log.error(e.getMessage());

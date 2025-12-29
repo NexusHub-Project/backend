@@ -125,6 +125,7 @@ public class Summoner {
     }
     public Summoner (String gameName, String tagLine, String puuid) {
         this.trimmedGameName = gameName;
+        this.gameName = gameName;
         this.tagLine = tagLine;
         this.puuid = puuid;
     }

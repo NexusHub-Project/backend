@@ -24,7 +24,8 @@ public class ChallengersResDto {
         this.rank = dto.getRank();
         this.wins = dto.getWins();
         this.losses = dto.getLosses();
+        this.leaguePoints = dto.getLeaguePoints();
 
-        this.winRate = (double) (wins / (losses + wins))*100;
+        this.winRate = ((double) wins / (losses + wins)) * 100;
     }
 }
