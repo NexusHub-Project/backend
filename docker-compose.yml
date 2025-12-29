@@ -2,14 +2,14 @@ version: '3.8'
 
 # 실행하려는 서비스(컨테이너)들의 목록
 services:
-  # 1. NexusHub 애플리케이션 서비스 정의
-  nexushub-app:
+  # 1. arcane 애플리케이션 서비스 정의
+  arcane-app:
     # 현재 폴더의 Dockerfile을 사용하여 이미지를 빌드
     build: .
-    container_name: nexushub-app
+    container_name: arcane-app
     # 이 서비스는 'nexushub-db' 서비스가 시작된 후에 시작되도록 설정
     depends_on:
-      nexushub-db:
+      arcane-db:
           condition: service_healthy
     ports:
       - "8080:8080"
@@ -29,17 +29,17 @@ services:
       - SEASON2025-3=${SEASON2025-3}
 
   # 2. MySQL 데이터베이스 서비스 정의
-  nexushub-db:
+  arcane-db:
     image: mysql:8.0
-    container_name: nexushub-db
+    container_name: arcane-db
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_DATABASE=nexushub_db
+      - MYSQL_DATABASE=arcane_db
     ports:
       - "3307:3306"
     # Docker를 종료해도 데이터가 유지되도록 볼륨 설정
     volumes:
-      - nexushub-db-data:/var/lib/mysql
+      - arcane-db-data:/var/lib/mysql
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost", "-p${DB_PASSWORD}" ]
       interval: 10s
@@ -48,4 +48,4 @@ services:
 
 # Docker 볼륨 정의
 volumes:
-  nexushub-db-data:
+  arcane-db-data:

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -73,5 +74,8 @@ public class RuneService {
         return id%100 == 0
                 ? new RuneResponseDto(runePathRepository.findById(id).orElseThrow())
                 : new RuneResponseDto(runeRepository.findById(id).orElseThrow());
+    }
+    public Optional<Rune> findRuneById(Long id){
+        return runeRepository.findById(id);
     }
 }
