@@ -114,11 +114,11 @@ public class SummonerController {
     public ResponseEntity<List<ChallengersResDto>> searchChallengers(){
         log.info("SummonerController - searchChallengers /search/challenger 호출 ");
         ChallengerLeagueDto challengers = riotApiService.getChallengers();
-        log.info("문제 예상 지점 2) ");
         List<ChallengersResDto> dtos = summonerService.setChallengersData(challengers);
-        log.info("문제 예상 지점 3) ");
         return ResponseEntity.ok(dtos);
     }
+
+
 
     @GetMapping("/profile")
     public ResponseEntity<ProfileResDto> getProfile(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {

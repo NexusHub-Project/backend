@@ -17,6 +17,10 @@ import com.nexushub.NexusHub.Riot.Match.dto.v3.MetaDataResDto;
 import com.nexushub.NexusHub.Riot.Match.dto.v3.MyDataResDto;
 import com.nexushub.NexusHub.Riot.Match.dto.v3.ParticipantsResDto;
 import com.nexushub.NexusHub.Riot.Match.service.MatchService;
+import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
+import com.nexushub.NexusHub.Riot.Ranker.dto.FromRiotRankerResDto;
+import com.nexushub.NexusHub.Riot.Ranker.dto.RankerResDto;
+import com.nexushub.NexusHub.Riot.Ranker.dto.RiotRankerDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.MasteryDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
@@ -344,6 +348,40 @@ public class SummonerService {
             }
         }
         return dtos;
+    }
+
+
+    // 여기로 들어오는게 무슨 티어의 랭커인지는 모름
+    public Queue<RankerResDto> setRankersDataV2(FromRiotRankerResDto rankerResDto, Tier tier) {
+        List<RiotRankerDto> entries = rankerResDto.getEntries();
+        Queue<RankerResDto> rankerResDtos = new LinkedList<>();
+        for (RiotRankerDto ranker : entries) {
+            Optional<Summoner> summoner = summonerRepository.findSummonerByPuuid(ranker.getPuuid());
+
+
+            if (summoner.isPresent()) { // DB에 이미 소환사 정보가 존재하면 업데이트만 해주기
+                Summoner smmrObj = summoner.get();
+                smmrObj.updateTierV2(ranker, tier);
+                rankerResDtos.add(RankerResDto.of(smmrObj));
+            }
+            else { // DB에 존재하지 않은 소환사라면,
+                // 1. puuid만으로 정보 얻어오기
+
+                RiotAccountDto riotAccountInfo = riotApiService.getRiotAccountInfo(ranker.getPuuid());
+
+                if (riotAccountInfo == null){
+                    log.warn("계정 정보 이상");
+                    continue;
+                }
+
+                // 2. 새로운 Summoner 생성
+                Summoner newSummoner = new Summoner(ranker, riotAccountInfo.getGameName(), riotAccountInfo.getTagLine(), tier);
+
+                // 3. 그리고 바로 dto에 넣기
+                rankerResDtos.add(RankerResDto.of(summonerRepository.save(newSummoner)));
+            }
+        }
+        return rankerResDtos;
     }
 
     /** Summoner 객체를 저장과 업데이트를 하는 메소드

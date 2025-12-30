@@ -1,8 +1,12 @@
 package com.nexushub.NexusHub.Riot.RiotInform.service;
 
+import com.nexushub.NexusHub.Common.Exception.Fail.SignUpFail;
+import com.nexushub.NexusHub.Common.Exception.Fail.WrongRankTier;
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Riot.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Riot.Match.dto.minimal.MinimalMatchDto;
+import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
+import com.nexushub.NexusHub.Riot.Ranker.dto.FromRiotRankerResDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.*;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerDto;
@@ -277,13 +281,51 @@ public class RiotApiService {
                     entity,
                     new ParameterizedTypeReference<>() {}
             );
-            log.info("문제 예상 지점 1) ");
             return response.getBody();
         } catch (Exception e) {
             log.error(e.getMessage());
             return null;
         }
     }
+
+    public FromRiotRankerResDto getChallengersV2(Tier tier) throws CannotFoundSummoner {
+        String url = baseUrlKR;
+        if (tier == Tier.CHALLENGER){
+            url = url + "/lol/league/v4/challengerleagues/by-queue/RANKED_SOLO_5x5";
+        }
+        else if (tier == Tier.GRANDMASTER){
+            url = url + "/lol/league/v4/grandmasterleagues/by-queue/RANKED_SOLO_5x5";
+        }
+        else if (tier == Tier.MASTER){
+            url = url + "/lol/league/v4/masterleagues/by-queue/RANKED_SOLO_5x5";
+        }
+        else {
+            log.warn("잘못된 랭크 티어 요청");
+            throw new WrongRankTier("잘못된 랭크 티어 요청");
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Riot-Token", apiKey);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        try{
+            ResponseEntity<FromRiotRankerResDto> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<>() {}
+            );
+            return response.getBody();
+        }
+
+        catch (Exception e) {
+            log.error(e.getMessage());
+            throw new CannotFoundSummoner(e.getMessage());
+        }
+    }
+
+
+
 
 
     private SummonerDto setSummonerDto(SummonerDto dto, List<TierInfoDto> list){

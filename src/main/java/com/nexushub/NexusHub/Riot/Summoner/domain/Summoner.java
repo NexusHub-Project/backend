@@ -6,6 +6,9 @@ import com.nexushub.NexusHub.Riot.Match.domain.MatchParticipant;
 
 import com.nexushub.NexusHub.Riot.Match.dto.ParticipantDto;
 
+import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
+import com.nexushub.NexusHub.Riot.Ranker.dto.RankerResDto;
+import com.nexushub.NexusHub.Riot.Ranker.dto.RiotRankerDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerDto;
 
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerDto;
@@ -123,11 +126,31 @@ public class Summoner {
         this.soloRankDefeat = dto.getLosses();
         return this;
     }
+
+    public Summoner updateTierV2(RiotRankerDto rankerResDto, Tier tier) {
+        this.soloRankTier = tier.getKey();
+        this.soloRankLP = rankerResDto.getLeaguePoints();
+        this.soloRankWin = rankerResDto.getWins();
+        this.soloRankDefeat = rankerResDto.getLosses();
+        return this;
+    }
+
     public Summoner (String gameName, String tagLine, String puuid) {
         this.trimmedGameName = gameName;
         this.gameName = gameName;
         this.tagLine = tagLine;
         this.puuid = puuid;
+    }
+    public Summoner (RiotRankerDto ranker, String gameName, String tagLine, Tier tier){
+        this.puuid = ranker.getPuuid();
+        this.gameName = gameName;
+        this.trimmedGameName = gameName;
+        this.tagLine = tagLine;
+        this.soloRankDefeat = ranker.getLosses();
+        this.soloRankWin = ranker.getWins();
+        this.soloRankLP = ranker.getLeaguePoints();
+        this.soloRankTier = tier.getKey();
+
     }
 
     public Summoner(ParticipantDto dto) {
