@@ -126,6 +126,17 @@ public class Summoner {
         this.soloRankDefeat = dto.getLosses();
         return this;
     }
+    public Summoner updateTier(RiotRankerDto dto) {
+        this.soloRankLP = dto.getLeaguePoints();
+        this.soloRankWin = dto.getWins();
+        this.soloRankDefeat = dto.getLosses();
+
+        // 참고: 챌린저/그마/마스터는 Ranker 테이블에서 Tier(Enum)로 관리하므로
+        // Summoner 테이블의 soloRankTier 문자열 컬럼은
+        // 굳이 업데이트하지 않거나, 필요하다면 "Challenger" 등으로 별도 파라미터를 받아야 합니다.
+
+        return this;
+    }
 
     public Summoner updateTierV2(RiotRankerDto rankerResDto, Tier tier) {
         this.soloRankTier = tier.getKey();

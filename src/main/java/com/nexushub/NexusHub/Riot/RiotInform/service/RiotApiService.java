@@ -40,6 +40,7 @@ public class RiotApiService {
 
     private String baseUrlAsia = "https://asia.api.riotgames.com";
     private String baseUrlKR = "https://kr.api.riotgames.com";
+    private static final String KR_BASE_URL = "https://kr.api.riotgames.com";
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -390,5 +391,59 @@ public class RiotApiService {
         return dto;
     }
 
+    private <T> T callApiWithRetry(String url, Class<T> responseType) {
+        int maxRetries = 5;
+        int retryCount = 0;
 
+        while (retryCount < maxRetries) {
+            try {
+                // API Key 추가 (이미 쿼리 파라미터가 있으면 & 없으면 ?)
+                String requestUrl = url + (url.contains("?") ? "&" : "?") + "api_key=" + apiKey;
+                return restTemplate.getForObject(requestUrl, responseType);
+
+            } catch (HttpClientErrorException.TooManyRequests e) {
+                retryCount++;
+                String retryAfter = e.getResponseHeaders() != null ? e.getResponseHeaders().getFirst("Retry-After") : null;
+                int sleepSeconds = (retryAfter != null && !retryAfter.isEmpty()) ? Integer.parseInt(retryAfter) : 10;
+
+                log.warn("🚨 API 제한(429) 발생! {}초 대기 후 재시도... ({}/{})", sleepSeconds, retryCount, maxRetries);
+
+                try {
+                    Thread.sleep(sleepSeconds * 1000L + 1000); // 여유 있게 1초 추가 대기
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("API 재시도 중 인터럽트", ie);
+                }
+            } catch (Exception e) {
+                log.error("API 호출 실패: url={}, error={}", url, e.getMessage());
+                throw e; // 그 외 에러는 바로 던짐
+            }
+        }
+        throw new RuntimeException("Riot API 재시도 횟수 초과");
+    }
+
+    /**
+     * 티어별 랭킹 정보 조회 (Challenger, Grandmaster, Master)
+     * 반환 타입: FromRiotRankerResDto
+     */
+    public FromRiotRankerResDto getLeagueByTier(Tier tier) {
+        String url = KR_BASE_URL;
+        if (tier == Tier.CHALLENGER) {
+            url += "/lol/league/v4/challengerleagues/by-queue/RANKED_SOLO_5x5";
+        } else if (tier == Tier.GRANDMASTER) {
+            url += "/lol/league/v4/grandmasterleagues/by-queue/RANKED_SOLO_5x5";
+        } else if (tier == Tier.MASTER) {
+            url += "/lol/league/v4/masterleagues/by-queue/RANKED_SOLO_5x5";
+        } else {
+            throw new IllegalArgumentException("지원하지 않는 티어입니다: " + tier);
+        }
+
+        return callApiWithRetry(url, FromRiotRankerResDto.class);
+    }
+
+    // 소환사 상세 정보 조회 (Summoner ID -> PUUID 획득용)
+    public SummonerDto getSummonerBySummonerId(String summonerId) {
+        String url = KR_BASE_URL + "/lol/summoner/v4/summoners/" + summonerId;
+        return callApiWithRetry(url, SummonerDto.class);
+    }
 }
