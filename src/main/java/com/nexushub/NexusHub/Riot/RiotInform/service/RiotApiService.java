@@ -132,7 +132,6 @@ public class RiotApiService {
 
     public RiotAccountDto getRiotAccountInfo(String puuid) {
         String url = baseUrlAsia + "/riot/account/v1/accounts/by-puuid/"+puuid;
-        log.info("getRiotAccountInfo puuid = {}", puuid);
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Riot-Token", apiKey);
 
@@ -151,6 +150,9 @@ public class RiotApiService {
             return response.getBody();
         } catch (HttpClientErrorException.NotFound e) {
             log.warn("PUUID : {} 에 해당하는 소환사가 없다", puuid);
+            return null;
+        } catch (HttpClientErrorException.TooManyRequests e){
+            log.warn("API 호출 LIMIT 초과");
             return null;
         } catch (Exception e) {
             log.info(e.getMessage());
@@ -316,11 +318,13 @@ public class RiotApiService {
                     new ParameterizedTypeReference<>() {}
             );
             return response.getBody();
-        }
-
-        catch (Exception e) {
-            log.error(e.getMessage());
-            throw new CannotFoundSummoner(e.getMessage());
+        }catch (HttpClientErrorException.TooManyRequests e) {
+            // 429 에러 발생 시
+            log.warn("API LIMIT 걸렸어");
+            return null;
+        } catch (Exception e) {
+            // 다른 에러는 바로 던짐
+            throw e;
         }
     }
 

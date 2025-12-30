@@ -362,7 +362,7 @@ public class SummonerService {
             if (summoner.isPresent()) { // DB에 이미 소환사 정보가 존재하면 업데이트만 해주기
                 Summoner smmrObj = summoner.get();
                 smmrObj.updateTierV2(ranker, tier);
-                rankerResDtos.add(RankerResDto.of(smmrObj));
+                rankerResDtos.add(RankerResDto.of(ranker, smmrObj));
             }
             else { // DB에 존재하지 않은 소환사라면,
                 // 1. puuid만으로 정보 얻어오기
@@ -378,7 +378,7 @@ public class SummonerService {
                 Summoner newSummoner = new Summoner(ranker, riotAccountInfo.getGameName(), riotAccountInfo.getTagLine(), tier);
 
                 // 3. 그리고 바로 dto에 넣기
-                rankerResDtos.add(RankerResDto.of(summonerRepository.save(newSummoner)));
+                rankerResDtos.add(RankerResDto.of(ranker, summonerRepository.save(newSummoner)));
             }
         }
         return rankerResDtos;

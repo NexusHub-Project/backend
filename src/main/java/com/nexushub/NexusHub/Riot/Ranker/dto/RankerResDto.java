@@ -18,9 +18,19 @@ public class RankerResDto {
     private String rank;
     private Double winRate;
 
+    // 이게 뭔지 정확하지는 않음
+    private Boolean veteran;
+    private Boolean inactive;
+    private Boolean freshBlood;
+    private Boolean hotStreak;
 
-    public static RankerResDto of (Summoner summoner) {
+
+    public static RankerResDto of (RiotRankerDto riotRankerDto, Summoner summoner) {
         return RankerResDto.builder()
+                .veteran(riotRankerDto.getVeteran())
+                .inactive(riotRankerDto.getInactive())
+                .freshBlood(riotRankerDto.getFreshBlood())
+                .hotStreak(riotRankerDto.getHotStreak())
                 .puuid(summoner.getPuuid())
                 .gameName(summoner.getGameName())
                 .tagLine(summoner.getTagLine())
