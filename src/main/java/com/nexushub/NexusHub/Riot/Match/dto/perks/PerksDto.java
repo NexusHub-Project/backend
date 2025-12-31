@@ -44,7 +44,7 @@ public class PerksDto {
         subStyle.setStyle(8100); // 8100: 지배(Domination) 빌드 ID
         subStyle.setSelections(List.of(
                 new SelectionDto(8139, 0, 0, 0), // 피의 맛
-                new SelectionDto(8141, 0, 0, 0)  // Deep Ward
+                new SelectionDto(8141, 0, 0, 0)  // deepWard
         ));
 
         // 5. 메인 룬과 보조 룬을 최종 객체에 리스트로 담기
