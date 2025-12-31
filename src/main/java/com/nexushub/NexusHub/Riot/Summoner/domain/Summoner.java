@@ -11,6 +11,7 @@ import com.nexushub.NexusHub.Riot.Ranker.dto.RankerResDto;
 import com.nexushub.NexusHub.Riot.Ranker.dto.RiotRankerDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerDto;
 
+import com.nexushub.NexusHub.Riot.RiotInform.dto.RiotAccountDto;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -147,7 +148,7 @@ public class Summoner {
     }
 
     public Summoner (String gameName, String tagLine, String puuid) {
-        this.trimmedGameName = gameName;
+        this.trimmedGameName = gameName.replace(" ","");
         this.gameName = gameName;
         this.tagLine = tagLine;
         this.puuid = puuid;
@@ -155,7 +156,7 @@ public class Summoner {
     public Summoner (RiotRankerDto ranker, String gameName, String tagLine, Tier tier){
         this.puuid = ranker.getPuuid();
         this.gameName = gameName;
-        this.trimmedGameName = gameName;
+        this.trimmedGameName = gameName.replace(" ","");
         this.tagLine = tagLine;
         this.soloRankDefeat = ranker.getLosses();
         this.soloRankWin = ranker.getWins();
@@ -168,6 +169,12 @@ public class Summoner {
         this.gameName = dto.getRiotIdGameName();
         this.trimmedGameName = dto.getRiotIdGameName().replace(" ","");
         this.tagLine = dto.getRiotIdTagline();
+        this.puuid = dto.getPuuid();
+    }
+    public Summoner(RiotAccountDto dto) {
+        this.gameName = dto.getGameName();
+        this.trimmedGameName = dto.getGameName().replace(" ","");
+        this.tagLine = dto.getTagLine();
         this.puuid = dto.getPuuid();
     }
 }

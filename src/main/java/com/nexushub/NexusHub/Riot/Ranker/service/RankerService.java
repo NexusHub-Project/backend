@@ -1,103 +1,150 @@
 package com.nexushub.NexusHub.Riot.Ranker.service;
 
+import com.nexushub.NexusHub.Common.Exception.Fail.TooManyRequestFail;
+import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Ranker;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
 import com.nexushub.NexusHub.Riot.Ranker.dto.FromRiotRankerResDto;
 import com.nexushub.NexusHub.Riot.Ranker.dto.RiotRankerDto;
 import com.nexushub.NexusHub.Riot.Ranker.repository.RankerRepository;
+import com.nexushub.NexusHub.Riot.RiotInform.dto.RiotAccountDto;
 import com.nexushub.NexusHub.Riot.RiotInform.service.RiotApiService;
 import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
-import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerDto;
-import com.nexushub.NexusHub.Riot.Summoner.repository.SummonerRepository;
+import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class RankerService {
-
+    private final SummonerService summonerService;
     private final RiotApiService riotApiService;
     private final RankerRepository rankerRepository;
-    private final SummonerRepository summonerRepository;
 
-    @Transactional
-    public void refreshRankerData() {
-        log.info("🚀 랭커 데이터 갱신 시작...");
+    public void saveChallenger() throws InterruptedException {
+        // 챌린저 티어 유저들이 RiotRankerDto 담겨져 있음 puuid로 구분 해야 함
+        List<RiotRankerDto> challengers = riotApiService.getLeagueByTier(Tier.CHALLENGER).getEntries();
+        Integer ranking = 1;
+        challengers.sort((a, b) -> Integer.compare(b.getLeaguePoints(), a.getLeaguePoints()));
 
-        // 1. 기존 데이터 초기화
-        rankerRepository.deleteAllInBatch();
+        // 한번에 저장하는게 나음
+        List<Ranker> rankerList = new ArrayList<>();
+        int i = 1;
+        for (RiotRankerDto challengerUserDto : challengers) { // 순회하기
+            log.info("rank : {} puuid : {}", i++, challengerUserDto.getPuuid());
 
-        // 2. 티어별 데이터 조회 및 저장 (Challenger, GM, Master)
-        // getLeagueByTier 메서드는 429 에러 시 자동 대기하므로 안전합니다.
-        processLeague(riotApiService.getLeagueByTier(Tier.CHALLENGER), Tier.CHALLENGER);
-        processLeague(riotApiService.getLeagueByTier(Tier.GRANDMASTER), Tier.GRANDMASTER);
+            Optional<Summoner> optionalSummoner = summonerService.getSummonerByPuuid(challengerUserDto.getPuuid()); // puuid로 우리 DB에 Summoner 저장되어 있는지 체크
+            Summoner summoner = null;
+            if (optionalSummoner.isEmpty()){ // 저장되어 있지 않는 사람이야
+                RiotAccountDto newInform = getNewSummonerInformation(challengerUserDto.getPuuid());
+                if (newInform == null){
+                    continue;
+                }
+                summoner = summonerService.saveSummoner(newInform);
+            }
+            else {
+                summoner = optionalSummoner.get();
+            }
 
-        // *마스터 티어는 인원이 많아 시간이 오래 걸릴 수 있음 (필요 시 주석 해제)
-        // processLeague(riotApiService.getLeagueByTier(Tier.MASTER), Tier.MASTER);
+            // Summoner 객체 있든 없든 모두 가져 왔음
+            Ranker ranker = Ranker.of(summoner, Tier.CHALLENGER, challengerUserDto.getLeaguePoints(), ranking++);
+            rankerList.add(ranker);
 
-        log.info("✅ 랭커 데이터 갱신 완료!");
+        }
+        rankerRepository.saveAll(rankerList);
     }
+    public void saveGrandMasters() throws InterruptedException {
+        // 그랜드 마스터 티어 유저들이 RiotRankerDto 담겨져 있음 puuid로 구분 해야 함
+        List<RiotRankerDto> grandMasters = riotApiService.getLeagueByTier(Tier.GRANDMASTER).getEntries();
+        Integer ranking = 301;
+        grandMasters.sort((a, b) -> Integer.compare(b.getLeaguePoints(), a.getLeaguePoints()));
 
-    private void processLeague(FromRiotRankerResDto leagueDto, Tier tier) {
-        if (leagueDto == null || leagueDto.getEntries() == null) return;
+        // 한번에 저장하는게 나음
+        List<Ranker> rankerList = new ArrayList<>();
+        int i = 301;
+        for (RiotRankerDto grandMasterUserDto : grandMasters) { // 순회하기
+            log.info("rank : {} puuid : {}", i++, grandMasterUserDto.getPuuid());
 
-        List<RiotRankerDto> entries = leagueDto.getEntries();
+            Optional<Summoner> optionalSummoner = summonerService.getSummonerByPuuid(grandMasterUserDto.getPuuid()); // puuid로 우리 DB에 Summoner 저장되어 있는지 체크
+            Summoner summoner = null;
+            if (optionalSummoner.isEmpty()){ // 저장되어 있지 않는 사람이야
+                RiotAccountDto newInform = getNewSummonerInformation(grandMasterUserDto.getPuuid());
+                if (newInform == null){
+                    continue;
+                }
+                summoner = summonerService.saveSummoner(newInform);
+            }
+            else {
+                summoner = optionalSummoner.get();
+            }
 
-        // LP 높은 순으로 정렬
-        entries.sort(Comparator.comparingInt(RiotRankerDto::getLeaguePoints).reversed());
+            // Summoner 객체 있든 없든 모두 가져 왔음
+            Ranker ranker = Ranker.of(summoner, Tier.CHALLENGER, grandMasterUserDto.getLeaguePoints(), ranking++);
+            rankerList.add(ranker);
 
-        int rank = 1;
-        for (RiotRankerDto entry : entries) {
-            try {
-                saveRanker(entry, tier, rank++);
+        }
+        rankerRepository.saveAll(rankerList);
+    }
+    public void saveMasters() throws InterruptedException {
+        // 그랜드 마스터 티어 유저들이 RiotRankerDto 담겨져 있음 puuid로 구분 해야 함
+        List<RiotRankerDto> masters = riotApiService.getLeagueByTier(Tier.MASTER).getEntries();
+        Integer ranking = 1001;
+        masters.sort((a, b) -> Integer.compare(b.getLeaguePoints(), a.getLeaguePoints()));
 
-                if (rank % 50 == 0) log.info("[{}] {}위 처리 중...", tier, rank);
-            } catch (Exception e) {
-                // 한 명 실패해도 멈추지 않고 계속 진행
-                log.error("랭커 저장 실패 (Tier: {}, ID: {}): {}", tier, entry.getPuuid(), e.getMessage());
+        // 한번에 저장하는게 나음
+        List<Ranker> rankerList = new ArrayList<>();
+        int i = 1001;
+        for (RiotRankerDto masterUserDto : masters) { // 순회하기
+            log.info("rank : {} puuid : {}", i++, masterUserDto.getPuuid());
+
+            Optional<Summoner> optionalSummoner = summonerService.getSummonerByPuuid(masterUserDto.getPuuid()); // puuid로 우리 DB에 Summoner 저장되어 있는지 체크
+            Summoner summoner = null;
+            if (optionalSummoner.isEmpty()){ // 저장되어 있지 않는 사람이야
+                RiotAccountDto newInform = getNewSummonerInformation(masterUserDto.getPuuid());
+                if (newInform == null){
+                    continue;
+                }
+                summoner = summonerService.saveSummoner(newInform);
+            }
+            else {
+                summoner = optionalSummoner.get();
+            }
+
+            // Summoner 객체 있든 없든 모두 가져 왔음
+            Ranker ranker = Ranker.of(summoner, Tier.CHALLENGER, masterUserDto.getLeaguePoints(), ranking++);
+            rankerList.add(ranker);
+
+        }
+        rankerRepository.saveAll(rankerList);
+    }
+    private RiotAccountDto getNewSummonerInformation(String puuid) throws InterruptedException {
+
+        for (int i=0; i<3; i++){
+            try{
+                RiotAccountDto summonerByPuuid = riotApiService.getSummonerByPuuid(puuid);
+                if (summonerByPuuid != null) {
+                    return summonerByPuuid;
+                }
+            } catch (TooManyRequestFail e){
+                if (i < 2) {
+                    log.warn("API 요청 제한(429). {}초 후 재시도... (시도 {}/3)", 125, i + 1);
+                    Thread.sleep(125000);
+                }
+            } catch (CannotFoundSummoner e) {
+                log.info("소환사 정보 없음 (404). 재시도 안 함.");
+                return null;
             }
         }
-    }
-
-    private void saveRanker(RiotRankerDto entry, Tier tier, int rank) {
-        // [주의] RiotRankerDto의 puuid 필드에는 실제로는 'summonerId'가 들어있음 (@JsonProperty 때문)
-        String encryptedSummonerId = entry.getPuuid();
-
-        // 1. API로 상세 정보 조회 (여기서 진짜 PUUID와 GameName을 얻음)
-        //    *API 호출이 많아 429가 발생할 수 있으나 RiotApiService가 처리함
-        SummonerDto summonerDto = riotApiService.getSummonerBySummonerId(encryptedSummonerId);
-
-        // 2. 소환사 DB 조회 또는 생성 (Upsert)
-        Summoner summoner = summonerRepository.findSummonerByPuuid(summonerDto.getPuuid())
-                .orElseGet(() -> {
-                    Summoner newSummoner = Summoner.builder()
-                            .puuid(summonerDto.getPuuid())
-                            .gameName(summonerDto.getGameName())
-                            .tagLine(summonerDto.getTagLine())
-                            .trimmedGameName(summonerDto.getGameName() != null ?
-                                    summonerDto.getGameName().replace(" ", "") : "")
-                            .build();
-                    return summonerRepository.save(newSummoner);
-                });
-
-        // 3. 소환사 티어/승패 정보 업데이트
-        // (Summoner 엔티티에 updateTier(RiotRankerDto) 메서드 필요)
-        summoner.updateTier(entry);
-
-        // 4. Ranker 테이블에 저장
-        Ranker ranker = Ranker.builder()
-                .summoner(summoner)
-                .tier(tier)
-                .leaguePoint(entry.getLeaguePoints())
-                .ranking(rank)
-                .build();
-
-        rankerRepository.save(ranker);
+        log.error("3회 재시도 실패. PUUID: {}", puuid);
+        return null;
     }
 }

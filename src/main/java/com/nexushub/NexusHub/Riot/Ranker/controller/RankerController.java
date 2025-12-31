@@ -48,14 +48,25 @@ public class RankerController {
         }
         return ResponseEntity.ok(rankerResDtos);
     }
-    @PostMapping("/refresh")
-    @Operation(summary = "랭커 데이터 수동 갱신", description = "Riot API를 호출하여 챌린저/그마/마스터 데이터를 DB에 최신화합니다. (시간이 오래 걸릴 수 있음)")
-    public ResponseEntity<String> refreshRankerData() {
-        log.info("API 요청으로 랭커 데이터 갱신을 시작합니다.");
+    @GetMapping("/store-rankers/challenger")
+    public ResponseEntity<String> storeRankers() throws InterruptedException {
+        // 단순 디비에 저장하는 용도
+        rankerService.saveChallenger();
 
-        // 서비스 메소드 호출
-        rankerService.refreshRankerData();
+        return ResponseEntity.ok("저장 완료");
+    }
+    @GetMapping("/store-rankers/grandmaster")
+    public ResponseEntity<String> storeRankersG() throws InterruptedException {
+        // 단순 디비에 저장하는 용도
+        rankerService.saveGrandMasters();
 
-        return ResponseEntity.ok("랭커 데이터 갱신 작업이 완료되었습니다.");
+        return ResponseEntity.ok("저장 완료");
+    }
+    @GetMapping("/store-rankers/master")
+    public ResponseEntity<String> storeRankersM() throws InterruptedException {
+        // 단순 디비에 저장하는 용도
+        rankerService.saveMasters();
+
+        return ResponseEntity.ok("저장 완료");
     }
 }

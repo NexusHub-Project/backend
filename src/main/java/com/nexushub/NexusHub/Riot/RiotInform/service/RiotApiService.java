@@ -1,6 +1,7 @@
 package com.nexushub.NexusHub.Riot.RiotInform.service;
 
 import com.nexushub.NexusHub.Common.Exception.Fail.SignUpFail;
+import com.nexushub.NexusHub.Common.Exception.Fail.TooManyRequestFail;
 import com.nexushub.NexusHub.Common.Exception.Fail.WrongRankTier;
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Riot.Match.dto.MatchDto;
@@ -438,12 +439,58 @@ public class RiotApiService {
             throw new IllegalArgumentException("지원하지 않는 티어입니다: " + tier);
         }
 
-        return callApiWithRetry(url, FromRiotRankerResDto.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Riot-Token", apiKey);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        try {
+            ResponseEntity<FromRiotRankerResDto> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    FromRiotRankerResDto.class
+            );
+            return response.getBody();
+
+        } catch (HttpClientErrorException.TooManyRequests e){
+            throw new TooManyRequestFail("Too Many Request AT Find Challenger Ranking");
+        } catch (Exception e){
+            log.warn(e.getMessage());
+            return null;
+        }
+
     }
 
-    // 소환사 상세 정보 조회 (Summoner ID -> PUUID 획득용)
-    public SummonerDto getSummonerBySummonerId(String summonerId) {
-        String url = KR_BASE_URL + "/lol/summoner/v4/summoners/" + summonerId;
-        return callApiWithRetry(url, SummonerDto.class);
+    // puuid를 통해서 소환사 정보 획득하기
+    public RiotAccountDto getSummonerByPuuid(String puuid) throws CannotFoundSummoner, TooManyRequestFail {
+        // uuid 정보 얻기
+        String url = baseUrlAsia + "/riot/account/v1/accounts/by-puuid/" + puuid;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Riot-Token", apiKey);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<RiotAccountDto> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    RiotAccountDto.class
+            );
+            RiotAccountDto body = response.getBody();
+            return response.getBody();
+
+        } catch (HttpClientErrorException.TooManyRequests e){
+            log.info("GET Summoner Inform By Puuid");
+            throw new TooManyRequestFail("Too Many Request At Find Summoner Inform By Puuid : "+ puuid);
+        }
+        catch (HttpClientErrorException.NotFound e) {
+            // 404 에러일 경우 직접 메시지 던짐
+            throw new CannotFoundSummoner(puuid + " 소환사를 찾을 수 없습니다.");
+        } catch (RestClientException e) {
+            log.error(" Riot API ERROR : {}", e.getMessage());
+            throw new CannotFoundSummoner("소환사 정보를 가져오는 중 오류가 발생했습니다.");
+        }
     }
 }

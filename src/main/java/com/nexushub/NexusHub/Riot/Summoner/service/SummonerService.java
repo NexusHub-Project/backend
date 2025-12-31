@@ -435,4 +435,10 @@ public class SummonerService {
         return MatchRuneResDto.of(perksDto);
     }
 
+    public Optional<Summoner> getSummonerByPuuid(String puuid){
+        return summonerRepository.findSummonerByPuuid(puuid);
+    }
+    public Summoner saveSummoner(RiotAccountDto riotAccountDto){
+        return summonerRepository.save(new Summoner(riotAccountDto));
+    }
 }
