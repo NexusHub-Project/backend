@@ -26,6 +26,7 @@ public class Ranker {
 
     ///  티어 (챌, 그마, 마)
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Tier tier;
     // 점수
     private Integer leaguePoint;
