@@ -72,17 +72,6 @@ public class RankerController {
 
         return ResponseEntity.ok("저장 완료");
     }
-    @GetMapping("/automatic/test")
-    public ResponseEntity<String> automatic(){
-
-        try{
-            rankerScheduler.scheduleRankingUpdate();
-            return ResponseEntity.ok("굿");
-        }
-        catch (Exception e){
-            return ResponseEntity.ok("에러");
-        }
-    }
 
     @GetMapping("/v2/ranker/challenger/{page}")
     public ResponseEntity<Queue<RankerResDto>> getChallRanks(@PathVariable int page){
@@ -95,5 +84,10 @@ public class RankerController {
     @GetMapping("/v2/ranker/master/{page}")
     public ResponseEntity<Queue<RankerResDto>> getMASTERRanks(@PathVariable int page){
         return ResponseEntity.ok(rankerService.getRankersByKey("ranking:master",page));
+    }
+
+    @GetMapping("/v2/ranker/all/{page}")
+    public ResponseEntity<Queue<RankerResDto>> getALLRanks(@PathVariable int page){
+        return ResponseEntity.ok(rankerService.getRankersByKey("ranking:all",page));
     }
 }
