@@ -1,6 +1,7 @@
 package com.nexushub.NexusHub.Riot.Ranker.controller;
 
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
+import com.nexushub.NexusHub.Riot.Ranker.Sheduler.RankerScheduler;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Ranker;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
 import com.nexushub.NexusHub.Riot.Ranker.dto.FromRiotRankerResDto;
@@ -14,6 +15,7 @@ import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +30,7 @@ public class RankerController {
     private final RiotApiService riotApiService;
     private final SummonerService summonerService;
     private final RankerService rankerService;
+    private final RankerScheduler rankerScheduler;
 
     @GetMapping("/search/{tier}")
     public ResponseEntity<Queue<RankerResDto>> searchChallenger(@PathVariable String tier) throws CannotFoundSummoner {
@@ -68,5 +71,29 @@ public class RankerController {
         rankerService.saveMasters();
 
         return ResponseEntity.ok("저장 완료");
+    }
+    @GetMapping("/automatic/test")
+    public ResponseEntity<String> automatic(){
+
+        try{
+            rankerScheduler.scheduleRankingUpdate();
+            return ResponseEntity.ok("굿");
+        }
+        catch (Exception e){
+            return ResponseEntity.ok("에러");
+        }
+    }
+
+    @GetMapping("/v2/ranker/challenger/{page}")
+    public ResponseEntity<Queue<RankerResDto>> getChallRanks(@PathVariable int page){
+        return ResponseEntity.ok(rankerService.getRankersByKey("ranking:challenger",page));
+    }
+    @GetMapping("/v2/ranker/grandmaster/{page}")
+    public ResponseEntity<Queue<RankerResDto>> getGrandMasterRanks(@PathVariable int page){
+        return ResponseEntity.ok(rankerService.getRankersByKey("ranking:grandmaster",page));
+    }
+    @GetMapping("/v2/ranker/master/{page}")
+    public ResponseEntity<Queue<RankerResDto>> getMASTERRanks(@PathVariable int page){
+        return ResponseEntity.ok(rankerService.getRankersByKey("ranking:master",page));
     }
 }

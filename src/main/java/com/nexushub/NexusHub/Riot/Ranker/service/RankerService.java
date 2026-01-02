@@ -1,10 +1,15 @@
 package com.nexushub.NexusHub.Riot.Ranker.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexushub.NexusHub.Common.Exception.Fail.TooManyRequestFail;
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Ranker;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
 import com.nexushub.NexusHub.Riot.Ranker.dto.FromRiotRankerResDto;
+import com.nexushub.NexusHub.Riot.Ranker.dto.RankerResDto;
+import com.nexushub.NexusHub.Riot.Ranker.dto.RedisRankerDto;
 import com.nexushub.NexusHub.Riot.Ranker.dto.RiotRankerDto;
 import com.nexushub.NexusHub.Riot.Ranker.repository.RankerRepository;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.RiotAccountDto;
@@ -13,13 +18,18 @@ import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
 import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +39,11 @@ public class RankerService {
     private final SummonerService summonerService;
     private final RiotApiService riotApiService;
     private final RankerRepository rankerRepository;
+
+    private static final int PAGE_SIZE = 100;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final ObjectMapper objectMapper;
+
 
     public void saveChallenger() throws InterruptedException {
         // 챌린저 티어 유저들이 RiotRankerDto 담겨져 있음 puuid로 구분 해야 함
@@ -126,6 +141,11 @@ public class RankerService {
         }
         rankerRepository.saveAll(rankerList);
     }
+
+
+
+
+
     private RiotAccountDto getNewSummonerInformation(String puuid) throws InterruptedException {
 
         for (int i=0; i<3; i++){
@@ -146,5 +166,75 @@ public class RankerService {
         }
         log.error("3회 재시도 실패. PUUID: {}", puuid);
         return null;
+    }
+
+    public Summoner updateScore(RiotRankerDto ranker) throws InterruptedException {
+        String puuid = ranker.getPuuid();
+        Summoner summoner = getSummoner(puuid);
+        if (summoner == null) return null;
+        return calculateScore(summoner, ranker);
+    }
+
+    @Transactional
+    protected Summoner getSummoner(String puuid) throws InterruptedException {
+        Optional<Summoner> smmr = summonerService.getSummonerByPuuid(puuid);
+        if (smmr.isEmpty()){
+            log.info("{} :  테이블에 없음", puuid);
+            RiotAccountDto riotAccountDto = getNewSummonerInformation(puuid);
+            if(riotAccountDto==null) return null;
+            return summonerService.saveSummoner(riotAccountDto);
+        }
+        return smmr.get();
+    }
+
+
+    @Transactional
+    protected Summoner calculateScore(Summoner summoner, RiotRankerDto rankerDto){
+        Integer soloRankLP = summoner.getSoloRankLP();
+        Integer leaguePoints = rankerDto.getLeaguePoints();
+        if (soloRankLP != null && soloRankLP.equals(leaguePoints)){
+            return summoner;
+        }
+        else {
+            return summoner.updateTier(rankerDto);
+        }
+    }
+    public Queue<RankerResDto> getRankersByKey(String key, int page){
+        // 인덱스 계산
+        long start = (long) (page - 1) * PAGE_SIZE;
+        long end = start + PAGE_SIZE - 1;
+        Set<ZSetOperations.TypedTuple<String>> rankData = redisTemplate.opsForZSet().reverseRangeWithScores(key, start, end);
+
+        if (rankData == null){
+            return new LinkedList<>();
+        }
+
+        // puuid를 ZSet에서 뽑아서 리스트에 넣는 과정
+        List<String> puuidList = new ArrayList<>();
+        for (ZSetOperations.TypedTuple<String> tuple : rankData) {
+            puuidList.add(tuple.getValue()); // ZSet에 저장된 값(Value)이 puuid임
+        }
+
+        // 한번에 가져오는 과정
+        List<String> jsonInfoList = redisTemplate.opsForValue().multiGet(puuidList);
+
+        // 나갈 데이터
+        Queue<RankerResDto> rankerQueue = new LinkedList<>();
+
+        for (String jsonData : jsonInfoList) {
+            if (jsonData != null){
+                try{
+                    RedisRankerDto redisDto = objectMapper.readValue(jsonData, RedisRankerDto.class);
+
+                    // (2) 변환 메서드 호출 (LP를 따로 넘길 필요 없음)
+                    rankerQueue.add(RankerResDto.from(redisDto));
+                } catch (JsonMappingException e) {
+                    throw new RuntimeException(e);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return rankerQueue;
     }
 }
