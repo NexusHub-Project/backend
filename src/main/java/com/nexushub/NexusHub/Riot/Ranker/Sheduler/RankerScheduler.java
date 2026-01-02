@@ -27,7 +27,7 @@ public class RankerScheduler {
     private final RankerService rankerService;
     private final RiotApiService riotApiService;
 
-//    @Scheduled(cron = "0 0/5 * * * *")
+    @Scheduled(cron = "0 0/20 * * * *")
     public void scheduleRankingUpdate(){
         // 1. 레디스에 있는 데이터 복제하기
         // 2.
@@ -43,6 +43,9 @@ public class RankerScheduler {
             updateTier(Tier.GRANDMASTER);
             log.info("----------Master START-----------");
             updateTier(Tier.MASTER);
+
+            // 전체 순위 반영
+            rankerService.updateGlobalRanking();
         }
         catch (Exception e){
             log.warn("<<< 업데이트 중 에러 발생 >>> : " + e.getMessage());
@@ -52,16 +55,16 @@ public class RankerScheduler {
     }
     private void updateTier(Tier tier) throws InterruptedException {
         FromRiotRankerResDto leagueByTier = riotApiService.getLeagueByTier(tier);
-        Queue<RedisRankerDto> redisRankerDtos = getRankerObject(leagueByTier);
+        Queue<RedisRankerDto> redisRankerDtos = getRankerObject(leagueByTier, tier);
         redisService.updateRedisRanking(redisRankerDtos, tier);
     }
-    private Queue<RedisRankerDto> getRankerObject(FromRiotRankerResDto dtos) throws InterruptedException {
+    private Queue<RedisRankerDto> getRankerObject(FromRiotRankerResDto dtos, Tier tier) throws InterruptedException {
         List<RiotRankerDto> entries = dtos.getEntries();
         Queue<RedisRankerDto> redisRankerDtos = new LinkedList<>();
         for (RiotRankerDto entry : entries) {
             Summoner summoner = rankerService.updateScore(entry);
-
             if (summoner== null) continue;
+            summoner.setSoloRankTier(tier);
             redisRankerDtos.add(RedisRankerDto.of(summoner));
         }
         return redisRankerDtos;

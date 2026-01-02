@@ -177,4 +177,8 @@ public class Summoner {
         this.tagLine = dto.getTagLine();
         this.puuid = dto.getPuuid();
     }
+
+    public void setSoloRankTier(Tier tier){
+        this.soloRankTier = tier.getKey();
+    }
 }

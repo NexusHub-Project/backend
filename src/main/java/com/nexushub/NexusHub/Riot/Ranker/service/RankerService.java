@@ -237,4 +237,11 @@ public class RankerService {
         }
         return rankerQueue;
     }
+
+    public void updateGlobalRanking(){
+        String globalKey = "ranking:all";
+        String challengerKey = "ranking:challenger";
+        List<String> otherKeys = List.of("ranking:grandmaster","ranking:master");
+        redisTemplate.opsForZSet().unionAndStore(challengerKey, otherKeys, globalKey);
+    }
 }
