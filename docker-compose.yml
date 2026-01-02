@@ -45,7 +45,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+  # 3. Redis 서비스
+  redis:
+    image: redis:alpine
+    container_name: arcane-redis
+    ports:
+      - "6379:6379"
+    restart: always
 # Docker 볼륨 정의
 volumes:
   arcane-db-data:

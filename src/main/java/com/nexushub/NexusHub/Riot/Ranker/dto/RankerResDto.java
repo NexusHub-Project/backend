@@ -41,4 +41,16 @@ public class RankerResDto {
                 .winRate(((double) summoner.getSoloRankWin() / (summoner.getSoloRankDefeat() + summoner.getSoloRankWin())) * 100)
                 .build();
     }
+    public static RankerResDto from (RedisRankerDto redisRankerDto){
+        return RankerResDto.builder()
+                .puuid(redisRankerDto.getPuuid())
+                .gameName(redisRankerDto.getGameName())
+                .tagLine(redisRankerDto.getTagLine())
+                .leaguePoints(redisRankerDto.getLp())
+                .wins(redisRankerDto.getWins())
+                .losses(redisRankerDto.getLosses())
+                .rank(redisRankerDto.getTier())
+                .winRate(((double) redisRankerDto.getWins() / (redisRankerDto.getLosses() + redisRankerDto.getWins()) * 100))
+                .build();
+    }
 }
