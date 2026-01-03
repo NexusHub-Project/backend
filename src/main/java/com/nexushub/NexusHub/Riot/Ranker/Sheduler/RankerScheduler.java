@@ -27,7 +27,7 @@ public class RankerScheduler {
     private final RankerService rankerService;
     private final RiotApiService riotApiService;
 
-    @Scheduled(cron = "0 0/20 * * * *")
+//    @Scheduled(cron = "0 0/20 * * * *")
     public void scheduleRankingUpdate(){
         // 1. 레디스에 있는 데이터 복제하기
         // 2.

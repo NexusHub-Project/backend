@@ -90,4 +90,9 @@ public class RankerController {
     public ResponseEntity<Queue<RankerResDto>> getALLRanks(@PathVariable int page){
         return ResponseEntity.ok(rankerService.getRankersByKey("ranking:all",page));
     }
+    @GetMapping("/v2/ranker/test")
+    public ResponseEntity<String> store(){
+        rankerScheduler.scheduleRankingUpdate();
+        return ResponseEntity.ok("asd");
+    }
 }
