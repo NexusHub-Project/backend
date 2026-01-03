@@ -6,6 +6,7 @@ import com.nexushub.NexusHub.Riot.Ranker.domain.Ranker;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
 import com.nexushub.NexusHub.Riot.Ranker.dto.FromRiotRankerResDto;
 import com.nexushub.NexusHub.Riot.Ranker.dto.RankerResDto;
+import com.nexushub.NexusHub.Riot.Ranker.dto.RiotRankerDto;
 import com.nexushub.NexusHub.Riot.Ranker.service.RankerService;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengersResDto;
@@ -19,6 +20,8 @@ import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
@@ -95,4 +98,23 @@ public class RankerController {
         rankerScheduler.scheduleRankingUpdate();
         return "Good";
     }
+    @GetMapping("/v2/ranker/puuid/gm")
+    public ResponseEntity<List<String>> getPuuidRanker() throws CannotFoundSummoner {
+        FromRiotRankerResDto challengersV2 = riotApiService.getChallengersV2(Tier.CHALLENGER);
+        List<String> list = new ArrayList<>();
+        for (RiotRankerDto entry : challengersV2.getEntries()) {
+            list.add(entry.getPuuid());
+        }
+        return ResponseEntity.ok(list);
+    }
+    @GetMapping("/v2/ranker/puuid/c")
+    public ResponseEntity<List<String>> getPuuidRancccker() throws CannotFoundSummoner {
+        FromRiotRankerResDto challengersV2 = riotApiService.getChallengersV2(Tier.GRANDMASTER);
+        List<String> list = new ArrayList<>();
+        for (RiotRankerDto entry : challengersV2.getEntries()) {
+            list.add(entry.getPuuid());
+        }
+        return ResponseEntity.ok(list);
+    }
+
 }
