@@ -1,6 +1,7 @@
 package com.nexushub.NexusHub.Riot.Ranker.Sheduler;
 
 
+import com.nexushub.NexusHub.Common.Annotation.LogExecutionTime;
 import com.nexushub.NexusHub.Common.Redis.RedisService;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Ranker;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
@@ -27,7 +28,7 @@ public class RankerScheduler {
     private final RankerService rankerService;
     private final RiotApiService riotApiService;
 
-    @Scheduled(cron = "0 0/20 * * * *")
+//    @Scheduled(cron = "0 0/20 * * * *")
     public void scheduleRankingUpdate(){
         // 1. 레디스에 있는 데이터 복제하기
         // 2.
@@ -53,12 +54,15 @@ public class RankerScheduler {
         }
         log.info("========= [UPDATING STARTING] DONE ===========");
     }
+
+    @LogExecutionTime
     private void updateTier(Tier tier) throws InterruptedException {
         FromRiotRankerResDto leagueByTier = riotApiService.getLeagueByTier(tier);
         Queue<RedisRankerDto> redisRankerDtos = getRankerObject(leagueByTier, tier);
         redisService.updateRedisRanking(redisRankerDtos, tier);
     }
     private Queue<RedisRankerDto> getRankerObject(FromRiotRankerResDto dtos, Tier tier) throws InterruptedException {
+        int i=1;
         List<RiotRankerDto> entries = dtos.getEntries();
         Queue<RedisRankerDto> redisRankerDtos = new LinkedList<>();
         for (RiotRankerDto entry : entries) {
@@ -66,6 +70,7 @@ public class RankerScheduler {
             if (summoner== null) continue;
             summoner.setSoloRankTier(tier);
             redisRankerDtos.add(RedisRankerDto.of(summoner));
+            log.info("PUT REDIS : {}", i++);
         }
         return redisRankerDtos;
     }
