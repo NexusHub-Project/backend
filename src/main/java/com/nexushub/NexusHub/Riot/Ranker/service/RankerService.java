@@ -244,4 +244,13 @@ public class RankerService {
         List<String> otherKeys = List.of("ranking:grandmaster","ranking:master");
         redisTemplate.opsForZSet().unionAndStore(challengerKey, otherKeys, globalKey);
     }
+
+    public Long getMasterPageSize(){
+        Long count = redisTemplate.opsForZSet().size("ranking:master");
+        return count/100 + 1;
+    }
+    public Long getAllPageSize(){
+        Long count = redisTemplate.opsForZSet().size("ranking:all");
+        return count/100 + 1;
+    }
 }

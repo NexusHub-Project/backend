@@ -5,6 +5,7 @@ import com.nexushub.NexusHub.Riot.Ranker.Sheduler.RankerScheduler;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Ranker;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
 import com.nexushub.NexusHub.Riot.Ranker.dto.FromRiotRankerResDto;
+import com.nexushub.NexusHub.Riot.Ranker.dto.RankerFinalResDto;
 import com.nexushub.NexusHub.Riot.Ranker.dto.RankerResDto;
 import com.nexushub.NexusHub.Riot.Ranker.service.RankerService;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
@@ -74,20 +75,28 @@ public class RankerController {
     }
 
     @GetMapping("/v2/ranker/challenger/{page}")
-    public ResponseEntity<Queue<RankerResDto>> getChallRanks(@PathVariable int page){
-        return ResponseEntity.ok(rankerService.getRankersByKey("ranking:challenger",page));
+    public ResponseEntity<RankerFinalResDto> getChallRanks(@PathVariable int page){
+        Queue<RankerResDto> rankersByKey = rankerService.getRankersByKey("ranking:challenger", page);
+        return ResponseEntity.ok(RankerFinalResDto.from(rankersByKey, 3L, (long) page));
     }
     @GetMapping("/v2/ranker/grandmaster/{page}")
-    public ResponseEntity<Queue<RankerResDto>> getGrandMasterRanks(@PathVariable int page){
-        return ResponseEntity.ok(rankerService.getRankersByKey("ranking:grandmaster",page));
+    public ResponseEntity<RankerFinalResDto> getGrandMasterRanks(@PathVariable int page){
+        Queue<RankerResDto> rankersByKey = rankerService.getRankersByKey("ranking:grandmaster", page);
+        return ResponseEntity.ok(RankerFinalResDto.from(rankersByKey, 7L, (long) page));
     }
     @GetMapping("/v2/ranker/master/{page}")
-    public ResponseEntity<Queue<RankerResDto>> getMASTERRanks(@PathVariable int page){
-        return ResponseEntity.ok(rankerService.getRankersByKey("ranking:master",page));
+    public ResponseEntity<RankerFinalResDto> getMASTERRanks(@PathVariable int page){
+
+        Queue<RankerResDto> rankersByKey = rankerService.getRankersByKey("ranking:master", page);
+        Long masterPageSize = rankerService.getMasterPageSize();
+
+        return ResponseEntity.ok(RankerFinalResDto.from(rankersByKey, masterPageSize, (long) page));
     }
 
     @GetMapping("/v2/ranker/all/{page}")
-    public ResponseEntity<Queue<RankerResDto>> getALLRanks(@PathVariable int page){
-        return ResponseEntity.ok(rankerService.getRankersByKey("ranking:all",page));
+    public ResponseEntity<RankerFinalResDto> getALLRanks(@PathVariable int page){
+        Queue<RankerResDto> rankersByKey = rankerService.getRankersByKey("ranking:all", page);
+        Long allPageSize = rankerService.getAllPageSize();
+        return ResponseEntity.ok(RankerFinalResDto.from(rankersByKey, allPageSize, (long) page));
     }
 }

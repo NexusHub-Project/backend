@@ -24,6 +24,9 @@ public class RankerResDto {
     private Boolean freshBlood;
     private Boolean hotStreak;
 
+    private Integer profileIconId;
+    private Integer summonerLevel;
+
 
     public static RankerResDto of (RiotRankerDto riotRankerDto, Summoner summoner) {
         return RankerResDto.builder()
@@ -51,6 +54,8 @@ public class RankerResDto {
                 .losses(redisRankerDto.getLosses())
                 .rank(redisRankerDto.getTier())
                 .winRate(((double) redisRankerDto.getWins() / (redisRankerDto.getLosses() + redisRankerDto.getWins()) * 100))
+                .profileIconId(1383)
+                .summonerLevel(77)
                 .build();
     }
 }
