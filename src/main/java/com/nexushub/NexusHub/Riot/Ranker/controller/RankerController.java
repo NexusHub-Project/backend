@@ -99,4 +99,10 @@ public class RankerController {
         Long allPageSize = rankerService.getAllPageSize();
         return ResponseEntity.ok(RankerFinalResDto.from(rankersByKey, allPageSize, (long) page));
     }
+
+    @GetMapping("/v2/update/ranking/directly")
+    public String updateRakingDirect(){
+        rankerScheduler.scheduleRankingUpdate();
+        return "good";
+    }
 }

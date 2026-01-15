@@ -22,7 +22,7 @@ public class RedisRankerDto {
 
     //  레벨이랑 아이콘은 잠정 중단
     private int level;
-    private String icon;
+    private int icon;
 
     public static RedisRankerDto of (Ranker ranker){
         Summoner summoner = ranker.getSummoner();
@@ -45,6 +45,8 @@ public class RedisRankerDto {
                 .lp(summoner.getSoloRankLP())
                 .wins(summoner.getSoloRankWin())
                 .losses(summoner.getSoloRankDefeat())
+                .icon(summoner.getIconId())
+                .level(summoner.getLevel())
                 .build();
     }
 }

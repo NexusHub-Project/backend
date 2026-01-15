@@ -146,7 +146,7 @@ public class RankerService {
 
 
 
-    private RiotAccountDto getNewSummonerInformation(String puuid) throws InterruptedException {
+    public RiotAccountDto getNewSummonerInformation(String puuid) throws InterruptedException {
 
         for (int i=0; i<3; i++){
             try{
@@ -237,6 +237,15 @@ public class RankerService {
         }
         return rankerQueue;
     }
+    public List<String> getRankersPuuid(String key){
+        Set<ZSetOperations.TypedTuple<String>> typedTuples = redisTemplate.opsForZSet().reverseRangeWithScores(key, 0, -1);
+        List<String> puuidList = new ArrayList<>();
+        for (ZSetOperations.TypedTuple<String> typedTuple : typedTuples) {
+            puuidList.add(typedTuple.getValue());
+        }
+        return puuidList;
+    }
+
 
     public void updateGlobalRanking(){
         String globalKey = "ranking:all";

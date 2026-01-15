@@ -19,7 +19,7 @@ public class AdditionalDataController {
 
     @GetMapping("/iconAndLevel")
     public String divisionRequest() throws CannotFoundSummoner, InterruptedException {
-        additionalService.getDivision();
+        additionalService.downloadRankersProfile();
         return "good";
     }
 }

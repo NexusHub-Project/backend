@@ -22,6 +22,7 @@ import com.nexushub.NexusHub.Riot.Ranker.dto.FromRiotRankerResDto;
 import com.nexushub.NexusHub.Riot.Ranker.dto.RankerResDto;
 import com.nexushub.NexusHub.Riot.Ranker.dto.RiotRankerDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.MasteryDto;
+import com.nexushub.NexusHub.Riot.RiotInform.dto.ProfileResDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengersResDto;
@@ -441,4 +442,8 @@ public class SummonerService {
     public Summoner saveSummoner(RiotAccountDto riotAccountDto){
         return summonerRepository.save(new Summoner(riotAccountDto));
     }
+    public void updateSummoners(List<Summoner> summoners){
+        summonerRepository.saveAll(summoners);
+    }
+
 }

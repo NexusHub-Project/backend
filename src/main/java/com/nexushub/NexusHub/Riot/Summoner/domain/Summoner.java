@@ -9,6 +9,7 @@ import com.nexushub.NexusHub.Riot.Match.dto.ParticipantDto;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
 import com.nexushub.NexusHub.Riot.Ranker.dto.RankerResDto;
 import com.nexushub.NexusHub.Riot.Ranker.dto.RiotRankerDto;
+import com.nexushub.NexusHub.Riot.RiotInform.dto.ProfileResDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerDto;
 
 import com.nexushub.NexusHub.Riot.RiotInform.dto.RiotAccountDto;
@@ -43,6 +44,11 @@ public class Summoner {
 
     @Column(name = "puuid", length = 100, nullable = false, unique = true)
     private String puuid;
+
+    @Column(name = "icon")
+    private Integer iconId;
+    @Column(name = "level")
+    private Integer level;
 
     // 솔랭 정보
     @Column(name = "solo_rank_tier", length = 20)
@@ -79,6 +85,8 @@ public class Summoner {
     @OneToMany(mappedBy = "summoner")
     @JsonIgnore
     private List<MatchParticipant> matchHistory;
+
+
 
     @PrePersist
     protected void onCreate() {
@@ -180,5 +188,10 @@ public class Summoner {
 
     public void setSoloRankTier(Tier tier){
         this.soloRankTier = tier.getKey();
+    }
+
+    public void updateProfile(ProfileResDto profileResDto){
+        this.iconId = profileResDto.getProfileIconId();
+        this.level = profileResDto.getSummonerLevel();
     }
 }

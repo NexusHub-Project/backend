@@ -1,23 +1,21 @@
 package com.nexushub.NexusHub.Riot.AdditionalData.service;
 
-
 import com.nexushub.NexusHub.Common.Exception.Fail.TooManyRequestFail;
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
-import com.nexushub.NexusHub.Riot.AdditionalData.dto.IconAndLevel;
-import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
-import com.nexushub.NexusHub.Riot.Ranker.dto.FromRiotRankerResDto;
-import com.nexushub.NexusHub.Riot.Ranker.dto.RiotRankerDto;
+import com.nexushub.NexusHub.Riot.Ranker.service.RankerService;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.ProfileResDto;
+import com.nexushub.NexusHub.Riot.RiotInform.dto.RiotAccountDto;
 import com.nexushub.NexusHub.Riot.RiotInform.service.RiotApiService;
+import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
+import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,68 +23,74 @@ import java.util.stream.Stream;
 public class AdditionalDataService {
 
     private final RiotApiService riotApiService;
+    private final RankerService rankerService;
+    private final SummonerService summonerService;
 
-    @Value("${riot.api-key}")
-    private String myKey;
+    public void downloadRankersProfile() throws InterruptedException {
+        List<String> challengerPuuid =
+                rankerService.getRankersPuuid("ranking:challenger");
+        List<String> gmPuuid =
+                rankerService.getRankersPuuid("ranking:grandmaster");
+        List<String> masterPuuid =
+                rankerService.getRankersPuuid("ranking:master");
+        storeProfile(challengerPuuid);
+        log.info("<< CHALLENGER ICON & LEVEL DONE >>");
+        storeProfile(gmPuuid);
+        log.info("<< GRANDMASTER ICON & LEVEL DONE >>");
+        storeProfile(masterPuuid);
+        log.info("<< MASTER ICON & LEVEL DONE >>");
+    }
 
-    @Value("${riot.api-key-temp1}")
-    private String apiKey1;
 
-    @Value("${riot.api-key-temp2}")
-    private String apiKey2;
+    private void storeProfile(List<String> puuids) throws InterruptedException {
+        List<Summoner> list = new ArrayList<>();
+        for (String puuid : puuids) {
+            Optional<Summoner> optionalSummoner = summonerService.getSummonerByPuuid(puuid);
+            Summoner summoner = null;
+            if (optionalSummoner.isEmpty()){ // 저장되어 있지 않는 사람이야
+                RiotAccountDto newInform = rankerService.getNewSummonerInformation(puuid);
+                if (newInform == null){
+                    continue;
+                }
+                summoner = summonerService.saveSummoner(newInform);
+            }
+            else {
+                summoner = optionalSummoner.get();
+            }
 
-    @Value("${riot.api-key-temp3}")
-    private String apiKey3;
+            log.info("icon : {} level :{}", summoner.getIconId(), summoner.getLevel());
+            if (summoner.getIconId() == null || summoner.getLevel() == null){ // icon이나 level이 null이면
+                log.info("{} : icon & level request ", puuid);
+                ProfileResDto profileResDto = requestProfileToRiot(puuid);
+                summoner.updateProfile(profileResDto);
+                list.add(summoner);
+            }
 
-    @Value("${riot.api-key-temp4}")
-    private String apiKey4;
+        }
+        summonerService.updateSummoners(list);
+    }
 
-    public void getDivision() throws CannotFoundSummoner {
-        List<IconAndLevel> sortedIconAndLevel = getSortedIconAndLevel(myKey);
-        log.info("size : {}", sortedIconAndLevel.size());
-        List<IconAndLevel> sortedIconAndLevel1 = getSortedIconAndLevel(apiKey1);
-        log.info("1) size : {}", sortedIconAndLevel1.size());
-        List<IconAndLevel> sortedIconAndLevel2 = getSortedIconAndLevel(apiKey2);
-        log.info("2) size : {}", sortedIconAndLevel2.size());
-        List<IconAndLevel> sortedIconAndLevel3 = getSortedIconAndLevel(apiKey3);
-        log.info("3) size : {}", sortedIconAndLevel3.size());
-        List<IconAndLevel> sortedIconAndLevel4 = getSortedIconAndLevel(apiKey4);
-        log.info("4) size : {}", sortedIconAndLevel4.size());
+    private ProfileResDto requestProfileToRiot(String puuid) throws InterruptedException {
+        for (int i=0; i<3; i++){
+            try{
+                ProfileResDto profileInfo = riotApiService.getProfileInfo(puuid);
+                if (profileInfo!=null) return profileInfo;
+            } catch (TooManyRequestFail e){
+                if (i < 2) {
+                    log.warn("API 요청 제한(429). {}초 후 재시도... (시도 {}/3)", 125, i + 1);
+                    Thread.sleep(125000);
+                }
+            } catch (CannotFoundSummoner e) {
+                log.info("소환사 정보 없음 (404). 재시도 안 함.");
+                return null;
+            }
+        }
+        log.error("3회 재시도 실패. PUUID: {}", puuid);
+        return null;
     }
 
 
 
-    private List<IconAndLevel> getSortedIconAndLevel(String apiKey) throws CannotFoundSummoner {
-        // 1. 원래 나의 키로 데이터 가져오기
 
-
-        // 2. origin 속의 Entry를 lp 순으로 나열을 해야 함 -> 여기는 모두 정렬이 되어 있는 상태임
-        List<RiotRankerDto> originChallenger = sortByLPFirst(riotApiService.getRankersByTierAndKey(Tier.CHALLENGER, apiKey));
-        List<RiotRankerDto> originGrandMaster = sortByLPFirst(riotApiService.getRankersByTierAndKey(Tier.GRANDMASTER, apiKey));
-        List<RiotRankerDto> originMaster = sortByLPFirst(riotApiService.getRankersByTierAndKey(Tier.MASTER, apiKey));
-
-        List<IconAndLevel> origin = new ArrayList<>();
-        int rank = 1;
-        for (RiotRankerDto riotRankerDto : originChallenger) {
-            origin.add(new IconAndLevel(rank++, riotRankerDto.getPuuid(), riotRankerDto.getLeaguePoints()));
-        }
-        for (RiotRankerDto riotRankerDto : originGrandMaster) {
-            origin.add(new IconAndLevel(rank++, riotRankerDto.getPuuid(), riotRankerDto.getLeaguePoints()));
-        }
-        for (RiotRankerDto riotRankerDto : originMaster) {
-            origin.add(new IconAndLevel(rank++, riotRankerDto.getPuuid(), riotRankerDto.getLeaguePoints()));
-        }
-
-        return origin;
-
-    }
-    private List<RiotRankerDto> sortByLPFirst(FromRiotRankerResDto origin){
-
-        List<RiotRankerDto> list = origin.getEntries()
-                .stream()
-                .sorted((a, b) -> b.getLeaguePoints() - a.getLeaguePoints()).toList();
-
-        return list;
-    }
 
 }

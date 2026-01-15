@@ -48,7 +48,7 @@ public class RedisService {
             @Override
             public Object execute(RedisOperations operations) throws DataAccessException {
                 for (RedisRankerDto redisDto : rankersInfoDtos) {
-
+                    log.info("icon : {}, level : {} before put Redis", redisDto.getIcon(), redisDto.getLevel());
                     String puuid = redisDto.getPuuid();
                     // ZSet을 통해서 빠르게 puuid - lp로 정렬을 함
                     operations.opsForZSet().add(tempKey, puuid, redisDto.getLp());

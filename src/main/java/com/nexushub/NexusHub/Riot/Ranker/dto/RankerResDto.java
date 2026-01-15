@@ -54,8 +54,8 @@ public class RankerResDto {
                 .losses(redisRankerDto.getLosses())
                 .rank(redisRankerDto.getTier())
                 .winRate(((double) redisRankerDto.getWins() / (redisRankerDto.getLosses() + redisRankerDto.getWins()) * 100))
-                .profileIconId(1383)
-                .summonerLevel(77)
+                .profileIconId(redisRankerDto.getIcon())
+                .summonerLevel(redisRankerDto.getLevel())
                 .build();
     }
 }

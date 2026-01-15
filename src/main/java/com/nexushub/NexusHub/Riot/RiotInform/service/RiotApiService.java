@@ -77,6 +77,7 @@ public class RiotApiService {
         return getSummonerInfo(gameName, tagLine).getPuuid();
     }
 
+
     public ProfileResDto getProfileInfo(String puuid) throws CannotFoundSummoner {
         // uuid 정보 얻기
         String url = baseUrlKR + "/lol/summoner/v4/summoners/by-puuid/" + puuid;
@@ -96,6 +97,8 @@ public class RiotApiService {
             ProfileDto body = response.getBody();
             return ProfileResDto.of(body);
 
+        } catch (HttpClientErrorException.TooManyRequests e){
+            throw new TooManyRequestFail("profile request LIMIT >>>");
         } catch (HttpClientErrorException.NotFound e) {
             // 404 에러일 경우 직접 메시지 던짐
             throw new CannotFoundSummoner(puuid + " 소환사를 찾을 수 없습니다.");
@@ -104,6 +107,7 @@ public class RiotApiService {
             throw new CannotFoundSummoner("소환사 정보를 가져오는 중 오류가 발생했습니다.");
         }
     }
+
 
     public SummonerDto getSummonerTierInfo(SummonerDto dto){
         log.info("RiotApiService : dto : {}", dto.toString());
@@ -161,6 +165,10 @@ public class RiotApiService {
             return null;
         }
     }
+
+
+
+
     public List<MasteryDto> getMasteryInfo(String puuid) throws CannotFoundSummoner {
         String url = baseUrlKR + "/lol/champion-mastery/v4/champion-masteries/by-puuid/" + puuid;
 
@@ -466,36 +474,6 @@ public class RiotApiService {
         return dto;
     }
 
-    private <T> T callApiWithRetry(String url, Class<T> responseType) {
-        int maxRetries = 5;
-        int retryCount = 0;
-
-        while (retryCount < maxRetries) {
-            try {
-                // API Key 추가 (이미 쿼리 파라미터가 있으면 & 없으면 ?)
-                String requestUrl = url + (url.contains("?") ? "&" : "?") + "api_key=" + apiKey;
-                return restTemplate.getForObject(requestUrl, responseType);
-
-            } catch (HttpClientErrorException.TooManyRequests e) {
-                retryCount++;
-                String retryAfter = e.getResponseHeaders() != null ? e.getResponseHeaders().getFirst("Retry-After") : null;
-                int sleepSeconds = (retryAfter != null && !retryAfter.isEmpty()) ? Integer.parseInt(retryAfter) : 10;
-
-                log.warn("🚨 API 제한(429) 발생! {}초 대기 후 재시도... ({}/{})", sleepSeconds, retryCount, maxRetries);
-
-                try {
-                    Thread.sleep(sleepSeconds * 1000L + 1000); // 여유 있게 1초 추가 대기
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                    throw new RuntimeException("API 재시도 중 인터럽트", ie);
-                }
-            } catch (Exception e) {
-                log.error("API 호출 실패: url={}, error={}", url, e.getMessage());
-                throw e; // 그 외 에러는 바로 던짐
-            }
-        }
-        throw new RuntimeException("Riot API 재시도 횟수 초과");
-    }
 
     /**
      * 티어별 랭킹 정보 조회 (Challenger, Grandmaster, Master)
@@ -568,43 +546,5 @@ public class RiotApiService {
         }
     }
 
-    public ProfileResDto getProfileInfoByKeyAndPuuid(String key, String puuid) throws CannotFoundSummoner {
 
-        if (key == null){
-            throw new RiotAPIKeyException("key가 null입니다.");
-        }
-        else if (puuid == null){
-
-            throw new RiotAPIKeyException("puuid가 null입니다.");
-        }
-
-
-        // uuid 정보 얻기
-        String url = baseUrlKR + "/lol/summoner/v4/summoners/by-puuid/" + puuid;
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Riot-Token", key);
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-
-        try {
-            ResponseEntity<ProfileDto> response = restTemplate.exchange(
-                    url,
-                    HttpMethod.GET,
-                    entity,
-                    ProfileDto.class
-            );
-            ProfileDto body = response.getBody();
-            return ProfileResDto.of(body);
-
-        } catch (HttpClientErrorException.TooManyRequests e){
-            throw new TooManyRequestFail("Too Many Request At Find Summoner Inform By Puuid : "+ puuid);
-        } catch (HttpClientErrorException.NotFound e) {
-            // 404 에러일 경우 직접 메시지 던짐
-            throw new CannotFoundSummoner(puuid + " 소환사를 찾을 수 없습니다.");
-        } catch (RestClientException e) {
-            log.error(" Riot API ERROR : {}", e.getMessage());
-            throw new CannotFoundSummoner("소환사 정보를 가져오는 중 오류가 발생했습니다.");
-        }
-    }
 }
