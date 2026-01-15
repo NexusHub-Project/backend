@@ -44,6 +44,7 @@ public class AdditionalDataService {
 
     private void storeProfile(List<String> puuids) throws InterruptedException {
         List<Summoner> list = new ArrayList<>();
+        int i=1;
         for (String puuid : puuids) {
             Optional<Summoner> optionalSummoner = summonerService.getSummonerByPuuid(puuid);
             Summoner summoner = null;
@@ -58,9 +59,8 @@ public class AdditionalDataService {
                 summoner = optionalSummoner.get();
             }
 
-            log.info("icon : {} level :{}", summoner.getIconId(), summoner.getLevel());
             if (summoner.getIconId() == null || summoner.getLevel() == null){ // icon이나 level이 null이면
-                log.info("{} : icon & level request ", puuid);
+                log.info("{} --- {} : icon & level request ",i++, puuid);
                 ProfileResDto profileResDto = requestProfileToRiot(puuid);
                 summoner.updateProfile(profileResDto);
                 list.add(summoner);
