@@ -106,20 +106,6 @@ public class SummonerController {
         return ResponseEntity.ok(sortedStats);
     }
 
-    /** 솔로랭킹을 보여주는 API이다.
-     *
-     * @return
-     */
-    @GetMapping("/search/challenger")
-    public ResponseEntity<List<ChallengersResDto>> searchChallengers(){
-        log.info("SummonerController - searchChallengers /search/challenger 호출 ");
-        ChallengerLeagueDto challengers = riotApiService.getChallengers();
-        List<ChallengersResDto> dtos = summonerService.setChallengersData(challengers);
-        return ResponseEntity.ok(dtos);
-    }
-
-
-
     @GetMapping("/profile")
     public ResponseEntity<ProfileResDto> getProfile(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
         log.info("SummonerController - getProfile  호출 ");

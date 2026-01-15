@@ -24,13 +24,11 @@ public class SummonerTierResDto {
                 .tagLine(summoner.getTagLine())
                 .puuid(summoner.getPuuid())
                 .soloRank(RankDto.of(
-                        "SOLO",
                         summoner.getSoloRankTier(),
                         summoner.getSoloRankLP(),
                         summoner.getSoloRankWin(),
                         summoner.getSoloRankDefeat()))
                 .flexRank(RankDto.of(
-                        "FLEX",
                         summoner.getFlexRankTier(),
                         summoner.getFlexRankLP(),
                         summoner.getFlexRankWin(),
