@@ -1,13 +1,12 @@
 package com.nexushub.NexusHub.Riot.RiotInform.service;
 
-import com.nexushub.NexusHub.Common.Exception.Fail.SignUpFail;
-import com.nexushub.NexusHub.Common.Exception.Fail.TooManyRequestFail;
-import com.nexushub.NexusHub.Common.Exception.Fail.WrongRankTier;
+import com.nexushub.NexusHub.Common.Exception.Fail.*;
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Riot.Match.dto.MatchDto;
 import com.nexushub.NexusHub.Riot.Match.dto.minimal.MinimalMatchDto;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
 import com.nexushub.NexusHub.Riot.Ranker.dto.FromRiotRankerResDto;
+import com.nexushub.NexusHub.Riot.Ranker.dto.RiotRankerDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.*;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerDto;
@@ -30,6 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 @Service
 @RequiredArgsConstructor
@@ -330,6 +330,80 @@ public class RiotApiService {
         }
     }
 
+    public FromRiotRankerResDto getRankersByTierAndKey(Tier tier, String key) throws CannotFoundSummoner {
+        String url = baseUrlKR;
+        if (tier == Tier.CHALLENGER){
+            url = url + "/lol/league/v4/challengerleagues/by-queue/RANKED_SOLO_5x5";
+        }
+        else if (tier == Tier.GRANDMASTER){
+            url = url + "/lol/league/v4/grandmasterleagues/by-queue/RANKED_SOLO_5x5";
+        }
+        else if (tier == Tier.MASTER){
+            url = url + "/lol/league/v4/masterleagues/by-queue/RANKED_SOLO_5x5";
+        }
+        else {
+            log.warn("잘못된 랭크 티어 요청");
+            throw new WrongRankTier("잘못된 랭크 티어 요청");
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Riot-Token", key);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        try{
+            ResponseEntity<FromRiotRankerResDto> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<>() {}
+            );
+            return response.getBody();
+        }catch (HttpClientErrorException.TooManyRequests e) {
+            // 429 에러 발생 시
+            log.warn("API LIMIT 걸렸어");
+            return null;
+        } catch (Exception e) {
+            // 다른 에러는 바로 던짐
+            throw e;
+        }
+    }
+
+
+
+    public PriorityQueue<RiotRankerDto> getRankersByKey(String key) throws CannotFoundSummoner {
+
+
+        FromRiotRankerResDto challenger = getRankersByTierAndKey(Tier.CHALLENGER, key);
+        if (challenger.getEntries().size() == 0 ){
+            log.info("챌린저 랭킹 비어 있음");
+        }
+        FromRiotRankerResDto grandmaster = getRankersByTierAndKey(Tier.GRANDMASTER, key);
+        if (grandmaster.getEntries().size()==0){
+            log.info("그랜드마스터 랭킹 비어 있음");
+        }
+        FromRiotRankerResDto master = getRankersByTierAndKey(Tier.MASTER, key);
+        if (master.getEntries().size()==0){
+            log.info("마스터 랭킹 비어 있음");
+        }
+        PriorityQueue<RiotRankerDto> priorityQueue = new PriorityQueue<>(
+                (a,b) -> b.getLeaguePoints() - a.getLeaguePoints()
+        );
+
+        for (RiotRankerDto entry : challenger.getEntries()) {
+            priorityQueue.add(entry);
+        }
+        for (RiotRankerDto entry : grandmaster.getEntries()) {
+            priorityQueue.add(entry);
+        }
+        for (RiotRankerDto entry : master.getEntries()) {
+            priorityQueue.add(entry);
+        }
+
+        return priorityQueue;
+    }
+
+
+
 
 
 
@@ -486,6 +560,46 @@ public class RiotApiService {
             throw new TooManyRequestFail("Too Many Request At Find Summoner Inform By Puuid : "+ puuid);
         }
         catch (HttpClientErrorException.NotFound e) {
+            // 404 에러일 경우 직접 메시지 던짐
+            throw new CannotFoundSummoner(puuid + " 소환사를 찾을 수 없습니다.");
+        } catch (RestClientException e) {
+            log.error(" Riot API ERROR : {}", e.getMessage());
+            throw new CannotFoundSummoner("소환사 정보를 가져오는 중 오류가 발생했습니다.");
+        }
+    }
+
+    public ProfileResDto getProfileInfoByKeyAndPuuid(String key, String puuid) throws CannotFoundSummoner {
+
+        if (key == null){
+            throw new RiotAPIKeyException("key가 null입니다.");
+        }
+        else if (puuid == null){
+
+            throw new RiotAPIKeyException("puuid가 null입니다.");
+        }
+
+
+        // uuid 정보 얻기
+        String url = baseUrlKR + "/lol/summoner/v4/summoners/by-puuid/" + puuid;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Riot-Token", key);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<ProfileDto> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    ProfileDto.class
+            );
+            ProfileDto body = response.getBody();
+            return ProfileResDto.of(body);
+
+        } catch (HttpClientErrorException.TooManyRequests e){
+            throw new TooManyRequestFail("Too Many Request At Find Summoner Inform By Puuid : "+ puuid);
+        } catch (HttpClientErrorException.NotFound e) {
             // 404 에러일 경우 직접 메시지 던짐
             throw new CannotFoundSummoner(puuid + " 소환사를 찾을 수 없습니다.");
         } catch (RestClientException e) {
