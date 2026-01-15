@@ -16,6 +16,7 @@ import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerTierResDto;
 import com.nexushub.NexusHub.Web.Statistics.dto.ChampionSeasonStatisticsDto;
 import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,7 @@ public class SummonerController {
      * @return Summoner
      * @throws CannotFoundSummoner
      */
+    @Operation(summary = "소환사 티어 정보 조회", description = "게임 닉네임과 태그라인을 통해 해당 소환사의 현재 티어 정보를 조회합니다.")
     @GetMapping("/tier")
     public ResponseEntity<SummonerTierResDto> summonerTierInfo(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
         log.info("SummonerController - summonerTierInfo /tier 호출 ");
@@ -55,6 +57,7 @@ public class SummonerController {
      * @return
      * @throws CannotFoundSummoner
      */
+    @Operation(summary = "소환사 챔피언 숙련도 조회", description = "소환사가 보유한 챔피언들의 숙련도 점수 및 레벨 정보를 조회합니다.")
     @GetMapping("/mastery")
     public ResponseEntity<List<MasteryDto>> summonerMasteryInfo(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
         log.info("SummonerController - summonerMasteryInfo /mastery 호출 ");
@@ -70,6 +73,7 @@ public class SummonerController {
      * @return
      * @throws CannotFoundSummoner
      */
+    @Operation(summary = "최근 매치 요약 리스트 조회", description = "해당 소환사의 최근 20게임 매치 요약 정보를 조회합니다.")
     @GetMapping("/matches")
     public ResponseEntity<Queue<MatchInfoResDto>> summonerMatches(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
         log.info("SummonerController - summonerMatches /matches 호출 ");
@@ -82,6 +86,7 @@ public class SummonerController {
      * @param matchId 게임 정보의 식별 id 값
      * @return
      */
+    @Operation(summary = "매치 상세 정보 조회", description = "특정 매치 ID를 통해 해당 게임의 모든 플레이어 기록 등 상세 데이터를 조회합니다.")
     @GetMapping("/matchInfo")
     public ResponseEntity<MatchDto> summonerMatchInfo(@RequestParam String matchId) {
         log.info("SummonerController - summonerMatchInfo /matchInfo 호출 ");
@@ -98,6 +103,7 @@ public class SummonerController {
      * @return
      * @throws CannotFoundSummoner
      */
+    @Operation(summary = "소환사 모스트 챔피언 통계", description = "소환사가 이번 시즌에 가장 많이 플레이한 챔피언 통계 정보를 조회합니다.")
     @GetMapping("/most")
     public ResponseEntity<List<ChampionSeasonStatisticsDto>> summonerMostInfo(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner{
         log.info("SummonerController - summonerMostInfo /most 호출 ");
@@ -106,6 +112,7 @@ public class SummonerController {
         return ResponseEntity.ok(sortedStats);
     }
 
+    @Operation(summary = "소환사 프로필 조회", description = "소환사의 기본 프로필(레벨, 아이콘 등) 정보를 조회합니다.")
     @GetMapping("/profile")
     public ResponseEntity<ProfileResDto> getProfile(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
         log.info("SummonerController - getProfile  호출 ");

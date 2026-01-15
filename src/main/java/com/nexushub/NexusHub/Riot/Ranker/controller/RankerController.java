@@ -32,16 +32,20 @@ public class RankerController {
     private final RankerService rankerService;
     private final RankerScheduler rankerScheduler;
 
+    @Operation(summary = "챌린저 랭킹 조회", description = "페이지 번호를 기반으로 챌린저 티어의 랭킹 목록을 조회합니다.")
     @GetMapping("/challenger/{page}")
     public ResponseEntity<RankerFinalResDto> getChallRanks(@PathVariable int page){
         Queue<RankerResDto> rankersByKey = rankerService.getRankersByKey("ranking:challenger", page);
         return ResponseEntity.ok(RankerFinalResDto.from(rankersByKey, 3L, (long) page));
     }
+
+    @Operation(summary = "그랜드마스터 랭킹 조회", description = "페이지 번호를 기반으로 그랜드마스터 티어의 랭킹 목록을 조회합니다.")
     @GetMapping("/grandmaster/{page}")
     public ResponseEntity<RankerFinalResDto> getGrandMasterRanks(@PathVariable int page){
         Queue<RankerResDto> rankersByKey = rankerService.getRankersByKey("ranking:grandmaster", page);
         return ResponseEntity.ok(RankerFinalResDto.from(rankersByKey, 7L, (long) page));
     }
+    @Operation(summary = "마스터 랭킹 조회", description = "페이지 번호를 기반으로 마스터 티어의 랭킹 목록을 조회합니다.")
     @GetMapping("/master/{page}")
     public ResponseEntity<RankerFinalResDto> getMASTERRanks(@PathVariable int page){
 
@@ -51,6 +55,7 @@ public class RankerController {
         return ResponseEntity.ok(RankerFinalResDto.from(rankersByKey, masterPageSize, (long) page));
     }
 
+    @Operation(summary = "전체 통합 랭킹 조회", description = "티어 구분 없이 전체 통합 랭킹 목록을 페이지별로 조회합니다.")
     @GetMapping("/all/{page}")
     public ResponseEntity<RankerFinalResDto> getALLRanks(@PathVariable int page){
         Queue<RankerResDto> rankersByKey = rankerService.getRankersByKey("ranking:all", page);

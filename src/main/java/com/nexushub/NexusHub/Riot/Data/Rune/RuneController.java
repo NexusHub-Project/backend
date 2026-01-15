@@ -4,6 +4,7 @@ import com.nexushub.NexusHub.Riot.Data.Champion.ChampionService;
 import com.nexushub.NexusHub.Riot.Data.Champion.dto.ChampionReturnDto;
 import com.nexushub.NexusHub.Riot.Data.Rune.domain.Rune;
 import com.nexushub.NexusHub.Riot.Data.Rune.dto.RuneResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ public class RuneController  {
 
     private final RuneService runeService;
 
+    @Operation(summary = "룬 ID로 정보 조회", description = "고유 ID를 사용하여 특정 룬의 상세 정보를 조회합니다.")
     @GetMapping("/{id}")
     public RuneResponseDto getChampInfo(@PathVariable Long id){
         return runeService.getRuneInfoById(id);
