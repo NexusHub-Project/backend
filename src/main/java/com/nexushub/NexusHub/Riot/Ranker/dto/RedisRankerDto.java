@@ -16,13 +16,13 @@ public class RedisRankerDto {
     private String gameName;
     private String tagLine;
     private String tier;
-    private int lp;
-    private int wins;
-    private int losses;
+    private Integer lp;
+    private Integer wins;
+    private Integer losses;
 
     //  레벨이랑 아이콘은 잠정 중단
-    private int level;
-    private int icon;
+    private Integer level;
+    private Integer icon;
 
     public static RedisRankerDto of (Ranker ranker){
         Summoner summoner = ranker.getSummoner();
