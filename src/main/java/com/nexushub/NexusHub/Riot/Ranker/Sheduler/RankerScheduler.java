@@ -2,6 +2,7 @@ package com.nexushub.NexusHub.Riot.Ranker.Sheduler;
 
 
 import com.nexushub.NexusHub.Common.Redis.RedisService;
+import com.nexushub.NexusHub.Riot.AdditionalData.service.AdditionalDataService;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Ranker;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
 import com.nexushub.NexusHub.Riot.Ranker.dto.FromRiotRankerResDto;
@@ -26,8 +27,9 @@ public class RankerScheduler {
     private final RedisService redisService;
     private final RankerService rankerService;
     private final RiotApiService riotApiService;
+    private final AdditionalDataService additionalDataService;
 
-    @Scheduled(cron = "0 0/20 * * * *")
+    @Scheduled(cron = "0 0/30 * * * *")
     public void scheduleRankingUpdate(){
         // 1. 레디스에 있는 데이터 복제하기
         // 2.
@@ -35,7 +37,7 @@ public class RankerScheduler {
         // 4. Riot API에 티어 별로 정보 받아오기
         // 5. 랭킹 정보 받아와서 Summoner에 정보 업데이트 -> 없으면 저장하고
         // 6. 레디스에 해당 정보 key : puuid / value : RedisRankerDto 로 만들어서 저장
-        log.info("========= [UPDATING STARTING] ===========");
+        log.info("========= [UPDATING - RANKING] START ===========");
         try{
             log.info("----------Challneger START-----------");
             updateTier(Tier.CHALLENGER);
@@ -46,12 +48,19 @@ public class RankerScheduler {
 
             // 전체 순위 반영
             rankerService.updateGlobalRanking();
+            log.info("========= [UPDATING - RANKING] DONE ===========");
+
+            log.info("========= [UPDATING - Rankers Icon And Level] START ===========");
+            additionalDataService.downloadRankersProfile();
+            log.info("========= [UPDATING - Rankers Icon And Level] DONE ===========");
+
+
         }
         catch (Exception e){
             log.warn("<<< 업데이트 중 에러 발생 >>> : " + e.getMessage());
             return;
         }
-        log.info("========= [UPDATING STARTING] DONE ===========");
+        log.info("=========Scheduled UPDATING DONE========");
     }
     private void updateTier(Tier tier) throws InterruptedException {
         FromRiotRankerResDto leagueByTier = riotApiService.getLeagueByTier(tier);
