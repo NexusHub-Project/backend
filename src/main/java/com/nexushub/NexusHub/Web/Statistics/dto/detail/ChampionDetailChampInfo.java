@@ -20,7 +20,7 @@ public class ChampionDetailChampInfo {
     // 게임 수
     private Integer gameCount;
     // 비율
-    private Float percent = (float) 0.0;
+    private Float percent;
 
 
     public ChampionDetailChampInfo(ChampionStatsByPosition stats) {

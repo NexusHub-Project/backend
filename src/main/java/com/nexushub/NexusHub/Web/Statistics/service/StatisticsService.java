@@ -113,7 +113,7 @@ public class StatisticsService {
             ChampionDetailChampInfo info = new ChampionDetailChampInfo(stat);
 
             if (stats.size() != 0 && totalGamePlayed!=0) {
-                percent = info.getGameCount()/totalGamePlayed * 100;
+                percent = (float) info.getGameCount() / totalGamePlayed * 100;
             }
             info.setPercent(percent);
 
