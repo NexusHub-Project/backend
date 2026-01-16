@@ -8,6 +8,7 @@ import com.nexushub.NexusHub.Riot.Data.Rune.RuneService;
 import com.nexushub.NexusHub.Riot.Data.SummonerSpell.SummonerSpellService;
 import com.nexushub.NexusHub.Riot.Ranker.Sheduler.RankerScheduler;
 import com.nexushub.NexusHub.Riot.Ranker.service.RankerService;
+import com.nexushub.NexusHub.Web.Statistics.service.StatisticsService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ public class DataController {
     private final AdditionalDataService additionalService;
     private final RankerService rankerService;
     private final RankerScheduler rankerScheduler;
+    private final StatisticsService statisticsService;
 
     @Operation(summary = "챔피언 데이터 임포트", description = "Riot API로부터 최신 챔피언 데이터를 가져와 데이터베이스에 저장합니다.")
     @GetMapping("/champion")
@@ -101,5 +103,12 @@ public class DataController {
     public String updateRakingDirect(){
         rankerScheduler.scheduleRankingUpdate();
         return "good";
+    }
+
+    @Operation(summary = "통계 데이터 생성 (Mock)", description = "분석을 위한 전 포지션별 챔피언 통계 데이터를 생성합니다.")
+    @GetMapping("/set-statistics/mock-data")
+    public String setMock(){
+        statisticsService.createAllPositionStatistics();
+        return "success";
     }
 }

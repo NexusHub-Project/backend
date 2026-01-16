@@ -26,13 +26,6 @@ public class StatisticsController {
 
     private final StatisticsService statisticsService;
 
-    @Operation(summary = "통계 데이터 생성 (Mock)", description = "분석을 위한 전 포지션별 챔피언 통계 데이터를 생성합니다.")
-    @GetMapping("/set/mock")
-    public String setMock(){
-        statisticsService.createAllPositionStatistics();
-        return "success";
-    }
-
     @Operation(summary = "포지션별 챔피언 티어 조회", description = "특정 포지션(TOP, JUNGLE 등)의 챔피언 티어 리스트 및 통계를 조회합니다.")
     @GetMapping("/tier/{position}")
     public ResponseEntity<List<TierResponseDto>> getPositionTier(@PathVariable String position){
