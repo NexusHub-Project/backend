@@ -13,12 +13,14 @@ import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengersResDto;
 import com.nexushub.NexusHub.Riot.RiotInform.service.RiotApiService;
 import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
+import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerKeywordResDto;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerTierResDto;
 import com.nexushub.NexusHub.Web.Statistics.dto.ChampionSeasonStatisticsDto;
 import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -112,16 +114,20 @@ public class SummonerController {
         return ResponseEntity.ok(sortedStats);
     }
 
-    @Operation(summary = "소환사 프로필 조회", description = "소환사의 기본 프로필(레벨, 아이콘 등) 정보를 조회합니다.")
+
+    @Operation(summary = "소환사 프로필 조회V2", description = "소환사의 기본 프로필(레벨, 아이콘 등) 정보를 조회합니다.")
     @GetMapping("/profile")
-    public ResponseEntity<ProfileResDto> getProfile(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
+    public ResponseEntity<ProfileResDto> getProfileV2(@RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
         log.info("SummonerController - getProfile  호출 ");
-        gameName = gameName.replace(" ", "");
-        Optional<Summoner> summoner = summonerService.findSummoner(gameName, tagLine);
-        String puuid = summonerService.findPuuid(gameName, tagLine, summoner);
-        log.info("puuid : {}", puuid);
-        ProfileResDto profileInfo = riotApiService.getProfileInfo(puuid);
+        ProfileResDto profileInfo = summonerService.getProfile(gameName, tagLine);
         return ResponseEntity.ok(profileInfo);
+    }
+
+    @Operation(summary = "키워드로 소환사 실시간 검색", description = "키워드가 포함된 소환사 리스트를 조회합니다.")
+    @GetMapping("/contain/{keyword}")
+    public ResponseEntity<List<SummonerKeywordResDto>> getSummonersByKeyWord(@PathVariable String keyword){
+        List<SummonerKeywordResDto> summonerByKeyword = summonerService.findSummonerByKeyword(keyword);
+        return ResponseEntity.ok(summonerByKeyword);
     }
 
 }

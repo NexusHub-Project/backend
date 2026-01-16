@@ -194,4 +194,6 @@ public class Summoner {
         this.iconId = profileResDto.getProfileIconId();
         this.level = profileResDto.getSummonerLevel();
     }
+
+
 }

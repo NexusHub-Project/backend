@@ -30,6 +30,7 @@ import com.nexushub.NexusHub.Riot.RiotInform.dto.RiotAccountDto;
 import com.nexushub.NexusHub.Riot.RiotInform.service.RiotApiService;
 import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerDto;
+import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerKeywordResDto;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerTierResDto;
 import com.nexushub.NexusHub.Riot.Summoner.repository.SummonerRepository;
 import lombok.RequiredArgsConstructor;
@@ -432,9 +433,26 @@ public class SummonerService {
         return dtos;
     }
 
-    private MatchRuneResDto reOrderRunes(PerksDto perksDto){
-        return MatchRuneResDto.of(perksDto);
+    public List<SummonerKeywordResDto> findSummonerByKeyword(String keyword){
+        List<Summoner> byGameNameContainingIgnoreCase = summonerRepository.findByGameNameContainingIgnoreCase(keyword);
+        List<SummonerKeywordResDto> list = new ArrayList<>();
+        for (Summoner summoner : byGameNameContainingIgnoreCase) {
+            list.add(SummonerKeywordResDto.of(summoner));
+        }
+        return list;
     }
+    public ProfileResDto getProfile(String gameName, String tagLine) throws CannotFoundSummoner {
+        gameName = gameName.replace(" ", "");
+        Optional<Summoner> summoner = findSummoner(gameName, tagLine);
+        String puuid = findPuuid(gameName, tagLine, summoner);
+        ProfileResDto profileInfo = riotApiService.getProfileInfo(puuid);
+        if (summoner.isPresent()){
+            summoner.get().updateProfile(profileInfo);
+            summonerRepository.save(summoner.get());
+        }
+        return profileInfo;
+    }
+
 
     public Optional<Summoner> getSummonerByPuuid(String puuid){
         return summonerRepository.findSummonerByPuuid(puuid);
