@@ -3,7 +3,7 @@
 
 ARCANE은 라이엇 게임즈의 빅데이터를 실시간으로 수집하고 분석하여, 플레이어에게 단순한 전적 검색 이상의 가치를 제공하는 고성능 분석 플랫폼입니다. 독자적인 알고리즘을 통해 게임 기여도를 수치화하고, 최상위권 랭커 데이터를 기반으로 최적의 승리 전략을 제시합니다.
 
-🚀 Key Features
+##🚀 Key Features
 💎 Advanced Analytics (OurScore & TeamScore)
 
 Performance Metric: 단순 KDA를 넘어 딜량, 시야, 오브젝트 관여도를 종합한 OurScore를 산출하여 개인의 실질 기여도를 측정합니다.
@@ -88,5 +88,3 @@ Swagger UI: http://localhost:8080/swagger-ui/index.html
 
 ⚖️ Disclaimer
 ARCANE isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
-
-Developed with ❤️ by ARCANE Team
