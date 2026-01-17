@@ -12,6 +12,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,5 +78,17 @@ public class RedisService {
         } else {
             log.warn("[Redis] {} 티어 업데이트 실패: 임시 키가 생성되지 않음", tier);
         }
+    }
+
+    public void storeCurrentPatchVersionAtRedis(String currentPatchVersion){
+        // 저장
+        try{
+            redisTemplate.opsForValue().set("patchVersion", currentPatchVersion);
+        } catch (Exception e){
+            log.error("Redis 패치 버전 저장 중 오류 발생 : {}", e.getMessage());
+        }
+    }
+    public String getCurrentPatchVersionFromRedis(){
+        return redisTemplate.opsForValue().get("patchVersion");
     }
 }

@@ -111,4 +111,16 @@ public class DataController {
         statisticsService.createAllPositionStatistics();
         return "success";
     }
+
+    @Operation(summary = "직접 패치 버전 가져오기", description = "실시간으로 현재 패치 버전을 가져옵니다.")
+    @GetMapping("/get/current-patchVersion/direct")
+    public String getPatchVersion(){
+        return additionalService.getCurrentPatchVersion();
+    }
+
+    @Operation(summary = "패치 버전 가져오기", description = "레디스에 저장된 패치 버전을 가져옵니다.")
+    @GetMapping("/get/current-patchVersion")
+    public String getPatchVersionFromRedis(){
+        return additionalService.getCurrentPatchVersionFromRedis();
+    }
 }
