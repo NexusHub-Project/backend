@@ -3,7 +3,7 @@
 
 ---
 
-ARCANE은 라이엇 게임즈의 빅데이터를 실시간으로 수집하고 분석하여, 플레이어에게 단순한 전적 검색 이상의 가치를 제공하는 고성능 분석 플랫폼입니다. 독자적인 알고리즘을 통해 게임 기여도를 수치화하고, 최상위권 랭커 데이터를 기반으로 최적의 승리 전략을 제시합니다.
+### ARCANE은 라이엇 게임즈의 빅데이터를 실시간으로 수집하고 분석하여, 플레이어에게 단순한 전적 검색 이상의 가치를 제공하는 고성능 분석 플랫폼입니다. 독자적인 알고리즘을 통해 게임 기여도를 수치화하고, 최상위권 랭커 데이터를 기반으로 최적의 승리 전략을 제시합니다.
 
 ---
 
@@ -27,48 +27,44 @@ Matchup Analysis: 특정 챔피언 간의 상대 승률과 상성 데이터를 �
 Position-based Statistics: 탑부터 서포터까지 각 포지션별 정교한 통계 지표를 제공합니다.
 
 ## 🛠 Technical Architecture
-## ⚙️ Backend Engineering
+### ⚙️ Backend Core & Infrastructure
 
-Language: Java 21 (Latest LTS)
+Language & Framework: 최신 LTS 버전인 Java 21과 Spring Boot 3.4.1을 기반으로 구축되어 강력한 성능과 생산성을 보장합니다.
 
-Framework: Spring Boot 3.4.1
+Database Strategy:
 
-Security: Spring Security & JWT 기반의 무상태 인증 체계
+MySQL: 유저 정보, 매치 히스토리 등 영속성이 필요한 데이터를 정규화하여 관리합니다.
 
-Data Persistence:
+Redis: 실시간 랭킹 데이터 및 패치 버전 정보 캐싱을 통해 DB 부하를 줄이고 응답 속도를 극대화합니다.
 
-JPA (Hibernate): 객체 지향적 데이터 관리 및 변경 감지(Dirty Checking) 적용
+Containerization: Docker와 Docker Compose를 활용하여 애플리케이션 및 인프라(MySQL, Redis) 환경을 코드 기반으로 관리하고 배포의 일관성을 유지합니다.
 
-MySQL 8.0: 소환사 정보 및 매치 히스토리 저장을 위한 관계형 DB
+### ⚡ Data Flow & Performance Optimization
 
-Redis: 실시간 랭킹 데이터 캐싱 및 패치 버전 관리 최적화
+Zero-Downtime Ranking Update: Redis의 Atomic Swap(rename) 기법을 도입하여, 대량의 랭킹 업데이트 작업 중에도 서비스 중단 없이 실시간 데이터를 제공합니다.
 
-## 📡 Riot API Integration
+High-Speed Bulk Storage: Redis Pipelining(executePipelined) 기술을 사용하여 대규모 랭커 데이터를 한 번의 네트워크 요청으로 고속 동기화합니다.
 
-Resilience: 429 Too Many Requests 대응을 위한 지수 백오프(Exponential Backoff) 기반 재시도 로직 구현
+Automated Data Lifecycle: RankerScheduler를 통해 20분 주기로 최신 랭크 정보를 자동 동기화하며 시스템의 데이터 선도를 유지합니다.
 
-Efficiency: 라이엇 데이터 드래곤(Data Dragon) 패치 버전을 Redis에 캐싱하여 불필요한 네트워크 오버헤드 90% 이상 절감
+### 📡 API Resilience & Reliability
 
-## 📦 Tech Stack Summary
-Category	Technology
-Language	Java 21
-Framework	Spring Boot 3.4.1
-Database	MySQL 8.0, Redis
-ORM	Spring Data JPA
-Infrastructure	Docker, Docker Compose
-API Spec	Swagger (OpenAPI 3.0)
-Auth	Spring Security, JWT
-🛠 Getting Started
-Prerequisites
+Error Resilience: Riot API의 호출 제한(429 Too Many Requests)에 대응하기 위해 재시도 로직과 지연 처리 시스템을 구축하여 데이터 수집의 안정성을 확보했습니다.
 
-JDK 21
+Clean Data Management: GameNameTrimFilter를 통해 유저 검색 시 발생하는 불필요한 공백을 정규화하여 검색 정확도를 높였습니다.
 
-Docker & Docker Compose
+---
 
-Installation & Run
+## 🛠 Tech Stack Summary
 
-Repository Clone
+| Category | Technology |
+| :--- | :--- |
+| **Language** | Java 21 |
+| **Framework** | Spring Boot 3.4.1 |
+| **Database** | MySQL 8.0, Redis |
+| **Infrastructure** | Docker, Docker Compose |
 
+---
 
 ## ⚖️ Disclaimer
 ARCANE isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
