@@ -2,6 +2,7 @@ package com.nexushub.NexusHub.Riot.AdditionalData.service;
 
 import com.nexushub.NexusHub.Common.Exception.Fail.TooManyRequestFail;
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
+import com.nexushub.NexusHub.Common.Redis.RedisService;
 import com.nexushub.NexusHub.Riot.Ranker.service.RankerService;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.ProfileResDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.RiotAccountDto;
@@ -11,7 +12,11 @@ import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +30,8 @@ public class AdditionalDataService {
     private final RiotApiService riotApiService;
     private final RankerService rankerService;
     private final SummonerService summonerService;
+    private final RestTemplate restTemplate;
+    private final RedisService redisService;
 
     public void downloadRankersProfile() throws InterruptedException {
         List<String> challengerPuuid =
@@ -89,8 +96,31 @@ public class AdditionalDataService {
         return null;
     }
 
+    public String getCurrentPatchVersion(){
+        String patchVersionUrl = "https://ddragon.leagueoflegends.com/api/versions.json";
+        try {
+            // RestTemplate을 사용하여 문자열 배열로 받기
+            ResponseEntity<String[]> response = restTemplate.getForEntity(patchVersionUrl, String[].class);
+            String[] versions = response.getBody();
 
+            if (versions != null && versions.length > 0) {
+                redisService.storeCurrentPatchVersionAtRedis(versions[0]);
+                return versions[0]; // 가장 최신 버전 반환
+            }
+        } catch (Exception e) {
+            log.error("패치 버전을 가져오는 중 오류 발생: {}", e.getMessage());
+        }
+        return "error";
+    }
 
+    public String getCurrentPatchVersionFromRedis(){
+        String currentPatchVersionFromRedis = redisService.getCurrentPatchVersionFromRedis();
+        return currentPatchVersionFromRedis==null ? getCurrentPatchVersion() : currentPatchVersionFromRedis;
+    }
 
-
+    @Scheduled(cron = "0 0 0 * * THU")
+    public void storeCurrentPatchVersionAuto(){
+        // 매주 목요일 0시에 redis에 저장하기
+        redisService.storeCurrentPatchVersionAtRedis(getCurrentPatchVersion());
+    }
 }
