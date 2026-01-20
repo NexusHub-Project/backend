@@ -212,6 +212,32 @@ public class RiotApiService {
             return null;
         }
     }
+    public String[] getSummonerMatchesV2(String puuid, int page) throws CannotFoundSummoner {
+        int pageSize = 20;
+        int startIdx = (page-1)*pageSize;
+        int count = pageSize;
+        String url = UriComponentsBuilder.fromHttpUrl(baseUrlAsia + "/lol/match/v5/matches/by-puuid/" + puuid + "/ids")
+                .queryParam("start", startIdx)   // 시작 인덱스
+                .queryParam("count", count)   // 가져올 개수
+                .toUriString();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Riot-Token", apiKey);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        try{
+            ResponseEntity<String[]> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<>() {}
+            );
+            return response.getBody();
+        }
+        catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
 
     public MatchDto getMatchInfo(String matchId) {
         String url = baseUrlAsia + "/lol/match/v5/matches/"+matchId;

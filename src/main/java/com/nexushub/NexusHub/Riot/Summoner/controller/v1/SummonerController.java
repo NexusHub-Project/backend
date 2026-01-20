@@ -91,10 +91,7 @@ public class SummonerController {
     @Operation(summary = "매치 상세 정보 조회", description = "특정 매치 ID를 통해 해당 게임의 모든 플레이어 기록 등 상세 데이터를 조회합니다.")
     @GetMapping("/matchInfo")
     public ResponseEntity<MatchDto> summonerMatchInfo(@RequestParam String matchId) {
-        log.info("SummonerController - summonerMatchInfo /matchInfo 호출 ");
         MatchDto matchInfo = matchService.getMatchInfoById(matchId);
-        InfoDto info = matchInfo.getInfo();
-        log.info("info : {}", info);
         return ResponseEntity.ok(matchInfo);
     }
 
@@ -128,6 +125,14 @@ public class SummonerController {
     public ResponseEntity<List<SummonerKeywordResDto>> getSummonersByKeyWord(@PathVariable String keyword){
         List<SummonerKeywordResDto> summonerByKeyword = summonerService.findSummonerByKeyword(keyword);
         return ResponseEntity.ok(summonerByKeyword);
+    }
+
+
+    @Operation(summary = "매치 id 얻기", description = "page에 해당하는 매치 id를 얻을 수 있습니다. ex ) 1 -> 0 ~ 19 / 2 ->  20 ~ 39")
+    @GetMapping("/match-id/{page}")
+    public ResponseEntity<String[]> getMatchId(@PathVariable int page, @RequestParam String gameName, @RequestParam String tagLine) throws CannotFoundSummoner {
+        String[] summonerMatchesIdV2 = summonerService.getSummonerMatchesIdV2(gameName, tagLine, page);
+        return ResponseEntity.ok(summonerMatchesIdV2);
     }
 
 }

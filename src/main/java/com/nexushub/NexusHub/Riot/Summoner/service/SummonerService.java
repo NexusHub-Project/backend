@@ -74,6 +74,11 @@ public class SummonerService {
         return riotApiService.getSummonerMatches(SummonerDto.setInform(gameName, tagLine, findPuuid(gameName, tagLine, summoner)));
     }
 
+    public String[] getSummonerMatchesIdV2(String gameName, String tagLine, int page) throws CannotFoundSummoner {
+        String puuid = findPuuid(gameName, tagLine, findSummoner(gameName, tagLine));
+        return riotApiService.getSummonerMatchesV2(puuid, page);
+    }
+
     /** gameName, tagLine, Optional<Summoner>로 puuid 반환하는 메소드
      *
      * @param gameName
