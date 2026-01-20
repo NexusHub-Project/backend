@@ -1,22 +1,12 @@
 package com.nexushub.NexusHub.Riot.Ranker.controller;
 
-import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Riot.Ranker.Sheduler.RankerScheduler;
-import com.nexushub.NexusHub.Riot.Ranker.domain.Ranker;
-import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
-import com.nexushub.NexusHub.Riot.Ranker.dto.FromRiotRankerResDto;
 import com.nexushub.NexusHub.Riot.Ranker.dto.RankerFinalResDto;
 import com.nexushub.NexusHub.Riot.Ranker.dto.RankerResDto;
 import com.nexushub.NexusHub.Riot.Ranker.service.RankerService;
-import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
-import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengersResDto;
-import com.nexushub.NexusHub.Riot.RiotInform.service.RiotApiService;
-import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
-import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +20,6 @@ import java.util.Queue;
 public class RankerController {
 
     private final RankerService rankerService;
-    private final RankerScheduler rankerScheduler;
 
     @Operation(summary = "챌린저 랭킹 조회", description = "페이지 번호를 기반으로 챌린저 티어의 랭킹 목록을 조회합니다.")
     @GetMapping("/challenger/{page}")
