@@ -1,6 +1,5 @@
 package com.nexushub.NexusHub.Riot.Ranker.dto;
 
-import com.nexushub.NexusHub.Riot.Ranker.domain.Ranker;
 import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,18 +23,6 @@ public class RedisRankerDto {
     private Integer level;
     private Integer icon;
 
-    public static RedisRankerDto of (Ranker ranker){
-        Summoner summoner = ranker.getSummoner();
-        return RedisRankerDto.builder()
-                .puuid(summoner.getPuuid())
-                .gameName(summoner.getGameName())
-                .tagLine(summoner.getTagLine())
-                .tier(summoner.getSoloRankTier())
-                .lp(summoner.getSoloRankLP())
-                .wins(summoner.getSoloRankWin())
-                .losses(summoner.getSoloRankDefeat())
-                .build();
-    }
     public static RedisRankerDto of (Summoner summoner){
         return RedisRankerDto.builder()
                 .puuid(summoner.getPuuid())

@@ -3,7 +3,6 @@ package com.nexushub.NexusHub.Riot.Ranker.Sheduler;
 
 import com.nexushub.NexusHub.Common.Redis.RedisService;
 import com.nexushub.NexusHub.Riot.AdditionalData.service.AdditionalDataService;
-import com.nexushub.NexusHub.Riot.Ranker.domain.Ranker;
 import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
 import com.nexushub.NexusHub.Riot.Ranker.dto.FromRiotRankerResDto;
 import com.nexushub.NexusHub.Riot.Ranker.dto.RedisRankerDto;
