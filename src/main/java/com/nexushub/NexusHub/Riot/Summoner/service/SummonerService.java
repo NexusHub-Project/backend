@@ -153,17 +153,11 @@ public class SummonerService {
 
             // step 2-1) : match가 있다면 바로 matchDataDto 구성하기
             if (match.isPresent()) {
-                log.info("{} 있음 ", matchId);
                 Match match1 = match.get();
                 List<MatchParticipant> participants = match1.getParticipants();
                 ParticipantsResDto participantsResDto = new ParticipantsResDto();
                 addParticipant(participants, participantsResDto);
-
-
-
                 MetaDataResDto metaDataResDto = MetaDataResDto.of(match1);
-                log.info("queueID : {}", match1.getQueueId());
-                log.info("queueId : {}", metaDataResDto.getQueueId());
                 MatchParticipant myDataByPuuid = match1.getMyDataByPuuid(puuid);
                 Long championId = myDataByPuuid.getChampionId();
                 Champion champion = championService.getChampionById(championId).orElseThrow(()->new CannotFoundChampion(championId+"에 해당하는 챔피언이 없습니다."));
@@ -173,12 +167,10 @@ public class SummonerService {
 
                 // step 4-2) : MatchDataDto 객체를 List에 넣어준다
                 MatchInfoResDto dto = MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto);
-                log.info("queueIOD : {}", dto.getMetaData().getQueueId());
                 matchInfoResDtos.add(dto);
             }
             // step 2-2) : match가 없다면 만들고 matchDataDto 구성하기
             else {
-                log.info("{} 없음 ", matchId);
 
                 // step 3-2) : riot API 요청을 통해서 해당 matchId의 값을 받기
                 MatchDto matchDto = riotApiService.getMatchInfo(matchId);
@@ -314,77 +306,7 @@ public class SummonerService {
         participantsResDto.addPlayer9(participants.get(9),champion9);
     }
 
-    /** 챌린저 dto를 통해서 해당 유저를 저장하고 ResponseDTo로 변환하는 메소드
-     *
-     * @param dto
-     * @return
-     */
-    public List<ChallengersResDto> setChallengersData(ChallengerLeagueDto dto) {
-        List<ChallengerDto> entries = dto.getEntries();
-        List<ChallengersResDto> dtos = new LinkedList<>();
-        for (ChallengerDto entry : entries) {
-            Optional<Summoner> summoner = summonerRepository.findSummonerByPuuid(entry.getPuuid());
 
-            if (summoner.isPresent()) {
-                dtos.add(new ChallengersResDto(entry, summoner.get()));
-            }
-            else {
-                // 1. puuid만으로 정보 얻어오기
-
-                RiotAccountDto riotAccountInfo = riotApiService.getRiotAccountInfo(entry.getPuuid());
-
-                if (riotAccountInfo == null){
-                    log.warn("계정 정보 이상");
-                    continue;
-                }
-
-                // 2. 그거 summoner에 저장하기
-                Summoner newSummoner = new Summoner(riotAccountInfo.getGameName(), riotAccountInfo.getTagLine(), riotAccountInfo.getPuuid());
-
-                newSummoner.updateTier(entry);
-
-                // 여기서 저장할 때 gameName이 비어 있으면 안되는데, 비어 있는 것이 문제임 ..
-
-                // 3. 그리고 바로 Dtos.add 해버기리
-                dtos.add(new ChallengersResDto(entry,summonerRepository.save(newSummoner)));
-            }
-        }
-        return dtos;
-    }
-
-
-    // 여기로 들어오는게 무슨 티어의 랭커인지는 모름
-    public Queue<RankerResDto> setRankersDataV2(FromRiotRankerResDto rankerResDto, Tier tier) {
-        List<RiotRankerDto> entries = rankerResDto.getEntries();
-        Queue<RankerResDto> rankerResDtos = new LinkedList<>();
-        for (RiotRankerDto ranker : entries) {
-            Optional<Summoner> summoner = summonerRepository.findSummonerByPuuid(ranker.getPuuid());
-
-
-            if (summoner.isPresent()) { // DB에 이미 소환사 정보가 존재하면 업데이트만 해주기
-                Summoner smmrObj = summoner.get();
-                smmrObj.updateTierV2(ranker, tier);
-                rankerResDtos.add(RankerResDto.of(ranker, smmrObj));
-            }
-            else { // DB에 존재하지 않은 소환사라면,
-                // 1. puuid만으로 정보 얻어오기
-
-                RiotAccountDto riotAccountInfo = riotApiService.getRiotAccountInfo(ranker.getPuuid());
-
-                if (riotAccountInfo == null){
-                    log.warn("계정 정보 이상");
-                    continue;
-                }
-
-                // 2. 새로운 Summoner 생성
-                Summoner newSummoner = new Summoner(ranker, riotAccountInfo.getGameName(), riotAccountInfo.getTagLine(), tier);
-
-                // 3. 그리고 바로 dto에 넣기
-                rankerResDtos.add(RankerResDto.of(ranker, summonerRepository.save(newSummoner)));
-            }
-        }
-        return rankerResDtos;
-    }
 
     /** Summoner 객체를 저장과 업데이트를 하는 메소드
      *
@@ -422,7 +344,6 @@ public class SummonerService {
             championOptional.ifPresent(champion -> {
                 // 3. (핵심) 조회한 champion 객체의 이름을 MasteryDto에 설정합니다.
                 dto.setChampionName(champion.getNameKo());
-                log.info("매핑 성공 - champId: {}, ChampName: {}", dto.getChampionId(), dto.getChampionName());
             });
 
             // 4. (선택사항) 만약 데이터가 없는 경우를 확인하고 싶다면 아래와 같이 처리할 수 있습니다.

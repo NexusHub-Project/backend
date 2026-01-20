@@ -7,7 +7,6 @@ import com.nexushub.NexusHub.Riot.Match.domain.MatchParticipant;
 import com.nexushub.NexusHub.Riot.Match.dto.ParticipantDto;
 
 import com.nexushub.NexusHub.Riot.Ranker.domain.Tier;
-import com.nexushub.NexusHub.Riot.Ranker.dto.RankerResDto;
 import com.nexushub.NexusHub.Riot.Ranker.dto.RiotRankerDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.ProfileResDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerDto;
@@ -28,6 +27,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(indexes =
+        {
+                @Index(name = "summoner_puuid", columnList = "puuid"),
+                @Index(name = "summoner_name", columnList = "trimmed_game_name, tag_line")
+        })
 public class Summoner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
