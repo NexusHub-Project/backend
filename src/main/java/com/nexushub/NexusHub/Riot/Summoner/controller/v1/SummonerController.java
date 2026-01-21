@@ -1,18 +1,13 @@
 package com.nexushub.NexusHub.Riot.Summoner.controller.v1;
 
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
-import com.nexushub.NexusHub.Common.Filter.GameNameTrimFilter;
-import com.nexushub.NexusHub.Riot.Match.dto.InfoDto;
 import com.nexushub.NexusHub.Riot.Match.dto.MatchDto;
-import com.nexushub.NexusHub.Riot.Match.dto.v2.MatchDataDto;
 import com.nexushub.NexusHub.Riot.Match.dto.v3.MatchInfoResDto;
+import com.nexushub.NexusHub.Riot.Match.dto.v4.MinimalMatchResDto;
 import com.nexushub.NexusHub.Riot.Match.service.MatchService;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.MasteryDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.ProfileResDto;
-import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
-import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengersResDto;
 import com.nexushub.NexusHub.Riot.RiotInform.service.RiotApiService;
-import com.nexushub.NexusHub.Riot.Summoner.domain.Summoner;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerKeywordResDto;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerTierResDto;
 import com.nexushub.NexusHub.Web.Statistics.dto.ChampionSeasonStatisticsDto;
@@ -20,7 +15,6 @@ import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -135,4 +129,18 @@ public class SummonerController {
         return ResponseEntity.ok(summonerMatchesIdV2);
     }
 
+    @Operation(summary = "1차적인 Match 정보  (병렬 수행) - 안 쓸 것", description = "1차적으로 보이는 간단 매치 정보 ")
+    @GetMapping("/match/summary/{matchId}")
+    public ResponseEntity<MinimalMatchResDto> getSummaryMatchInfo(@RequestParam String puuid, @PathVariable String matchId) throws CannotFoundSummoner {
+        MinimalMatchResDto minimalMatchData = summonerService.getMinimalMatchData(puuid, matchId);
+        return ResponseEntity.ok(minimalMatchData);
+    }
+
+    @Operation(summary = "매치 id 및 요약 정보 얻기", description = "page에 해당하는 매치 정보 전체를 얻을 수 있습니다. ex ) 1 -> 0 ~ 19 / 2 ->  20 ~ 39")
+    @GetMapping("/match-id/{page}/v3")
+    public ResponseEntity<Queue<MatchInfoResDto>> getSummaryMatch(@PathVariable int page, @RequestParam String puuid) throws CannotFoundSummoner {
+        String[] summonerMatchesIdV3 = summonerService.getSummonerMatchesIdV3(puuid, page);
+        Queue<MatchInfoResDto> summonerSummaryMatch = summonerService.getSummonerSummaryMatch(summonerMatchesIdV3, puuid);
+        return ResponseEntity.ok(summonerSummaryMatch);
+    }
 }
