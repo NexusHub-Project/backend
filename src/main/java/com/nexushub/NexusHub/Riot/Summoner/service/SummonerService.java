@@ -35,6 +35,7 @@ import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerDto;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerKeywordResDto;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerTierResDto;
 import com.nexushub.NexusHub.Riot.Summoner.repository.SummonerRepository;
+import com.nexushub.NexusHub.Score.service.PythonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +55,7 @@ public class SummonerService {
     private final ChampionRepository championRepository;
     private final MatchService matchService;
     private final ChampionService championService;
+    private final PythonService pythonService;
 
     /** gameName, tagLine으로 Optional<Summoner>를 반환하는 메소드
      *
@@ -248,8 +250,8 @@ public class SummonerService {
                             .visionWardsBoughtInGame(participantDto.getVisionWardsBoughtInGame())
                             .visionScore(participantDto.getVisionScore())
                             .build();
-                    participant.setTeamLuckScore(rand.nextInt(100 - 35 + 1) + 35);
-                    participant.setOurScore(rand.nextInt(100 - 35 + 1) + 35);
+                    participant.setTeamLuckScore(pythonService.getRandomNumberFromPython());
+                    participant.setOurScore(pythonService.getRandomNumberFromPython());
                     matchParticipants.add(participant);
                 }
 
@@ -367,8 +369,8 @@ public class SummonerService {
                             .visionWardsBoughtInGame(participantDto.getVisionWardsBoughtInGame())
                             .visionScore(participantDto.getVisionScore())
                             .build();
-                    participant.setTeamLuckScore(rand.nextInt(100 - 35 + 1) + 35);
-                    participant.setOurScore(rand.nextInt(100 - 35 + 1) + 35);
+                    participant.setTeamLuckScore(pythonService.getRandomNumberFromPython());
+                    participant.setOurScore(pythonService.getRandomNumberFromPython());
                     matchParticipants.add(participant);
                 }
 

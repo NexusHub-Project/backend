@@ -10,6 +10,7 @@ import com.nexushub.NexusHub.Riot.RiotInform.dto.ProfileResDto;
 import com.nexushub.NexusHub.Riot.RiotInform.service.RiotApiService;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerKeywordResDto;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerTierResDto;
+import com.nexushub.NexusHub.Score.service.PythonService;
 import com.nexushub.NexusHub.Web.Statistics.dto.ChampionSeasonStatisticsDto;
 import com.nexushub.NexusHub.Riot.Summoner.service.SummonerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +31,7 @@ public class SummonerController {
     private final SummonerService summonerService;
     private final MatchService matchService;
     private final RiotApiService riotApiService;
+    private final PythonService pythonService;
 
     /** gameName과 tagLine을 통해서 티어 정보를 검색하는 API이다.
      * - DTO 수정 완료
@@ -142,5 +144,10 @@ public class SummonerController {
         String[] summonerMatchesIdV3 = summonerService.getSummonerMatchesIdV3(puuid, page);
         Queue<MatchInfoResDto> summonerSummaryMatch = summonerService.getSummonerSummaryMatch(summonerMatchesIdV3, puuid);
         return ResponseEntity.ok(summonerSummaryMatch);
+    }
+
+    @GetMapping("/getPython")
+    public ResponseEntity<Integer> getsdas(){
+        return ResponseEntity.ok(pythonService.getRandomNumberFromPython());
     }
 }
