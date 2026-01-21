@@ -81,6 +81,10 @@ public class SummonerService {
         return riotApiService.getSummonerMatchesV2(puuid, page);
     }
 
+    public String[] getSummonerMatchesIdV3(String puuid, int page) throws CannotFoundSummoner {
+        return riotApiService.getSummonerMatchesV2(puuid, page);
+    }
+
     /** gameName, tagLine, Optional<Summoner>로 puuid 반환하는 메소드
      *
      * @param gameName
@@ -267,6 +271,126 @@ public class SummonerService {
 
         return matchInfoResDtos;
     }
+    public Queue<MatchInfoResDto> getSummonerSummaryMatch(String[] summonerMatchesId, String puuid) throws CannotFoundSummoner {
+        Queue<MatchInfoResDto> matchInfoResDtos = new LinkedList<>();
+
+
+        // step 1) : matchId를 통해서 Match_info 객체를 받아오기  => 있을 수도 있고 없을 수도 있음
+        for (String matchId : summonerMatchesId) { // match id 가져와서 반복문 돌림
+            Optional<Match> match = matchService.getMatchByMatchId(matchId);
+
+            // step 2-1) : match가 있다면 바로 matchDataDto 구성하기
+            if (match.isPresent()) {
+                Match match1 = match.get();
+                List<MatchParticipant> participants = match1.getParticipants();
+                ParticipantsResDto participantsResDto = new ParticipantsResDto();
+                addParticipant(participants, participantsResDto);
+                MetaDataResDto metaDataResDto = MetaDataResDto.of(match1);
+                MatchParticipant myDataByPuuid = match1.getMyDataByPuuid(puuid);
+                Long championId = myDataByPuuid.getChampionId();
+                Champion champion = championService.getChampionById(championId).orElseThrow(()->new CannotFoundChampion(championId+"에 해당하는 챔피언이 없습니다."));
+                MyDataResDto myDataResDto = MyDataResDto.of(myDataByPuuid,champion);
+
+                myDataResDto.setPerks(myDataByPuuid);
+
+                // step 4-2) : MatchDataDto 객체를 List에 넣어준다
+                MatchInfoResDto dto = MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto);
+                matchInfoResDtos.add(dto);
+            }
+            // step 2-2) : match가 없다면 만들고 matchDataDto 구성하기
+            else {
+
+                // step 3-2) : riot API 요청을 통해서 해당 matchId의 값을 받기
+                MatchDto matchDto = riotApiService.getMatchInfo(matchId);
+
+                // step 4-2) : matchDto 속의 infoDto를 통해서 participantDto를 통해, Summoner에 저장이 되어 있는 Summoner인지 체크하기
+                InfoDto infoDto = matchDto.getInfo();
+                List<ParticipantDto> participantsDtoFromApi = infoDto.getParticipants(); // 참가자 정보 찾아 왔음
+
+
+                //여기서 queueID 넣어야 함
+                // 기본 정보 저장
+                Match newMatch = Match.builder()
+                        .matchId(matchId) // Riot API에서 받은 matchId
+                        .gameMode(infoDto.getGameMode())
+                        .gameDuration(infoDto.getGameDuration())
+                        .gameCreation(infoDto.getGameCreation())
+                        .gameEndTimestamp(infoDto.getGameEndTimestamp())
+                        .queueId(infoDto.getQueueId())
+                        .build();
+
+                List<MatchParticipant> matchParticipants = new ArrayList<>();
+                Random rand = new Random();
+                for (ParticipantDto participantDto : participantsDtoFromApi) {
+                    // step 5-2) : puuid로 Summoner를 찾거나, 없으면 새로 저장
+                    Summoner summoner = summonerRepository.findSummonerByPuuid(participantDto.getPuuid())
+                            .orElseGet(() -> summonerRepository.save(
+                                    new Summoner(participantDto)
+                            ));
+
+                    MatchParticipant participant = MatchParticipant.builder()
+                            .match(newMatch)
+                            .summoner(summoner)
+                            .win(participantDto.getWin())
+                            .championId(participantDto.getChampionId())
+                            .champLevel(participantDto.getChampLevel())
+                            .teamPosition(participantDto.getTeamPosition())
+                            .item0(participantDto.getItem0())
+                            .item1(participantDto.getItem1())
+                            .item2(participantDto.getItem2())
+                            .item3(participantDto.getItem3())
+                            .item4(participantDto.getItem4())
+                            .item5(participantDto.getItem5())
+                            .item6(participantDto.getItem6())
+                            .perks(participantDto.getPerks())
+                            .kda(participantDto.getKda())
+                            .kills(participantDto.getKills())
+                            .assists(participantDto.getAssists())
+                            .deaths(participantDto.getDeaths())
+                            .totalMinionKills(participantDto.getTotalMinionsKilled() + participantDto.getNeutralMinionsKilled())
+                            .totalDamageTaken(participantDto.getTotalDamageTaken())
+                            .totalDamageDealtToChampions(participantDto.getTotalDamageDealtToChampions())
+                            .doubleKills(participantDto.getDoubleKills())
+                            .tripleKills(participantDto.getTripleKills())
+                            .quadraKills(participantDto.getQuadraKills())
+                            .pentaKills(participantDto.getPentaKills())
+                            .summoner1Casts(participantDto.getSummoner1Casts())
+                            .summoner1Id(participantDto.getSummoner1Id())
+                            .summoner2Id(participantDto.getSummoner2Id())
+                            .summoner2Casts(participantDto.getSummoner2Casts())
+                            .spell1Casts(participantDto.getSpell1Casts())
+                            .spell2Casts(participantDto.getSpell2Casts())
+                            .spell3Casts(participantDto.getSpell3Casts())
+                            .spell4Casts(participantDto.getSpell4Casts())
+                            .wardKilled(participantDto.getWardKilled())
+                            .wardPlaced(participantDto.getWardPlaced())
+                            .visionWardsBoughtInGame(participantDto.getVisionWardsBoughtInGame())
+                            .visionScore(participantDto.getVisionScore())
+                            .build();
+                    participant.setTeamLuckScore(rand.nextInt(100 - 35 + 1) + 35);
+                    participant.setOurScore(rand.nextInt(100 - 35 + 1) + 35);
+                    matchParticipants.add(participant);
+                }
+
+                newMatch.setParticipants(matchParticipants);
+
+                ParticipantsResDto participantsResDto = new ParticipantsResDto();
+                addParticipant(matchParticipants, participantsResDto);
+                MetaDataResDto metaDataResDto = MetaDataResDto.of(newMatch);
+                MatchParticipant myDataByPuuid = newMatch.getMyDataByPuuid(puuid);
+                Long championId = myDataByPuuid.getChampionId();
+                Champion champion = championService.getChampionById(championId).orElseThrow(()->new CannotFoundChampion(championId+"에 해당하는 챔피언이 없습니다."));
+                MyDataResDto myDataResDto = MyDataResDto.of(myDataByPuuid,champion);
+                myDataResDto.setPerks(myDataByPuuid);
+
+                matchInfoResDtos.add(MatchInfoResDto.of(metaDataResDto, myDataResDto, participantsResDto));
+                matchService.save(newMatch);
+            }
+        }
+
+        return matchInfoResDtos;
+    }
+    // ## 안 쓸 것 ㅇㅇ
     public MinimalMatchResDto getMinimalMatchData(String puuid, String matchId){
         // 1) matchId를 통해서 Match정보를 받아와야 함 -> ##MatchService에서 가져왔어야 했는데
         Optional<Match> optionalMatch = matchService.getMatchByMatchId(matchId);

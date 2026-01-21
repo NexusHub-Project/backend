@@ -129,11 +129,18 @@ public class SummonerController {
         return ResponseEntity.ok(summonerMatchesIdV2);
     }
 
-    @Operation(summary = "1차적인 Match 정보  (병렬 수행)", description = "1차적으로 보이는 간단 매치 정보 ")
+    @Operation(summary = "1차적인 Match 정보  (병렬 수행) - 안 쓸 것", description = "1차적으로 보이는 간단 매치 정보 ")
     @GetMapping("/match/summary/{matchId}")
     public ResponseEntity<MinimalMatchResDto> getSummaryMatchInfo(@RequestParam String puuid, @PathVariable String matchId) throws CannotFoundSummoner {
         MinimalMatchResDto minimalMatchData = summonerService.getMinimalMatchData(puuid, matchId);
         return ResponseEntity.ok(minimalMatchData);
     }
 
+    @Operation(summary = "매치 id 및 요약 정보 얻기", description = "page에 해당하는 매치 정보 전체를 얻을 수 있습니다. ex ) 1 -> 0 ~ 19 / 2 ->  20 ~ 39")
+    @GetMapping("/match-id/{page}/v3")
+    public ResponseEntity<Queue<MatchInfoResDto>> getSummaryMatch(@PathVariable int page, @RequestParam String puuid) throws CannotFoundSummoner {
+        String[] summonerMatchesIdV3 = summonerService.getSummonerMatchesIdV3(puuid, page);
+        Queue<MatchInfoResDto> summonerSummaryMatch = summonerService.getSummonerSummaryMatch(summonerMatchesIdV3, puuid);
+        return ResponseEntity.ok(summonerSummaryMatch);
+    }
 }

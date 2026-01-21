@@ -1,7 +1,6 @@
 package com.nexushub.NexusHub.Riot.Match.dto.v4;
 
 import com.nexushub.NexusHub.Riot.Match.dto.v3.ParticipantDto;
-import com.nexushub.NexusHub.Riot.Match.dto.v3.ParticipantsResDto;
 import lombok.Builder;
 import lombok.Data;
 
