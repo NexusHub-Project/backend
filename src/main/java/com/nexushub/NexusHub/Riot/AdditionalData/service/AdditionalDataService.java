@@ -96,6 +96,8 @@ public class AdditionalDataService {
         return null;
     }
 
+
+
     public String getCurrentPatchVersion(){
         String patchVersionUrl = "https://ddragon.leagueoflegends.com/api/versions.json";
         try {
@@ -117,8 +119,7 @@ public class AdditionalDataService {
         String currentPatchVersionFromRedis = redisService.getCurrentPatchVersionFromRedis();
         return currentPatchVersionFromRedis==null ? getCurrentPatchVersion() : currentPatchVersionFromRedis;
     }
-
-    @Scheduled(cron = "0 0 0 * * THU")
+    @Scheduled(cron = "0 0 0 * * THU", zone = "Asia/Seoul")
     public void storeCurrentPatchVersionAuto(){
         // 매주 목요일 0시에 redis에 저장하기
         redisService.storeCurrentPatchVersionAtRedis(getCurrentPatchVersion());
