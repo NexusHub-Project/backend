@@ -8,6 +8,8 @@ import com.nexushub.NexusHub.Web.Statistics.domain.MatchUp.MatchUp;
 import com.nexushub.NexusHub.Web.Statistics.domain.Position;
 import com.nexushub.NexusHub.Web.Statistics.dto.ChampionDetailDto;
 import com.nexushub.NexusHub.Web.Statistics.dto.ChampionNameResDto;
+import com.nexushub.NexusHub.Web.Statistics.dto.CounterChampionResDto;
+import com.nexushub.NexusHub.Web.Statistics.dto.TierResponseDto;
 import com.nexushub.NexusHub.Web.Statistics.dto.detail.ChampionDetailBuild;
 import com.nexushub.NexusHub.Web.Statistics.dto.detail.ChampionDetailChampInfo;
 import com.nexushub.NexusHub.Web.Statistics.dto.detail.ChampionDetailList;
@@ -15,6 +17,7 @@ import com.nexushub.NexusHub.Web.Statistics.repository.ChampionStatisticsReposit
 import com.nexushub.NexusHub.Web.Statistics.repository.MatchUpRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 /**
  * 챔피언 통계 데이터를 관리하고 생성하는 서비스 클래스.
@@ -52,6 +56,31 @@ public class StatisticsService {
         processPositionData(getSupportChampionNames(), Position.SUP);
 
         log.info("모든 포지션 통계 데이터 생성이 완료되었습니다.");
+    }
+    @Transactional(readOnly = true)
+    public List<TierResponseDto> getTierResponseList(String positionString) {
+        Position position = Position.fromString(positionString);
+        List<ChampionStatsByPosition> statsList = championStatisticsRepository.findByPosition(position);
+
+
+
+        return statsList.stream().map(stats -> {
+            // 1. 카운터 챔피언 3명 조회
+            List<Champion> counters = matchUpRepository.findTop3CountersByStats(
+                    stats, PageRequest.of(0, 3)
+            );
+
+            // 2. 카운터 정보를 DTO 객체로 변환
+            List<CounterChampionResDto> counterDtos = counters.stream()
+                    .map(c -> CounterChampionResDto.builder()
+                            .championNameEn(c.getNameEn())
+                            .championImgUrl(c.getNameEn() + ".png")
+                            .build())
+                    .collect(Collectors.toList());
+
+            // 3. 최종 TierResponseDto 반환
+            return new TierResponseDto(stats, counterDtos);
+        }).collect(Collectors.toList());
     }
 
 

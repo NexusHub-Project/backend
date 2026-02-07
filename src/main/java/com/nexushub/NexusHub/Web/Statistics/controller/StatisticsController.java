@@ -29,14 +29,9 @@ public class StatisticsController {
     @Operation(summary = "포지션별 챔피언 티어 조회", description = "특정 포지션(TOP, JUNGLE 등)의 챔피언 티어 리스트 및 통계를 조회합니다.")
     @GetMapping("/tier/{position}")
     public ResponseEntity<List<TierResponseDto>> getPositionTier(@PathVariable String position){
-        List<ChampionStatsByPosition> tiers = statisticsService.getTiers(position);
-        List<TierResponseDto> dtos = new ArrayList<>();
+        List<TierResponseDto> tierResponseList = statisticsService.getTierResponseList(position);
 
-        for (ChampionStatsByPosition tier : tiers) {
-            dtos.add(new TierResponseDto(tier));
-        }
-        dtos.sort((t1,t2)->t1.getTier() - t2.getTier());
-        return ResponseEntity.ok(dtos);
+        return ResponseEntity.ok(tierResponseList);
     }
 
     @Operation(summary = "챔피언 상세 분석 정보 조회", description = "특정 챔피언의 포지션별 빌드, 승률, 상성 등 상세 분석 데이터를 조회합니다.")
