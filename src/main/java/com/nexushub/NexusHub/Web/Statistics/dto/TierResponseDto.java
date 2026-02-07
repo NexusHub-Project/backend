@@ -3,6 +3,8 @@ package com.nexushub.NexusHub.Web.Statistics.dto;
 import com.nexushub.NexusHub.Web.Statistics.domain.Champion.ChampionStatsByPosition;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class TierResponseDto {
     private String championName;
@@ -11,15 +13,16 @@ public class TierResponseDto {
     private Integer score;
     private Float pickRate;
     private Float winRate;
-    private Integer scoreDiff;
 
-    public TierResponseDto(ChampionStatsByPosition stats) {
+    private List<CounterChampionResDto> counterChampions;
+
+    public TierResponseDto(ChampionStatsByPosition stats, List<CounterChampionResDto> counterChampions) {
         this.championName = stats.getChampion().getNameKo();
         this.championNameEn = stats.getChampion().getNameEn();
         this.tier = stats.getTier();
         this.score = stats.getScore();
         this.pickRate = stats.getPickRate();
         this.winRate = stats.getWinRate();
-        this.scoreDiff = stats.getScore();
+        this.counterChampions = counterChampions;
     }
 }
