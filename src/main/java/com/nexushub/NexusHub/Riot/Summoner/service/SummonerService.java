@@ -116,7 +116,6 @@ public class SummonerService {
 
         SummonerDto tierInfo = riotApiService.getSummonerTierInfo(SummonerDto.setInform(gameName, tagLine, puuid));
 
-        log.info("문제 예상 1)");
         Summoner savedS = this.SaveOrUpateSummoner(tierInfo, summoner);
         return SummonerTierResDto.of(savedS);
     }
@@ -620,6 +619,27 @@ public class SummonerService {
         }
         return list;
     }
+
+    public List<SummonerKeywordResDto> findSummonerByKeywordV2(String keyword){
+        List<Summoner> result;
+
+        if (keyword.contains("#")){ // 태그 라인까지 같이 검색을 한 경우
+            // # 기준으로 분리
+            String[] parts = keyword.split("#", 2);
+            String gameName = parts[0];
+            String tagLine = parts[1];
+            result = summonerRepository.findByGameNameContainingIgnoreCaseAndTagLineContainingIgnoreCase(gameName, tagLine);
+        }
+        else {
+            result = summonerRepository.findByGameNameContainingIgnoreCase(keyword);
+        }
+        return result.stream()
+                .map(SummonerKeywordResDto::of)
+                .toList();
+    }
+
+
+
     public ProfileResDto getProfile(String gameName, String tagLine) throws CannotFoundSummoner {
         gameName = gameName.replace(" ", "");
         Optional<Summoner> summoner = findSummoner(gameName, tagLine);

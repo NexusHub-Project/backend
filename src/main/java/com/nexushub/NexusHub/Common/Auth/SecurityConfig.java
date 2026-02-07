@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,8 +51,13 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/api/v1/championDetail/*",
-                                "api/v1/ranker/automatic/test",
-                                "/api/v1/additionalData/iconAndLevel"
+                                "/api/v1/ranker/automatic/test",
+                                "/api/v1/additionalData/iconAndLevel",
+                                "/api/v1/tune/**",
+                                "/tune.html",
+                                "/static/**",
+                                "/api/v1/tune/**",
+                                "/favicon.ico"
                         ).permitAll()
                         .anyRequest().authenticated()
 //
@@ -77,5 +83,10 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config); // 모든 경로에 대해 위 설정 적용
         return source;
+    }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers("/tune.html", "/favicon.ico", "/static/**");
     }
 }

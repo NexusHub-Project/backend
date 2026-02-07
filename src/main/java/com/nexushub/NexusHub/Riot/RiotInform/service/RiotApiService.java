@@ -10,6 +10,7 @@ import com.nexushub.NexusHub.Riot.Ranker.dto.RiotRankerDto;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.*;
 import com.nexushub.NexusHub.Riot.RiotInform.dto.Ranker.ChallengerLeagueDto;
 import com.nexushub.NexusHub.Riot.Summoner.dto.SummonerDto;
+import com.nexushub.NexusHub.Score.dto.MatchModelDto;
 import com.zaxxer.hikari.util.IsolationLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -260,6 +261,31 @@ public class RiotApiService {
         }
     }
 
+    public List<MatchModelDto> getMatchModel(String[] matchIds){
+        List<MatchModelDto> dtos = new ArrayList<>();
+        for (String matchId : matchIds) {
+            String url = baseUrlAsia + "/lol/match/v5/matches/"+matchId;
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-Riot-Token", apiKey);
+
+            HttpEntity<?> entity = new HttpEntity<>(headers);
+            try{
+                ResponseEntity<MatchModelDto> response = restTemplate.exchange(
+                        url,
+                        HttpMethod.GET,
+                        entity,
+                        new ParameterizedTypeReference<>() {}
+                );
+                dtos.add(response.getBody());
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                return null;
+            }
+        }
+        return dtos;
+    }
+
     public List<String> getMatchIdByPuuid(String puuid, long seasonStartTime){
         // 쿼리 파라미터로 검색 기간, 솔랭, 갯수 넣어서 가져옴 => 쿼리 파라미터 넣고 싶어서 UriComponentBuilder 쓰기로 함
 
@@ -326,43 +352,6 @@ public class RiotApiService {
         }
     }
 
-    public FromRiotRankerResDto getChallengersV2(Tier tier) throws CannotFoundSummoner {
-        String url = baseUrlKR;
-        if (tier == Tier.CHALLENGER){
-            url = url + "/lol/league/v4/challengerleagues/by-queue/RANKED_SOLO_5x5";
-        }
-        else if (tier == Tier.GRANDMASTER){
-            url = url + "/lol/league/v4/grandmasterleagues/by-queue/RANKED_SOLO_5x5";
-        }
-        else if (tier == Tier.MASTER){
-            url = url + "/lol/league/v4/masterleagues/by-queue/RANKED_SOLO_5x5";
-        }
-        else {
-            log.warn("잘못된 랭크 티어 요청");
-            throw new WrongRankTier("잘못된 랭크 티어 요청");
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Riot-Token", apiKey);
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-        try{
-            ResponseEntity<FromRiotRankerResDto> response = restTemplate.exchange(
-                    url,
-                    HttpMethod.GET,
-                    entity,
-                    new ParameterizedTypeReference<>() {}
-            );
-            return response.getBody();
-        }catch (HttpClientErrorException.TooManyRequests e) {
-            // 429 에러 발생 시
-            log.warn("API LIMIT 걸렸어");
-            return null;
-        } catch (Exception e) {
-            // 다른 에러는 바로 던짐
-            throw e;
-        }
-    }
 
     public FromRiotRankerResDto getRankersByTierAndKey(Tier tier, String key) throws CannotFoundSummoner {
         String url = baseUrlKR;
@@ -402,63 +391,6 @@ public class RiotApiService {
         }
     }
 
-
-
-    public PriorityQueue<RiotRankerDto> getRankersByKey(String key) throws CannotFoundSummoner {
-
-
-        FromRiotRankerResDto challenger = getRankersByTierAndKey(Tier.CHALLENGER, key);
-        if (challenger.getEntries().size() == 0 ){
-            log.info("챌린저 랭킹 비어 있음");
-        }
-        FromRiotRankerResDto grandmaster = getRankersByTierAndKey(Tier.GRANDMASTER, key);
-        if (grandmaster.getEntries().size()==0){
-            log.info("그랜드마스터 랭킹 비어 있음");
-        }
-        FromRiotRankerResDto master = getRankersByTierAndKey(Tier.MASTER, key);
-        if (master.getEntries().size()==0){
-            log.info("마스터 랭킹 비어 있음");
-        }
-        PriorityQueue<RiotRankerDto> priorityQueue = new PriorityQueue<>(
-                (a,b) -> b.getLeaguePoints() - a.getLeaguePoints()
-        );
-
-        for (RiotRankerDto entry : challenger.getEntries()) {
-            priorityQueue.add(entry);
-        }
-        for (RiotRankerDto entry : grandmaster.getEntries()) {
-            priorityQueue.add(entry);
-        }
-        for (RiotRankerDto entry : master.getEntries()) {
-            priorityQueue.add(entry);
-        }
-
-        return priorityQueue;
-    }
-
-
-
-
-
-
-
-    private SummonerDto setSummonerDto(SummonerDto dto, List<TierInfoDto> list){
-        if (list.size() == 2) {
-            TierInfoDto flex = list.get(1);
-            dto.setFlexRankDefeat(flex.getLosses());
-            dto.setFlexRankWin(flex.getWins());
-            dto.setFlexRankTier(flex.getTier()+" "+flex.getRank());
-            dto.setFlexRankLP(flex.getLeaguePoints());
-        }
-        TierInfoDto sole = list.get(0);
-
-        dto.setSoloRankDefeat(sole.getLosses());
-        dto.setSoloRankWin(sole.getWins());
-        dto.setSoloRankTier(sole.getTier()+" "+sole.getRank());
-        dto.setSoloRankLP(sole.getLeaguePoints());
-
-        return dto;
-    }
 
     private SummonerDto setSummonerDtoV2(SummonerDto dto, List<TierInfoDto> list) {
         if (list.size() == 2) {

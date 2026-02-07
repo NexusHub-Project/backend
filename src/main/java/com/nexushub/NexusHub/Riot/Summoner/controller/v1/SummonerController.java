@@ -123,6 +123,13 @@ public class SummonerController {
         return ResponseEntity.ok(summonerByKeyword);
     }
 
+    @Operation(summary = "키워드로 소환사 실시간 검색 V2", description = "키워드(게임네임과 태그라인이 포함될 수도 있음)가 포함된 소환사 리스트를 조회합니다.")
+    @GetMapping("/contain/{keyword}/V2")
+    public ResponseEntity<List<SummonerKeywordResDto>> getSummonersByKeyWordV2(@PathVariable String keyword){
+        List<SummonerKeywordResDto> summonerByKeyword = summonerService.findSummonerByKeywordV2(keyword);
+        return ResponseEntity.ok(summonerByKeyword);
+    }
+
 
     @Operation(summary = "매치 id 얻기", description = "page에 해당하는 매치 id를 얻을 수 있습니다. ex ) 1 -> 0 ~ 19 / 2 ->  20 ~ 39")
     @GetMapping("/match-id/{page}")
