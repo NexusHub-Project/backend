@@ -2,6 +2,7 @@ package com.nexushub.NexusHub.Riot.Summoner.service;
 
 import com.nexushub.NexusHub.Common.Exception.Normal.CannotFoundChampion;
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
+import com.nexushub.NexusHub.Common.Exception.RiotAPI.RiotInternalError;
 import com.nexushub.NexusHub.Riot.Data.Champion.Champion;
 import com.nexushub.NexusHub.Riot.Data.Champion.repository.ChampionRepository;
 import com.nexushub.NexusHub.Riot.Data.Champion.ChampionService;
@@ -111,10 +112,15 @@ public class SummonerService {
      */
     public SummonerTierResDto getSummonerTierInfo(String gameName, String tagLine) throws CannotFoundSummoner {
         log.info("SummonerService - getSummonerTierInfo : {}#{}", gameName, tagLine);
-        Optional<Summoner> summoner = findSummoner(gameName, tagLine);
-        String puuid = findPuuid(gameName, tagLine, summoner);
 
-        SummonerDto tierInfo = riotApiService.getSummonerTierInfo(SummonerDto.setInform(gameName, tagLine, puuid));
+        RiotAccountDto accountInfo = riotApiService.getSummonerInfo(gameName, tagLine);
+        String puuid = accountInfo.getPuuid();
+
+        SummonerDto tierInfo = riotApiService.getSummonerTierInfo(
+                SummonerDto.setInform(accountInfo.getGameName(), accountInfo.getTagLine(), puuid)
+        );
+
+        Optional<Summoner> summoner = summonerRepository.findSummonerByPuuid(puuid);
 
         Summoner savedS = this.SaveOrUpateSummoner(tierInfo, summoner);
         return SummonerTierResDto.of(savedS);
@@ -274,10 +280,13 @@ public class SummonerService {
     }
     public Queue<MatchInfoResDto> getSummonerSummaryMatch(String[] summonerMatchesId, String puuid) throws CannotFoundSummoner {
         Queue<MatchInfoResDto> matchInfoResDtos = new LinkedList<>();
-
-
+        for (String s : summonerMatchesId) {
+            log.info("{}", s);
+        }
+        int i = 1;
         // step 1) : matchId를 통해서 Match_info 객체를 받아오기  => 있을 수도 있고 없을 수도 있음
         for (String matchId : summonerMatchesId) { // match id 가져와서 반복문 돌림
+            log.info("{}) id : {}",i++,matchId);
             Optional<Match> match = matchService.getMatchByMatchId(matchId);
 
             // step 2-1) : match가 있다면 바로 matchDataDto 구성하기
@@ -302,8 +311,12 @@ public class SummonerService {
             else {
 
                 // step 3-2) : riot API 요청을 통해서 해당 matchId의 값을 받기
+                log.info("*****1****");
                 MatchDto matchDto = riotApiService.getMatchInfo(matchId);
 
+                if (matchDto == null){
+                    throw new RiotInternalError("라이엇 내부 오류 500");
+                }
                 // step 4-2) : matchDto 속의 infoDto를 통해서 participantDto를 통해, Summoner에 저장이 되어 있는 Summoner인지 체크하기
                 InfoDto infoDto = matchDto.getInfo();
                 List<ParticipantDto> participantsDtoFromApi = infoDto.getParticipants(); // 참가자 정보 찾아 왔음
@@ -572,15 +585,16 @@ public class SummonerService {
      * @return
      */
     private Summoner SaveOrUpateSummoner(SummonerDto dto, Optional<Summoner> summoner){
-
-        if (summoner.isPresent()){ // 최초 검색이 아닌 경우
+        if (summoner.isPresent()){
+            // 기존에 puuid가 같은 소환사가 있다면 정보를 업데이트
             Summoner target = summoner.get();
+            // 닉네임이 바뀌었을 수 있으므로 updateTier 내부에서
+            // gameName, tagLine, trimmedGameName을 모두 갱신
             target.updateTier(dto);
             return summonerRepository.save(target);
         }
-        else { // 최초 검색인 경우
+        else {
             Summoner target = Summoner.update(dto);
-
             return summonerRepository.save(target);
         }
     }

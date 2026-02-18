@@ -129,6 +129,9 @@ public class Summoner {
         this.flexRankLP = dto.getFlexRankLP();
         this.flexRankWin = dto.getFlexRankWin();
         this.flexRankDefeat = dto.getFlexRankDefeat();
+        this.gameName = dto.getGameName();
+        this.tagLine = dto.getTagLine();
+        this.trimmedGameName = dto.getGameName().replace(" ", "");
         return this;
     }
 

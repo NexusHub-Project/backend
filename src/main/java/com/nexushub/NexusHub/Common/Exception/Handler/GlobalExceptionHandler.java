@@ -7,6 +7,7 @@ import com.nexushub.NexusHub.Common.Exception.Normal.CannotFoundPatchNote;
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.CannotFoundSummoner;
 import com.nexushub.NexusHub.Common.Exception.Normal.CannotFoundUser;
 import com.nexushub.NexusHub.Common.Exception.RiotAPI.IsPresentLoginId;
+import com.nexushub.NexusHub.Common.Exception.RiotAPI.RiotInternalError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -101,5 +102,12 @@ public class GlobalExceptionHandler {
         Map<String, Object> error = new HashMap<>();
         error.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(RiotInternalError.class)
+    public ResponseEntity<?> riotInternalError(RiotInternalError e) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }

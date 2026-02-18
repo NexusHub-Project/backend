@@ -149,6 +149,7 @@ public class SummonerController {
     @GetMapping("/match-id/{page}/v3")
     public ResponseEntity<Queue<MatchInfoResDto>> getSummaryMatch(@PathVariable int page, @RequestParam String puuid) throws CannotFoundSummoner {
         String[] summonerMatchesIdV3 = summonerService.getSummonerMatchesIdV3(puuid, page);
+        log.info("size of id : {}", summonerMatchesIdV3.length);
         Queue<MatchInfoResDto> summonerSummaryMatch = summonerService.getSummonerSummaryMatch(summonerMatchesIdV3, puuid);
         return ResponseEntity.ok(summonerSummaryMatch);
     }

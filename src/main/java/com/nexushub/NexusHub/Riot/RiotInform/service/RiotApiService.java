@@ -23,6 +23,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -208,8 +209,30 @@ public class RiotApiService {
             );
             return response.getBody();
         }
-        catch (Exception e) {
-            log.error(e.getMessage());
+        catch (HttpClientErrorException.TooManyRequests e) {
+            // 429 에러: 호출 제한 초과
+            log.warn("매치 리스트 조회 실패: API 호출 제한 초과 (429)");
+            throw new TooManyRequestFail("Riot API 호출 제한 초과");
+
+        } catch (HttpClientErrorException.NotFound e) {
+            // 404 에러: 해당 PUUID에 대한 정보가 없음
+            log.warn("매치 리스트를 찾을 수 없음 (404). PUUID: {}", dto.getPuuid());
+            throw new CannotFoundSummoner("해당 소환사의 매치 기록이 존재하지 않습니다.");
+
+        } catch (HttpClientErrorException.Unauthorized e) {
+            // 401/403 에러: API 키 만료 또는 권한 오류
+            log.error("API 키가 유효하지 않거나 만료되었습니다.");
+            return null;
+
+        } catch (HttpServerErrorException e) {
+            // 500 에러: 아까 발생했던 라이엇 서버 내부 오류
+            log.error("라이엇 서버 내부 오류 발생 ({}): {}", e.getStatusCode(), e.getResponseBodyAsString());
+            // null 대신 빈 배열을 반환하여 이후 반복문에서 NPE가 발생하지 않도록 함
+            return new String[0];
+
+        } catch (RestClientException e) {
+            // 기타 RestTemplate 관련 오류
+            log.error("매치 리스트 요청 중 알 수 없는 오류 발생: {}", e.getMessage());
             return null;
         }
     }
