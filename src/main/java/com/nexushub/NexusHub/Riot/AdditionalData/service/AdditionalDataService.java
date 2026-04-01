@@ -69,10 +69,13 @@ public class AdditionalDataService {
             if (summoner.getIconId() == null || summoner.getLevel() == null){ // icon이나 level이 null이면
                 log.info("{} --- {} : icon & level request ",i++, puuid);
                 ProfileResDto profileResDto = requestProfileToRiot(puuid);
-                summoner.updateProfile(profileResDto);
-                list.add(summoner);
+                if (profileResDto != null) {
+                    summoner.updateProfile(profileResDto);
+                    list.add(summoner);
+                } else {
+                    log.warn("{} -- 소환사 정보 없음 ",  puuid);
+                }
             }
-
         }
         summonerService.updateSummoners(list);
     }
